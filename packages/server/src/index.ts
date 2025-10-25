@@ -2,14 +2,19 @@
 
 // ESM
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 
 const fastify = Fastify({
   logger: true
 })
-
+await fastify.register(cors, {
+  // put your options here
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    credentials: true,
+})
 // Declare a route
-fastify.get('/', function (request, reply) {
-  reply.send({ hello: 'world' })
+fastify.get('/api', function (request, reply) {
+  reply.send({ message: 'Hello from Fastify!' })
 })
 
 // Run the server!
