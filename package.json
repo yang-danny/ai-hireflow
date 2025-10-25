@@ -1,0 +1,25 @@
+{
+  "name": "ai-hireflow",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/yang-danny/ai-hireflow#readme",
+  "bugs": {
+    "url": "https://github.com/yang-danny/ai-hireflow/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yang-danny/ai-hireflow.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "packages/*"
+   
+  ]
+}
