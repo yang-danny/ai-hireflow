@@ -1,28 +1,32 @@
 {
-  "name": "ai-hireflow",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "homepage": "https://github.com/yang-danny/ai-hireflow#readme",
-  "bugs": {
-    "url": "https://github.com/yang-danny/ai-hireflow/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yang-danny/ai-hireflow.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npm run dev -w packages/client\" \"npm run dev -w packages/server\""
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "devDependencies": {
-    "concurrently": "^9.2.1"
-  }
+   "name": "ai-hireflow",
+   "version": "1.0.0",
+   "description": "",
+   "keywords": [],
+   "homepage": "https://github.com/yang-danny/ai-hireflow#readme",
+   "bugs": {
+      "url": "https://github.com/yang-danny/ai-hireflow/issues"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/yang-danny/ai-hireflow.git"
+   },
+   "license": "ISC",
+   "author": "",
+   "type": "module",
+   "main": "index.js",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "dev": "concurrently \"npm run dev -w packages/client\" \"npm run dev -w packages/server\"",
+      "format": "prettier --write ."
+   },
+   "workspaces": [
+      "packages/*"
+   ],
+   "devDependencies": {
+      "concurrently": "^9.2.1"
+   },
+   "dependencies": {
+      "prettier": "^3.6.2"
+   }
 }
