@@ -18,15 +18,18 @@
    "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "dev": "concurrently \"npm run dev -w packages/client\" \"npm run dev -w packages/server\"",
-      "format": "prettier --write ."
+      "format": "prettier --write .",
+      "prepare": "husky"
    },
    "workspaces": [
       "packages/*"
    ],
    "devDependencies": {
-      "concurrently": "^9.2.1"
+      "concurrently": "^9.2.1",
+      "husky": "^9.1.7"
    },
    "dependencies": {
+      "lint-staged": "^16.2.6",
       "prettier": "^3.6.2"
    }
 }
