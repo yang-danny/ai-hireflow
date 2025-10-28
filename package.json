@@ -25,11 +25,16 @@
       "packages/*"
    ],
    "devDependencies": {
+      "@types/react-helmet": "^6.1.11",
       "concurrently": "^9.2.1",
       "husky": "^9.1.7"
    },
    "dependencies": {
+      "@fastify/oauth2": "^8.1.2",
       "lint-staged": "^16.2.6",
-      "prettier": "^3.6.2"
+      "lucide-react": "^0.548.0",
+      "prettier": "^3.6.2",
+      "react-helmet": "^6.1.0",
+      "tailwind-merge": "^3.3.1"
    }
 }
