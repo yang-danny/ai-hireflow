@@ -15,7 +15,7 @@ export function HeroSection({ backgroundImage }: HeroProps) {
                   write compelling cover letters, and ace your next interview.
                </p>
                <div className="flex items-center justify-center gap-4 pt-4">
-                  <Button variant="primary" href="#features">
+                  <Button variant="primary" href="/auth">
                      Start Now
                   </Button>
                   <Button variant="secondary" href="#features">

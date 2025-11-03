@@ -1,7 +1,7 @@
-import DocumentIcon from './icons/DocumentIcon';
-import AnalysisIcon from './icons/AnalysisIcon';
-import EnvelopeIcon from './icons/EnvelopeIcon';
-import CoachingIcon from './icons/CoachingIcon';
+import { ResumeGeneratorIcon } from './icons/icons';
+import { ResumeAnalyzerIcon } from './icons/icons';
+import { CoverLetterIcon } from './icons/icons';
+import { InterviewPrepIcon } from './icons/icons';
 
 interface FeatureCardProps {
    icon: string;
@@ -10,14 +10,15 @@ interface FeatureCardProps {
 }
 
 const iconMap = {
-   document: DocumentIcon,
-   analysis: AnalysisIcon,
-   envelope: EnvelopeIcon,
-   coaching: CoachingIcon,
+   document: ResumeGeneratorIcon,
+   analysis: ResumeAnalyzerIcon,
+   envelope: CoverLetterIcon,
+   coaching: InterviewPrepIcon,
 };
 
 export function FeatureCard({ icon, title, description }: FeatureCardProps) {
-   const IconComponent = iconMap[icon as keyof typeof iconMap] || DocumentIcon;
+   const IconComponent =
+      iconMap[icon as keyof typeof iconMap] || ResumeGeneratorIcon;
 
    return (
       <div className="bg-(--color-background-card) rounded-[20px] border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">

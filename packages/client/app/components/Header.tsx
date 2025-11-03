@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import LogoIcon from './icons/LogoIcon';
-import ChevronDownIcon from './icons/ChevronDownIcon';
+import { LogoIcon } from './icons/icons';
 import { Button } from './Button';
 import type { NavigationItem } from '../types/schema';
 import { useNavigate } from 'react-router-dom';
@@ -14,13 +13,6 @@ export function Header({ navigation }: HeaderProps) {
    const navigate = useNavigate();
    const { isAuthenticated } = useAuthStore();
 
-   const handleGetStarted = () => {
-      if (isAuthenticated) {
-         navigate('/dashboard');
-      } else {
-         navigate('/auth');
-      }
-   };
    return (
       <header className="fixed top-0 left-0 right-0 z-50 bg-(--color-background-dark)/95 backdrop-blur-sm border-b border-(--color-border)">
          <div className="max-w-7xl mx-auto px-6 py-4">
@@ -42,13 +34,6 @@ export function Header({ navigation }: HeaderProps) {
                         className="flex items-center gap-1 text-sm font-medium text-(--color-text-muted) hover:text-(--color-text-primary) transition-colors"
                      >
                         {item.label}
-                        {item.hasDropdown && (
-                           <ChevronDownIcon
-                              width={7}
-                              height={4}
-                              color="rgba(255, 255, 255, 0.8)"
-                           />
-                        )}
                      </a>
                   ))}
                </nav>

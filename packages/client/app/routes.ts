@@ -10,8 +10,8 @@ export default [
 
    route('/auth', 'routes/auth.tsx'),
 
-   route('/auth/success', 'routes/AuthCallback.tsx'),
-   route('/auth/error', 'routes/AuthError.tsx'),
+   route('/auth/success', 'routes/authCallback.tsx'),
+   route('/auth/error', 'routes/authError.tsx'),
    layout('routes/protected-layout.tsx', [
       route('dashboard', 'routes/dashboard.tsx'),
    ]),

@@ -53,20 +53,21 @@ export class AuthController {
 
          if (!response.ok) {
             const errorText = await response.text();
-            request.log.error('Google API error:', errorText);
+            request.log.error({ msg: 'Google API error:', errorText });
             throw new Error(
                `Google API returned ${response.status}: ${errorText}`
             );
          }
 
          const googleUserInfo = (await response.json()) as GoogleUserInfo;
-         request.log.info('User info received from Google:', {
+         request.log.info({
+            msg: 'User info received from Google:',
             email: googleUserInfo.email,
          });
 
          // Find or create user
          const user = await AuthService.findOrCreateGoogleUser(googleUserInfo);
-         request.log.info('User found/created:', { userId: user._id });
+         request.log.info({ msg: 'User found/created:', userId: user._id });
 
          // Generate JWT token
          const jwtToken = request.server.jwt.sign({

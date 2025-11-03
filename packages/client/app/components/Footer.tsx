@@ -1,10 +1,9 @@
-import LogoIcon from './icons/LogoIcon';
-import TwitterIcon from './icons/TwitterIcon';
-import InstagramIcon from './icons/InstagramIcon';
-import FacebookIcon from './icons/FacebookIcon';
-import LinkedInIcon from './icons/LinkedInIcon';
-import YouTubeIcon from './icons/YouTubeIcon';
-import GitHubIcon from './icons/GitHubIcon';
+import { LogoIcon } from './icons/icons';
+import { TwitterIcon } from './icons/icons';
+import { InstagramIcon } from './icons/icons';
+import { FacebookIcon } from './icons/icons';
+import { LinkedInIconLight } from './icons/icons';
+import { YouTubeIcon } from './icons/icons';
 import type { FooterData } from '../types/schema';
 
 interface FooterProps {
@@ -15,9 +14,8 @@ const socialIconMap = {
    twitter: TwitterIcon,
    instagram: InstagramIcon,
    facebook: FacebookIcon,
-   linkedin: LinkedInIcon,
+   linkedin: LinkedInIconLight,
    youtube: YouTubeIcon,
-   github: GitHubIcon,
 };
 
 export function Footer({ footer }: FooterProps) {

@@ -1,4 +1,4 @@
-import CheckmarkIcon from './icons/CheckmarkIcon';
+import { CheckIcon } from './icons/icons';
 import { Button } from './Button';
 import type { PricingPlan } from '../types/schema';
 
@@ -54,7 +54,7 @@ export function PricingCard({
             {features.map((feature, index) => (
                <div key={index} className="flex items-start gap-3">
                   <div className="flex-shrink-0 mt-0.5">
-                     <CheckmarkIcon width={19} height={19} color="#00c4cc" />
+                     <CheckIcon width={20} height={20} color="#00c4cc" />
                   </div>
                   <span className="text-base text-(--color-text-muted)">
                      {feature}

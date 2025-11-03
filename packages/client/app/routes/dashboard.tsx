@@ -1,55 +1,88 @@
-import { useAuthStore } from '../../store/useAuthStore';
 import { useNavigate } from 'react-router';
+import { useAuthStore } from '../../store/useAuthStore';
+import { DashboardSidebar } from '../components/DashboardSidebar';
+import { DashboardHeader } from '../components/DashboardHeader';
+import { DashboardFeatureCard } from '../components/DashboardFeatureCard';
+import { DashboardQuickTips } from '../components/DashboardQuickTips';
+import { ResumeGeneratorIcon } from '../components/icons/icons';
+import { ResumeAnalyzerIcon } from '../components/icons/icons';
+import { CoverLetterIcon } from '../components/icons/icons';
+import { InterviewPrepIcon } from '../components/icons/icons';
 
 export default function Dashboard() {
-   const { user, logout } = useAuthStore();
+   const { user } = useAuthStore();
    const navigate = useNavigate();
 
-   const handleLogout = async () => {
-      await logout();
-      navigate('/auth', { replace: true });
-   };
+   if (!user) {
+      return null;
+   }
+
+   const features = [
+      {
+         icon: <ResumeGeneratorIcon width={28} height={28} color="white" />,
+         title: 'AI Resume Generator',
+         description:
+            'Create a professional resume tailored to specific job descriptions.',
+         buttonText: 'Start Generating',
+         onClick: () => navigate('/resume-generator'),
+      },
+      {
+         icon: <ResumeAnalyzerIcon width={28} height={28} color="white" />,
+         title: 'AI Resume Analyzer',
+         description:
+            "Get instant feedback on your resume's strengths and weaknesses.",
+         buttonText: 'Analyze Now',
+         onClick: () => navigate('/resume-analyzer'),
+      },
+      {
+         icon: <CoverLetterIcon width={28} height={28} color="white" />,
+         title: 'AI Cover Letter Generator',
+         description: 'Craft compelling cover letters that stand out.',
+         buttonText: 'Start Crafting',
+         onClick: () => navigate('/cover-letter'),
+      },
+      {
+         icon: <InterviewPrepIcon width={28} height={28} color="white" />,
+         title: 'Interview Coach',
+         description:
+            'Practice common interview questions and get AI-driven feedback.',
+         buttonText: 'Practice Now',
+         onClick: () => navigate('/interview-prep'),
+      },
+   ];
 
    return (
-      <div className="min-h-screen bg-[#10141E] p-8">
-         <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-[#2A2D42] to-[#1A1D2A] p-8 rounded-2xl border border-gray-700/50">
-               <div className="flex items-center justify-between mb-6">
-                  <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                  <button
-                     onClick={handleLogout}
-                     className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30"
-                  >
-                     Logout
-                  </button>
-               </div>
+      <div className="flex flex-col lg:flex-row min-h-screen bg-background-dark relative overflow-hidden">
+         {/* Gradient Blur Effects */}
+         <div className="absolute top-[-125px] left-[-125px] w-[250px] h-[250px] gradient-blur-cyan pointer-events-none" />
+         <div className="absolute bottom-[-125px] right-[-125px] w-[250px] h-[250px] gradient-blur-purple pointer-events-none" />
 
-               <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                     {user?.avatar ? (
-                        <img
-                           src={user.avatar}
-                           alt={user.name}
-                           className="w-16 h-16 rounded-full"
+         {/* Sidebar */}
+         <aside className="w-full lg:w-80 flex-shrink-0">
+            <DashboardSidebar />
+         </aside>
+         {/* Main Content */}
+         <main className="flex-1 flex flex-col border-l-2 border-border relative z-10">
+            {/* Center Content */}
+            <div className="flex-1 flex flex-col">
+               <DashboardHeader user={user} />
+               <div className="flex flex-col lg:flex-row gap-4 p-6">
+                  {/* Feature Cards Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
+                     {features.map((feature) => (
+                        <DashboardFeatureCard
+                           key={feature.title}
+                           {...feature}
                         />
-                     ) : (
-                        <div className="w-16 h-16 rounded-full bg-cyan-500 flex items-center justify-center text-white text-2xl font-bold">
-                           {user?.name.charAt(0).toUpperCase()}
-                        </div>
-                     )}
-                     <div>
-                        <h2 className="text-2xl font-bold text-white">
-                           {user?.name}
-                        </h2>
-                        <p className="text-gray-400">{user?.email}</p>
-                        <span className="inline-block mt-2 px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm">
-                           {user?.role}
-                        </span>
-                     </div>
+                     ))}
                   </div>
+                  {/* Right Sidebar - Quick Tips */}
+                  <aside className="w-full lg:w-80 flex-shrink-0 ">
+                     <DashboardQuickTips />
+                  </aside>
                </div>
             </div>
-         </div>
+         </main>
       </div>
    );
 }

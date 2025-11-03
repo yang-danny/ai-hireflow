@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-// import LogoIcon from '../components/icons/LogoIcon';
 import {
    GithubIcon,
    GoogleIcon,
@@ -67,9 +66,10 @@ const SocialButton = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="cursor-pointer flex items-center justify-center w-full py-3 px-4 border border-gray-700 rounded-lg text-gray-300 border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]"
+      className="cursor-pointer flex items-center justify-center w-full h-14 py-3 px-4 border border-gray-700 rounded-lg text-gray-300 border-2 border-(--color-border) hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]"
    >
       {icon}
+
       <span className="ml-3 font-medium">{text}</span>
    </button>
 );
@@ -317,19 +317,19 @@ const Auth = () => {
 
                <div className="space-y-4">
                   <SocialButton
-                     icon={<GoogleIcon />}
+                     icon={<GoogleIcon className="w-6 h-6" />}
                      text="Continue with Google"
                      onClick={handleGoogleLogin}
                      disabled={isLoading}
                   />
                   <SocialButton
-                     icon={<LinkedInIcon />}
+                     icon={<LinkedInIcon className="w-6 h-6" />}
                      text="Continue with LinkedIn"
                      onClick={() => alert('LinkedIn login coming soon!')}
                      disabled={isLoading}
                   />
                   <SocialButton
-                     icon={<GithubIcon />}
+                     icon={<GithubIcon className="w-6 h-6" />}
                      text="Continue with GitHub"
                      onClick={() => alert('GitHub login coming soon!')}
                      disabled={isLoading}
