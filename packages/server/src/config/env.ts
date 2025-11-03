@@ -61,7 +61,7 @@ export const envSchema = {
       },
       GOOGLE_REDIRECT_URI: {
          type: 'string',
-         default: 'http://localhost:5000/api/auth/google/callback',
+         default: 'http://localhost:3000/api/auth/google/callback',
       },
       FRONTEND_URL: {
          type: 'string',

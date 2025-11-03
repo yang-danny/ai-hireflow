@@ -1,6 +1,6 @@
 import User, { IUserDocument } from '../models/User.model.js';
 import bcrypt from 'bcrypt';
-import type { GoogleUserInfo } from '../types/index.js';
+import type { GoogleUserInfo, LinkedInUserInfo } from '../types/oauth.js';
 
 export class AuthService {
    /**
@@ -111,6 +111,58 @@ export class AuthService {
       // Update last login
       user.lastLogin = new Date();
       await user.save();
+
+      return user;
+   }
+
+   /**
+    * Find or create user from LinkedIn OAuth
+    */
+   static async findOrCreateLinkedInUser(
+      linkedinUserInfo: LinkedInUserInfo
+   ): Promise<IUserDocument> {
+      const {
+         id: linkedinId,
+         email,
+         localizedFirstName,
+         localizedLastName,
+         profilePicture,
+      } = linkedinUserInfo;
+
+      const name = `${localizedFirstName} ${localizedLastName}`;
+
+      // Try to find user by LinkedIn ID
+      let user = await User.findOne({ linkedinId });
+
+      if (user) {
+         // Update last login
+         user.lastLogin = new Date();
+         await user.save();
+         return user;
+      }
+
+      // Try to find user by email (link existing account)
+      user = await User.findOne({ email });
+
+      if (user) {
+         // Link LinkedIn account to existing user
+         user.linkedinId = linkedinId;
+         user.avatar = profilePicture || user.avatar;
+         user.lastLogin = new Date();
+         await user.save();
+         return user;
+      }
+
+      // Create new user
+      user = await User.create({
+         email,
+         name,
+         linkedinId,
+         avatar: profilePicture,
+         isEmailVerified: true, // LinkedIn email is considered verified
+         lastLogin: new Date(),
+         role: 'candidate',
+      });
 
       return user;
    }

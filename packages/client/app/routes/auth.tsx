@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { GithubIcon, GoogleIcon, LogoIcon } from '../components/icons/icons';
+// import LogoIcon from '../components/icons/LogoIcon';
+import {
+   GithubIcon,
+   GoogleIcon,
+   LinkedInIcon,
+   LogoIcon,
+} from '../components/icons/icons';
 import { useAuthStore } from '../../store/useAuthStore';
 
 const InputField = ({
@@ -61,7 +67,7 @@ const SocialButton = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex items-center justify-center w-full py-3 px-4 border border-gray-700 rounded-lg text-gray-300 hover:bg-[#2C3149]/50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="cursor-pointer flex items-center justify-center w-full py-3 px-4 border border-gray-700 rounded-lg text-gray-300 border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]"
    >
       {icon}
       <span className="ml-3 font-medium">{text}</span>
@@ -188,16 +194,19 @@ const Auth = () => {
       error || (urlError ? decodeURIComponent(urlError) : null);
 
    return (
-      <div className="bg-[#10141E] min-h-screen flex items-center justify-center p-4 font-sans text-gray-200">
+      <div className="bg-(--color-background-dark) min-h-screen flex items-center justify-center p-4 font-sans text-gray-200">
          <div className="w-full max-w-md">
-            <div className="bg-gradient-to-br from-[#2A2D42] to-[#1A1D2A] p-8 rounded-2xl border border-gray-700/50 shadow-2xl shadow-cyan-500/5">
-               <div className="text-center mb-8">
-                  <div className="flex justify-center items-center space-x-3 mb-4">
-                     <LogoIcon />
-                     <span className="text-2xl font-bold text-white">
+            <div className="bg-gradient-to-br bg-(--color-background-card) to-[#1A1D2A] p-8 rounded-2xl border border-gray-700/50 shadow-2xl shadow-cyan-500/5">
+               <div className="text-center items-center mb-8">
+                  <a
+                     href="/"
+                     className="flex items-center justify-center mb-6 gap-3"
+                  >
+                     <LogoIcon width={28} height={28} color="#00c4cc" />
+                     <span className="text-xl font-semibold bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent tracking-tight">
                         AI HireFlow
                      </span>
-                  </div>
+                  </a>
                   <h2 className="text-3xl font-bold text-white">
                      {isSignIn ? 'Welcome Back' : 'Create an Account'}
                   </h2>
@@ -311,6 +320,12 @@ const Auth = () => {
                      icon={<GoogleIcon />}
                      text="Continue with Google"
                      onClick={handleGoogleLogin}
+                     disabled={isLoading}
+                  />
+                  <SocialButton
+                     icon={<LinkedInIcon />}
+                     text="Continue with LinkedIn"
+                     onClick={() => alert('LinkedIn login coming soon!')}
                      disabled={isLoading}
                   />
                   <SocialButton

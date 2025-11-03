@@ -1,38 +1,20 @@
-import React from 'react';
-
-export const LogoIcon = () => (
+import type { SVGProps } from 'react';
+const LogoIcon = (props: SVGProps<SVGSVGElement>) => (
    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 21.389 21.389"
+      {...props}
    >
       <path
-         d="M12 2L2 7L12 12L22 7L12 2Z"
-         stroke="#00F5D4"
-         strokeWidth="2"
-         strokeLinecap="round"
-         strokeLinejoin="round"
-      />
-      <path
-         d="M2 17L12 22L22 17"
-         stroke="#00F5D4"
-         strokeWidth="2"
-         strokeLinecap="round"
-         strokeLinejoin="round"
-      />
-      <path
-         d="M2 12L12 17L22 12"
-         stroke="#00F5D4"
-         strokeWidth="2"
-         strokeLinecap="round"
-         strokeLinejoin="round"
+         xmlns="http://www.w3.org/2000/svg"
+         fill="currentColor"
+         d="m17.5 7.775-1.215-2.67-2.674-1.22 2.674-1.21L17.5.005l1.215 2.67 2.674 1.21-2.674 1.22zm0 13.61-1.215-2.67-2.674-1.21 2.674-1.22 1.215-2.67 1.215 2.67 2.674 1.22-2.674 1.21zm-9.722-2.91-2.43-5.35L0 10.695l5.347-2.43 2.43-5.35 2.431 5.35 5.347 2.43-5.347 2.43zm0-4.72.972-2.09 2.09-.97-2.09-.97-.972-2.09-.972 2.09-2.09.97 2.09.97z"
       />
    </svg>
 );
 
-export const HomeIcon = ({ className }: { className?: string }) => (
+const HomeIcon = ({ className }: { className?: string }) => (
    <svg
       className={className}
       width="24"
@@ -58,7 +40,7 @@ export const HomeIcon = ({ className }: { className?: string }) => (
    </svg>
 );
 
-export const ResumeIcon = ({ className }: { className?: string }) => (
+const ResumeIcon = ({ className }: { className?: string }) => (
    <svg
       className={className}
       width="24"
@@ -105,7 +87,7 @@ export const ResumeIcon = ({ className }: { className?: string }) => (
    </svg>
 );
 
-export const CoverLetterIcon = ({ className }: { className?: string }) => (
+const CoverLetterIcon = ({ className }: { className?: string }) => (
    <svg
       className={className}
       width="24"
@@ -131,7 +113,7 @@ export const CoverLetterIcon = ({ className }: { className?: string }) => (
    </svg>
 );
 
-export const InterviewIcon = ({ className }: { className?: string }) => (
+const InterviewIcon = ({ className }: { className?: string }) => (
    <svg
       className={className}
       width="24"
@@ -171,7 +153,7 @@ export const InterviewIcon = ({ className }: { className?: string }) => (
    </svg>
 );
 
-export const SettingsIcon = ({ className }: { className?: string }) => (
+const SettingsIcon = ({ className }: { className?: string }) => (
    <svg
       className={className}
       width="24"
@@ -197,7 +179,7 @@ export const SettingsIcon = ({ className }: { className?: string }) => (
    </svg>
 );
 
-export const BellIcon = () => (
+const BellIcon = () => (
    <svg
       width="24"
       height="24"
@@ -222,7 +204,7 @@ export const BellIcon = () => (
    </svg>
 );
 
-export const LightbulbIcon = () => (
+const LightbulbIcon = () => (
    <svg
       width="24"
       height="24"
@@ -254,7 +236,7 @@ export const LightbulbIcon = () => (
    </svg>
 );
 
-export const CheckIcon = () => (
+const CheckIcon = () => (
    <svg
       width="24"
       height="24"
@@ -279,7 +261,7 @@ export const CheckIcon = () => (
    </svg>
 );
 
-export const StarIcon = () => (
+const StarIcon = () => (
    <svg
       width="24"
       height="24"
@@ -297,7 +279,7 @@ export const StarIcon = () => (
    </svg>
 );
 
-export const SearchIcon = () => (
+const SearchIcon = () => (
    <svg
       width="24"
       height="24"
@@ -322,7 +304,7 @@ export const SearchIcon = () => (
    </svg>
 );
 
-export const MicIcon = ({ className }: { className?: string }) => (
+const MicIcon = ({ className }: { className?: string }) => (
    <svg
       className={className}
       width="24"
@@ -362,7 +344,7 @@ export const MicIcon = ({ className }: { className?: string }) => (
    </svg>
 );
 
-export const GoogleIcon = () => (
+const GoogleIcon = () => (
    <svg
       className="w-5 h-5"
       viewBox="0 0 48 48"
@@ -388,18 +370,60 @@ export const GoogleIcon = () => (
       />
    </svg>
 );
-
-export const GithubIcon = () => (
+const GithubIcon = () => (
    <svg
       className="w-5 h-5"
-      viewBox="0 0 24 24"
-      fill="currentColor"
+      viewBox="0 0 48 48"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
    >
       <path
          fillRule="evenodd"
          clipRule="evenodd"
-         d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.82c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.852 0 1.338-.012 2.419-.012 2.747 0 .268.18.578.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"
+         d="M24 4C12.954 4 4 12.954 4 24C4 32.995 9.627 40.559 17.481 43.244C18.481 43.427 18.852 42.821 18.852 42.296C18.852 41.822 18.835 40.337 18.826 38.764C13.216 39.968 12.052 36.347 12.052 36.347C11.139 33.989 9.843 33.385 9.843 33.385C8.035 32.155 9.983 32.178 9.983 32.178C11.983 32.317 13.028 34.216 13.028 34.216C14.804 37.221 17.647 36.345 18.889 35.837C19.067 34.554 19.583 33.679 20.156 33.181C15.903 32.678 11.428 31.002 11.428 23.098C11.428 20.864 12.212 19.041 13.069 17.608C12.868 17.105 12.189 15.137 13.258 12.459C13.258 12.459 14.933 11.926 18.806 14.568C20.414 14.131 22.114 13.912 23.806 13.904C25.498 13.912 27.199 14.131 28.809 14.568C32.68 11.926 34.353 12.459 34.353 12.459C35.424 15.137 34.745 17.105 34.544 17.608C35.403 19.041 36.184 20.864 36.184 23.098C36.184 31.021 31.703 32.673 27.44 33.166C28.157 33.787 28.784 35.015 28.784 36.889C28.784 39.545 28.761 41.685 28.761 42.296C28.761 42.825 29.126 43.435 30.141 43.242C37.992 40.554 43.613 32.993 43.613 24C43.613 12.954 34.659 4 23.613 4H24Z"
+         fill="#181717"
       />
    </svg>
 );
+
+// LinkedIn Icon
+const LinkedInIcon = () => (
+   <svg
+      className="w-5 h-5"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+   >
+      <path
+         d="M41.7 4H6.3C5.03 4 4 5.03 4 6.3V41.7C4 42.97 5.03 44 6.3 44H41.7C42.97 44 44 42.97 44 41.7V6.3C44 5.03 42.97 4 41.7 4Z"
+         fill="#0A66C2"
+      />
+      <path d="M13.2 18.6H8.4V39.6H13.2V18.6Z" fill="white" />
+      <path
+         d="M10.8 8.4C9.13 8.4 7.8 9.73 7.8 11.4C7.8 13.07 9.13 14.4 10.8 14.4C12.47 14.4 13.8 13.07 13.8 11.4C13.8 9.73 12.47 8.4 10.8 8.4Z"
+         fill="white"
+      />
+      <path
+         d="M34.8 18C31.67 18 29.47 19.43 28.5 20.82V18.6H23.7V39.6H28.5V28.5C28.5 26.13 29.1 23.88 32.1 23.88C35.07 23.88 35.1 26.55 35.1 28.68V39.6H39.9V27.57C39.9 23.28 38.97 18 34.8 18Z"
+         fill="white"
+      />
+   </svg>
+);
+
+export {
+   LogoIcon,
+   HomeIcon,
+   ResumeIcon,
+   CoverLetterIcon,
+   InterviewIcon,
+   SettingsIcon,
+   BellIcon,
+   LightbulbIcon,
+   CheckIcon,
+   StarIcon,
+   SearchIcon,
+   MicIcon,
+   GoogleIcon,
+   GithubIcon,
+   LinkedInIcon,
+};

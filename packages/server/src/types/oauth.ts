@@ -1,8 +1,15 @@
-export interface GoogleOAuth2Token {
-   access_token: string;
-   token_type: string;
-   expires_in: number;
-   refresh_token?: string;
-   scope: string;
-   id_token?: string;
+export interface GoogleUserInfo {
+   sub: string;
+   email: string;
+   name: string;
+   picture?: string;
+   email_verified?: boolean;
 }
+
+// export interface LinkedInUserInfo {
+//    id: string;
+//    localizedFirstName: string;
+//    localizedLastName: string;
+//    email: string;
+//    profilePicture: string;
+// }

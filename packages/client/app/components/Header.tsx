@@ -53,35 +53,28 @@ export function Header({ navigation }: HeaderProps) {
                   ))}
                </nav>
 
-               {/* Action Buttons */}
-               {/* <div className="hidden md:flex items-center gap-4">
-            <button className="text-sm font-bold border-2 px-6 py-2.5 my-1 rounded-lg text-(--color-primary) hover:text-(--color-primary-dark) transition-colors">
-              Login
-            </button>
-            <Button variant="primary">Start Now</Button>
-          </div> */}
                {isAuthenticated ? (
                   <button
                      onClick={() => navigate('/dashboard')}
-                     className="px-4 py-2 bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-cyan-500/40 transition-shadow"
+                     className="px-4 py-2 bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-medium rounded-lg hover:cursor-pointer shadow-lg hover:shadow-cyan-500/40 transition-shadow"
                   >
                      Dashboard
                   </button>
                ) : (
-                  <>
+                  <div className="hidden md:flex items-center gap-4">
                      <button
                         onClick={() => navigate('/auth')}
-                        className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
+                        className="text-sm font-bold border-2 px-6 py-2.5 my-1 rounded-lg text-(--color-primary) hover:cursor-pointer text-(--color-primary-dark) transition-colors"
                      >
                         Sign In
                      </button>
                      <button
                         onClick={() => navigate('/auth')}
-                        className="px-4 py-2 bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-cyan-500/40 transition-shadow"
+                        className="px-4 py-2 bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-medium rounded-lg hover:cursor-pointer shadow-lg hover:shadow-cyan-500/40 transition-shadow"
                      >
                         Get Started
                      </button>
-                  </>
+                  </div>
                )}
                {/* Mobile Menu Button */}
                <button

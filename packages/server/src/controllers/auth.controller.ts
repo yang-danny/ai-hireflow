@@ -1,13 +1,6 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { AuthService } from '../services/auth.service.js';
-
-interface GoogleUserInfo {
-   sub: string;
-   email: string;
-   name: string;
-   picture?: string;
-   email_verified?: boolean;
-}
+import type { GoogleUserInfo } from '../types/oauth.js';
 
 interface RegisterBody {
    email: string;

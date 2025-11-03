@@ -6,6 +6,7 @@ export interface IUserDocument extends Document {
    name: string;
    avatar?: string;
    googleId?: string;
+   linkedinId?: string;
    password?: string;
    role: 'admin' | 'recruiter' | 'candidate';
    isEmailVerified: boolean;
@@ -39,6 +40,12 @@ const UserSchema = new Schema<IUserDocument>(
          unique: true,
          index: true,
       },
+      linkedinId: {
+         type: String,
+         sparse: true,
+         unique: true,
+         index: true,
+      },
       password: {
          type: String,
          select: false,
@@ -63,6 +70,6 @@ const UserSchema = new Schema<IUserDocument>(
 );
 
 // Index for faster queries
-UserSchema.index({ email: 1, googleId: 1 });
+UserSchema.index({ email: 1, googleId: 1, linkedinId: 1 });
 
 export default mongoose.model<IUserDocument>('User', UserSchema);
