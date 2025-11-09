@@ -24,7 +24,7 @@ export default function Dashboard() {
          description:
             'Create a professional resume tailored to specific job descriptions.',
          buttonText: 'Start Generating',
-         onClick: () => navigate('/resume-generator'),
+         onClick: () => navigate('/resume'),
       },
       {
          icon: <ResumeAnalyzerIcon width={28} height={28} color="white" />,

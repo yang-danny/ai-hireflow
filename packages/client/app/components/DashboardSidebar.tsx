@@ -55,7 +55,7 @@ export function DashboardSidebar() {
             <ResumeGeneratorIcon width={16} height={16} color="currentColor" />
          ),
          label: 'AI Resume Generator',
-         href: '/resume-generator',
+         href: '/resume',
       },
       {
          icon: (

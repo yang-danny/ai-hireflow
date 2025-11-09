@@ -14,5 +14,7 @@ export default [
    route('/auth/error', 'routes/authError.tsx'),
    layout('routes/protected-layout.tsx', [
       route('dashboard', 'routes/dashboard.tsx'),
+      route('resume', 'routes/resume.tsx'),
+      route('resume-generator', 'routes/resume-generator.tsx'),
    ]),
 ] satisfies RouteConfig;

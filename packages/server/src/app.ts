@@ -13,6 +13,7 @@ import oauthPlugin from './plugins/oauth.plugin.js';
 import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
+import resumeRoutes from './routes/resume.routes.js';
 
 export async function buildApp(): Promise<FastifyInstance> {
    const fastify = Fastify({
@@ -47,7 +48,6 @@ export async function buildApp(): Promise<FastifyInstance> {
    await fastify.register(databasePlugin);
    await fastify.register(jwtPlugin);
    await fastify.register(oauthPlugin);
-
    // Root route
    fastify.get('/', async (request, reply) => {
       return {
@@ -56,15 +56,12 @@ export async function buildApp(): Promise<FastifyInstance> {
          version: '1.0.0',
          module: 'ESM',
          cors: 'enabled',
-      };
-   });
-
-   // CORS test endpoint
-   fastify.get('/test-cors', async (request, reply) => {
-      return {
-         success: true,
-         message: 'CORS is working!',
-         origin: request.headers.origin,
+         endpoints: {
+            health: '/api/health',
+            auth: '/api/auth',
+            users: '/api/users',
+            resumes: '/api/resumes', // NEW
+         },
       };
    });
 
@@ -72,6 +69,7 @@ export async function buildApp(): Promise<FastifyInstance> {
    await fastify.register(healthRoutes, { prefix: '/api/health' });
    await fastify.register(authRoutes, { prefix: '/api/auth' });
    await fastify.register(userRoutes, { prefix: '/api/users' });
+   await fastify.register(resumeRoutes, { prefix: '/api/resumes' }); // NEW
 
    return fastify;
 }

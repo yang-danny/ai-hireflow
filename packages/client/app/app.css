@@ -43,6 +43,18 @@
    --spacing-container: 48px;
    --spacing-card-gap: 24px;
    --spacing-sidebar: 12px;
+
+   /* Resume Generator specific colors */
+   --color-form-background: #1f1f33;
+   --color-form-input-bg: #2a2a2e;
+   --color-form-label: #d1d5db;
+   --color-form-placeholder: #6b7280;
+   --color-step-inactive: #9ca3af;
+   --color-step-active-bg: rgba(0, 196, 204, 0.1);
+   --color-step-active-border: rgba(0, 196, 204, 0.3);
+   --color-preview-border: #374151;
+   --color-ai-enhance-start: #a855f7;
+   --color-ai-enhance-end: #7c3aed;
 }
 
 /* Custom utilities */
@@ -97,6 +109,21 @@
       var(--gradient-nav-active-start) 0%,
       var(--gradient-nav-active-end) 100%
    );
+}
+
+/* AI Enhance gradient button */
+@utility gradient-ai-enhance {
+   background: linear-gradient(90deg, #a855f7 0%, #7c3aed 100%);
+}
+
+/* Progress bar background */
+@utility progress-bar-bg {
+   background-color: #374151;
+}
+
+/* Progress bar fill */
+@utility progress-bar-fill {
+   background-color: #00c4cc;
 }
 
 /* Text styles */
