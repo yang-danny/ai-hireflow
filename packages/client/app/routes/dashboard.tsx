@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useState } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { DashboardSidebar } from '../components/DashboardSidebar';
 import { DashboardHeader } from '../components/DashboardHeader';
@@ -8,10 +8,14 @@ import { ResumeGeneratorIcon } from '../components/icons/icons';
 import { ResumeAnalyzerIcon } from '../components/icons/icons';
 import { CoverLetterIcon } from '../components/icons/icons';
 import { InterviewPrepIcon } from '../components/icons/icons';
+import Resume from './resume';
+import Analyzer from './analyzer';
+import CoverLetter from './coverLetter';
+import Interview from './interview';
 
 export default function Dashboard() {
    const { user } = useAuthStore();
-   const navigate = useNavigate();
+   const [activeComponent, setActiveComponent] = useState('home');
 
    if (!user) {
       return null;
@@ -24,7 +28,7 @@ export default function Dashboard() {
          description:
             'Create a professional resume tailored to specific job descriptions.',
          buttonText: 'Start Generating',
-         onClick: () => navigate('/resume'),
+         onClick: () => setActiveComponent('resume'),
       },
       {
          icon: <ResumeAnalyzerIcon width={28} height={28} color="white" />,
@@ -32,14 +36,14 @@ export default function Dashboard() {
          description:
             "Get instant feedback on your resume's strengths and weaknesses.",
          buttonText: 'Analyze Now',
-         onClick: () => navigate('/resume-analyzer'),
+         onClick: () => setActiveComponent('analyzer'),
       },
       {
          icon: <CoverLetterIcon width={28} height={28} color="white" />,
          title: 'AI Cover Letter Generator',
          description: 'Craft compelling cover letters that stand out.',
          buttonText: 'Start Crafting',
-         onClick: () => navigate('/cover-letter'),
+         onClick: () => setActiveComponent('coverLetter'),
       },
       {
          icon: <InterviewPrepIcon width={28} height={28} color="white" />,
@@ -47,9 +51,31 @@ export default function Dashboard() {
          description:
             'Practice common interview questions and get AI-driven feedback.',
          buttonText: 'Practice Now',
-         onClick: () => navigate('/interview-prep'),
+         onClick: () => setActiveComponent('interview'),
       },
    ];
+
+   const renderContent = () => {
+      switch (activeComponent) {
+         case 'resume':
+            return <Resume />;
+         case 'analyzer':
+            return <Analyzer />;
+         case 'coverLetter':
+            return <CoverLetter />;
+         case 'interview':
+            return <Interview />;
+         case 'home':
+         default:
+            return (
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
+                  {features.map((feature) => (
+                     <DashboardFeatureCard key={feature.title} {...feature} />
+                  ))}
+               </div>
+            );
+      }
+   };
 
    return (
       <div className="flex flex-col lg:flex-row min-h-screen bg-background-dark relative overflow-hidden">
@@ -59,7 +85,7 @@ export default function Dashboard() {
 
          {/* Sidebar */}
          <aside className="w-full lg:w-80 flex-shrink-0">
-            <DashboardSidebar />
+            <DashboardSidebar setActiveComponent={setActiveComponent} />
          </aside>
          {/* Main Content */}
          <main className="flex-1 flex flex-col border-l-2 border-border relative z-10">
@@ -67,15 +93,7 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-col">
                <DashboardHeader user={user} />
                <div className="flex flex-col lg:flex-row gap-4 p-6">
-                  {/* Feature Cards Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
-                     {features.map((feature) => (
-                        <DashboardFeatureCard
-                           key={feature.title}
-                           {...feature}
-                        />
-                     ))}
-                  </div>
+                  {renderContent()}
                   {/* Right Sidebar - Quick Tips */}
                   <aside className="w-full lg:w-80 flex-shrink-0 ">
                      <DashboardQuickTips />

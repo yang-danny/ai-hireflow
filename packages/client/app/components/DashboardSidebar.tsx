@@ -1,6 +1,6 @@
 import { useAuthStore } from '../../store/useAuthStore';
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { LogoIcon } from './icons/icons';
 import { HomeNavIcon } from './icons/icons';
 import { ResumeGeneratorIcon } from './icons/icons';
@@ -12,14 +12,14 @@ import { LogoutIcon } from './icons/icons';
 interface NavItemProps {
    icon: React.ReactNode;
    label: string;
-   href: string;
+   onClick: () => void;
    active?: boolean;
 }
 
-function NavItem({ icon, label, href, active = false }: NavItemProps) {
+function NavItem({ icon, label, onClick, active = false }: NavItemProps) {
    return (
-      <Link
-         to={href}
+      <button
+         onClick={onClick}
          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
             active
                ? 'gradient-nav-active text-white'
@@ -28,13 +28,13 @@ function NavItem({ icon, label, href, active = false }: NavItemProps) {
       >
          <div className="w-4 h-4 flex-shrink-0">{icon}</div>
          <span className="text-sm font-medium">{label}</span>
-      </Link>
+      </button>
    );
 }
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ setActiveComponent }) {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-   const location = useLocation();
+   const [activeItem, setActiveItem] = useState('home');
 
    const { logout } = useAuthStore();
    const navigate = useNavigate();
@@ -44,37 +44,42 @@ export function DashboardSidebar() {
       navigate('/');
    };
 
+   const handleNavClick = (component: string) => {
+      setActiveComponent(component);
+      setActiveItem(component);
+   };
+
    const navItems = [
       {
          icon: <HomeNavIcon width={16} height={16} color="currentColor" />,
          label: 'Home',
-         href: '/dashboard',
+         component: 'home',
       },
       {
          icon: (
             <ResumeGeneratorIcon width={16} height={16} color="currentColor" />
          ),
          label: 'AI Resume Generator',
-         href: '/resume',
+         component: 'resume',
       },
       {
          icon: (
             <ResumeAnalyzerIcon width={16} height={16} color="currentColor" />
          ),
          label: 'AI Resume Analyzer',
-         href: '/resume-analyzer',
+         component: 'analyzer',
       },
       {
          icon: <CoverLetterIcon width={16} height={16} color="currentColor" />,
          label: 'AI Cover Letter Generator',
-         href: '/cover-letter',
+         component: 'coverLetter',
       },
       {
          icon: (
             <InterviewPrepIcon width={16} height={16} color="currentColor" />
          ),
          label: 'AI Interview Preparation',
-         href: '/interview-prep',
+         component: 'interview',
       },
    ];
 
@@ -91,8 +96,10 @@ export function DashboardSidebar() {
             {navItems.map((item) => (
                <NavItem
                   key={item.label}
-                  {...item}
-                  active={location.pathname === item.href}
+                  icon={item.icon}
+                  label={item.label}
+                  onClick={() => handleNavClick(item.component)}
+                  active={activeItem === item.component}
                />
             ))}
          </nav>

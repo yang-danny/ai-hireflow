@@ -15,6 +15,6 @@ export default [
    layout('routes/protected-layout.tsx', [
       route('dashboard', 'routes/dashboard.tsx'),
       route('resume', 'routes/resume.tsx'),
-      route('resume-generator', 'routes/resume-generator.tsx'),
+      route('resume-generator', 'routes/resumeGenerator.tsx'),
    ]),
 ] satisfies RouteConfig;
