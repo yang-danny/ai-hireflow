@@ -155,31 +155,31 @@ export class ResumeService {
    /**
     * Duplicate resume
     */
-   static async duplicateResume(
-      resumeId: string,
-      userId: string
-   ): Promise<IResumeDocument> {
-      const originalResume = await Resume.findOne({
-         _id: resumeId,
-         userId,
-      });
+   // static async duplicateResume(
+   //    resumeId: string,
+   //    userId: string
+   // ): Promise<IResumeDocument> {
+   //    const originalResume = await Resume.findOne({
+   //       _id: resumeId,
+   //       userId,
+   //    });
 
-      if (!originalResume) {
-         throw new Error('Resume not found or not authorized');
-      }
+   //    if (!originalResume) {
+   //       throw new Error('Resume not found or not authorized');
+   //    }
 
-      const resumeObject = originalResume.toObject();
-      delete resumeObject._id;
-      delete resumeObject.createdAt;
-      delete resumeObject.updatedAt;
+   //    const resumeObject = originalResume.toObject();
+   //    delete resumeObject._id;
+   //    delete resumeObject.createdAt;
+   //    delete resumeObject.updatedAt;
 
-      const newResume = await Resume.create({
-         ...resumeObject,
-         title: `${resumeObject.title} (Copy)`,
-         public: false,
-         userId,
-      });
+   //    const newResume = await Resume.create({
+   //       ...resumeObject,
+   //       title: `${resumeObject.title} (Copy)`,
+   //       public: false,
+   //       userId,
+   //    });
 
-      return newResume;
-   }
+   //    return newResume;
+   // }
 }

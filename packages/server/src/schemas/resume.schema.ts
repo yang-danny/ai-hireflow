@@ -1,3 +1,15 @@
+export const uploadResumeSchema = {
+   consumes: ['multipart/form-data'],
+   body: {
+      type: 'object',
+      required: ['title', 'file'],
+      properties: {
+         title: { type: 'string' },
+         file: { type: 'object' },
+      },
+   },
+} as const;
+
 export const createResumeSchema = {
    body: {
       type: 'object',

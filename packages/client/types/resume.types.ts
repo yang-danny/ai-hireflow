@@ -1,3 +1,9 @@
+export interface ApiResponse<T> {
+   success: boolean;
+   message: string;
+   data: T;
+}
+
 export interface PersonalInfo {
    image?: File | string;
    full_name?: string;
@@ -51,4 +57,14 @@ export interface Resume {
    public: boolean;
    updatedAt?: string;
    createdAt?: string;
+}
+
+export interface GetResumesData {
+   resumes: Resume[];
+   pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      pages: number;
+   };
 }

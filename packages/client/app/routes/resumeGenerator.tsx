@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import UserIcon from '~/components/icons/UserIcon';
 import PersonalInfoForm from '~/components/PersonalInfoForm';
 import type { PersonalInfo, Resume } from '../../types/resume.types';
@@ -15,6 +15,7 @@ import {
    DownloadIcon,
    EyeIcon,
    EyeOffIcon,
+   FileType,
    Save,
    Share2Icon,
 } from 'lucide-react';
@@ -22,8 +23,8 @@ import api from '../../services/api';
 
 const ResumeGenerator = () => {
    const [resumeData, setResumeData] = useState<Resume>({
-      id: '',
-      title: 'Full Stack Developer',
+      _id: '',
+      title: '',
       personal_info: {},
       professional_summary: '',
       experience: [],
@@ -34,8 +35,16 @@ const ResumeGenerator = () => {
       accent_color: '#3b82f6',
       public: false,
    });
+   const location = useLocation();
+
+   useEffect(() => {
+      if (location.state && location.state.resume) {
+         setResumeData(location.state.resume);
+      }
+   }, [location.state]);
    const [activeSectionIndex, setActiveSectionIndex] = useState(0);
    const [isSaving, setIsSaving] = useState(false);
+   const [errors, setErrors] = useState<any>({});
    const [removeBackground, setRemoveBackground] = useState(false);
    const sections = [
       {
@@ -75,7 +84,7 @@ const ResumeGenerator = () => {
    };
    const handleShare = () => {
       const frontendURL = window.location.href.split('/app/')[0];
-      const resumeURL = frontendURL + '/view/' + resumeData.id;
+      const resumeURL = frontendURL + '/view/' + resumeData._id;
 
       if (navigator.share) {
          navigator.share({ url: resumeURL, text: 'My Resume' });
@@ -88,13 +97,32 @@ const ResumeGenerator = () => {
    };
 
    const handleSaveChanges = async () => {
+      const newErrors: any = {};
+      if (!resumeData.title) {
+         newErrors.title = 'Resume Title is required.';
+      }
+      if (!resumeData.personal_info.full_name) {
+         newErrors.full_name = 'Full Name is required.';
+      }
+      if (!resumeData.personal_info.email) {
+         newErrors.email = 'Email Address is required.';
+      }
+      if (!resumeData.personal_info.phone) {
+         newErrors.phone = 'Phone Number is required.';
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+         setErrors(newErrors);
+         return;
+      }
+      setErrors({});
       setIsSaving(true);
       try {
          let response;
-         if (resumeData.id) {
+         if (resumeData._id) {
             // Update existing resume
             response = await api.put(
-               `/api/resumes/${resumeData.id}`,
+               `/api/resumes/${resumeData._id}`,
                resumeData
             );
          } else {
@@ -186,6 +214,31 @@ const ResumeGenerator = () => {
                         </div>
                      </div>
                      <div className="space-y-6 p-4">
+                        <div className="flex flex-col justify-between border-b border-dashed border-gray-300">
+                           <label className="flex items-center gap-2 text-md font-bold text-gray-600">
+                              <FileType className="size-6" /> Resume Title:{' '}
+                              <span className="text-red-500">*</span>
+                           </label>
+                           <input
+                              type="text"
+                              value={resumeData.title || ''}
+                              onChange={(e) =>
+                                 setResumeData((prev) => ({
+                                    ...prev,
+                                    title: e.target.value,
+                                 }))
+                              }
+                              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors text-sm text-gray-600 "
+                              placeholder={`Enter resume title`}
+                              required={true}
+                           />
+                           {errors.title && (
+                              <p className="text-red-500 text-sm mt-1">
+                                 {errors.title}
+                              </p>
+                           )}
+                           <br className="text-gray-600" />
+                        </div>
                         {activeSection.id === 'personal' && (
                            <PersonalInfoForm
                               data={resumeData.personal_info}
@@ -195,6 +248,7 @@ const ResumeGenerator = () => {
                                     personal_info: data,
                                  }))
                               }
+                              errors={errors}
                               removeBackground={removeBackground}
                               setRemoveBackground={setRemoveBackground}
                            />
@@ -261,7 +315,7 @@ const ResumeGenerator = () => {
                         <button
                            onClick={handleSaveChanges}
                            disabled={isSaving}
-                           className="flex items-center gap-2 bg-gradient-to-br from-green-100 to bg-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                           className="cursor-pointer flex items-center gap-2 bg-gradient-to-br from-green-100 to bg-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                            <Save className="size-4" />
                            {isSaving ? 'Saving...' : 'Save Changes'}

@@ -5,9 +5,17 @@ import {
    updateResumeSchema,
    getResumeByIdSchema,
    getResumesSchema,
+   uploadResumeSchema,
 } from '../schemas/resume.schema.js';
 
 export default async function resumeRoutes(fastify: FastifyInstance) {
+   // Upload new resume (protected)
+   fastify.post('/upload', {
+      onRequest: [fastify.authenticate],
+      schema: uploadResumeSchema,
+      handler: ResumeController.uploadResume,
+   });
+
    // Get all resumes for logged-in user (protected)
    fastify.get('/', {
       onRequest: [fastify.authenticate],

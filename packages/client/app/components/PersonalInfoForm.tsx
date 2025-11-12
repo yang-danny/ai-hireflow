@@ -14,6 +14,7 @@ interface PersonalInfoFormProps {
    onChange: (data: PersonalInfo) => void;
    removeBackground: boolean;
    setRemoveBackground: React.Dispatch<React.SetStateAction<boolean>>;
+   errors: { [key: string]: string };
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
@@ -21,6 +22,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
    onChange,
    removeBackground,
    setRemoveBackground,
+   errors,
 }) => {
    const handleChange = (field: keyof PersonalInfo, value: any) => {
       onChange({ ...data, [field]: value });
@@ -74,7 +76,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
    ];
    return (
       <div>
-         <h3 className="text-lg m-4 font-semibold text-gray-900">
+         <h3 className="text-lg mb-2 font-semibold text-gray-900">
             Personal Information
          </h3>
          <p className="text-sm text-gray-600">
@@ -145,6 +147,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                      placeholder={`Enter your ${field.label.toLowerCase()}`}
                      required={field.required}
                   />
+                  {errors[field.key] && (
+                     <p className="text-red-500 text-sm mt-1">
+                        {errors[field.key]}
+                     </p>
+                  )}
                </div>
             );
          })}

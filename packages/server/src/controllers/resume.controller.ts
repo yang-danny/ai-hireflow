@@ -26,7 +26,47 @@ interface GetResumesQuery {
    public?: boolean;
 }
 
+interface UploadResumeBody {
+   title: string;
+   file: any;
+}
+
 export class ResumeController {
+   /**
+    * Upload a new resume
+    */
+   static async uploadResume(
+      request: FastifyRequest<{ Body: UploadResumeBody }>,
+      reply: FastifyReply
+   ) {
+      try {
+         const userId = request.user?.id;
+         if (!userId) {
+            return reply.status(401).send({
+               success: false,
+               message: 'Unauthorized',
+            });
+         }
+
+         const { title, file } = request.body;
+         const resume = await ResumeService.createResume(userId, {
+            title,
+            // Add other fields from the file if necessary
+         });
+
+         return reply.status(201).send({
+            success: true,
+            message: 'Resume uploaded successfully',
+            data: resume,
+         });
+      } catch (error: any) {
+         return reply.status(500).send({
+            success: false,
+            message: error.message,
+         });
+      }
+   }
+
    /**
     * Get all resumes for logged-in user
     */
