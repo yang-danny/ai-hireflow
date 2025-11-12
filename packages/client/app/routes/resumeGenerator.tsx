@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import UserIcon from '~/components/icons/UserIcon';
 import PersonalInfoForm from '~/components/PersonalInfoForm';
 import type { PersonalInfo, Resume } from '../../types/resume.types';
@@ -19,31 +19,40 @@ import {
    Save,
    Share2Icon,
 } from 'lucide-react';
-import api from '../../services/api';
+import { useResumeStore } from '../../store/useResumeStore';
 
 const ResumeGenerator = () => {
-   const [resumeData, setResumeData] = useState<Resume>({
-      _id: '',
-      title: '',
-      personal_info: {},
-      professional_summary: '',
-      experience: [],
-      education: [],
-      project: [],
-      skills: [],
-      template: 'classic',
-      accent_color: '#3b82f6',
-      public: false,
-   });
-   const location = useLocation();
+   const {
+      currentResume,
+      loading: isSaving,
+      error,
+      createResume,
+      updateResume,
+   } = useResumeStore();
+
+   const [localResume, setLocalResume] = useState<Resume>(
+      currentResume || {
+         _id: '',
+         title: '',
+         personal_info: {},
+         professional_summary: '',
+         experience: [],
+         education: [],
+         project: [],
+         skills: [],
+         template: 'classic',
+         accent_color: '#3b82f6',
+         public: false,
+      }
+   );
 
    useEffect(() => {
-      if (location.state && location.state.resume) {
-         setResumeData(location.state.resume);
+      if (currentResume) {
+         setLocalResume(currentResume);
       }
-   }, [location.state]);
+   }, [currentResume]);
+
    const [activeSectionIndex, setActiveSectionIndex] = useState(0);
-   const [isSaving, setIsSaving] = useState(false);
    const [errors, setErrors] = useState<any>({});
    const [removeBackground, setRemoveBackground] = useState(false);
    const sections = [
@@ -80,11 +89,11 @@ const ResumeGenerator = () => {
    ];
    const activeSection = sections[activeSectionIndex];
    const changeResumeVisibility = async () => {
-      setResumeData({ ...resumeData, public: !resumeData.public });
+      setLocalResume({ ...localResume, public: !localResume.public });
    };
    const handleShare = () => {
       const frontendURL = window.location.href.split('/app/')[0];
-      const resumeURL = frontendURL + '/view/' + resumeData._id;
+      const resumeURL = frontendURL + '/view/' + localResume._id;
 
       if (navigator.share) {
          navigator.share({ url: resumeURL, text: 'My Resume' });
@@ -98,16 +107,16 @@ const ResumeGenerator = () => {
 
    const handleSaveChanges = async () => {
       const newErrors: any = {};
-      if (!resumeData.title) {
+      if (!localResume.title) {
          newErrors.title = 'Resume Title is required.';
       }
-      if (!resumeData.personal_info.full_name) {
+      if (!localResume.personal_info.full_name) {
          newErrors.full_name = 'Full Name is required.';
       }
-      if (!resumeData.personal_info.email) {
+      if (!localResume.personal_info.email) {
          newErrors.email = 'Email Address is required.';
       }
-      if (!resumeData.personal_info.phone) {
+      if (!localResume.personal_info.phone) {
          newErrors.phone = 'Phone Number is required.';
       }
 
@@ -116,28 +125,15 @@ const ResumeGenerator = () => {
          return;
       }
       setErrors({});
-      setIsSaving(true);
-      try {
-         let response;
-         if (resumeData._id) {
-            // Update existing resume
-            response = await api.put(
-               `/api/resumes/${resumeData._id}`,
-               resumeData
-            );
-         } else {
-            // Create new resume
-            response = await api.post('/api/resumes', resumeData);
-         }
 
-         if (response.data?.data) {
-            setResumeData(response.data.data);
+      try {
+         if (localResume._id) {
+            await updateResume(localResume._id, localResume);
+         } else {
+            await createResume(localResume);
          }
       } catch (error) {
          console.error('Failed to save resume:', error);
-         // You might want to show an error message to the user
-      } finally {
-         setIsSaving(false);
       }
    };
 
@@ -166,18 +162,18 @@ const ResumeGenerator = () => {
                      <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
                         <div className="flex items-center gap-2 p-2">
                            <TemplateSelector
-                              selectedTemplete={resumeData.template}
+                              selectedTemplete={localResume.template}
                               onChange={(template: string) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     template,
                                  }))
                               }
                            />
                            <ColorPicker
-                              selectedColor={resumeData.accent_color}
+                              selectedColor={localResume.accent_color}
                               onChange={(accent_color: string) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     accent_color,
                                  }))
@@ -221,9 +217,9 @@ const ResumeGenerator = () => {
                            </label>
                            <input
                               type="text"
-                              value={resumeData.title || ''}
+                              value={localResume.title || ''}
                               onChange={(e) =>
-                                 setResumeData((prev) => ({
+                                 setLocalResume((prev) => ({
                                     ...prev,
                                     title: e.target.value,
                                  }))
@@ -241,9 +237,9 @@ const ResumeGenerator = () => {
                         </div>
                         {activeSection.id === 'personal' && (
                            <PersonalInfoForm
-                              data={resumeData.personal_info}
+                              data={localResume.personal_info}
                               onChange={(data: PersonalInfo) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     personal_info: data,
                                  }))
@@ -255,21 +251,21 @@ const ResumeGenerator = () => {
                         )}
                         {activeSection.id === 'summary' && (
                            <ProfessinalSummaryForm
-                              data={resumeData.professional_summary}
+                              data={localResume.professional_summary}
                               onChange={(data) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     professional_summary: data,
                                  }))
                               }
-                              setResumeData={setResumeData}
+                              setResumeData={setLocalResume}
                            />
                         )}
                         {activeSection.id === 'experience' && (
                            <ExperienceForm
-                              data={resumeData.experience}
+                              data={localResume.experience}
                               onChange={(data) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     experience: data,
                                  }))
@@ -278,9 +274,9 @@ const ResumeGenerator = () => {
                         )}
                         {activeSection.id === 'education' && (
                            <EducationForm
-                              data={resumeData.education}
+                              data={localResume.education}
                               onChange={(data) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     education: data,
                                  }))
@@ -289,9 +285,9 @@ const ResumeGenerator = () => {
                         )}
                         {activeSection.id === 'projects' && (
                            <ProjectForm
-                              data={resumeData.project}
+                              data={localResume.project}
                               onChange={(data) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     project: data,
                                  }))
@@ -301,9 +297,9 @@ const ResumeGenerator = () => {
 
                         {activeSection.id === 'skills' && (
                            <SkillsForm
-                              data={resumeData.skills}
+                              data={localResume.skills}
                               onChange={(data) =>
-                                 setResumeData((prev: Resume) => ({
+                                 setLocalResume((prev: Resume) => ({
                                     ...prev,
                                     skills: data,
                                  }))
@@ -328,7 +324,7 @@ const ResumeGenerator = () => {
                   {/* Buttons */}
                   <div className="relative w-full">
                      <div className="absolute bottom-3 left-0 right-0 flex items-center justify-end gap-2">
-                        {resumeData.public && (
+                        {localResume.public && (
                            <button
                               onClick={handleShare}
                               className="flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-blue-100 to bg-blue-200 ring-blue-300 text-blue-600 ring hover:ring transition-colors rounded-lg"
@@ -341,12 +337,12 @@ const ResumeGenerator = () => {
                            onClick={changeResumeVisibility}
                            className="flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-purple-100 to bg-purple-200 ring-purple-300 text-purple-600 ring hover:ring transition-colors rounded-lg"
                         >
-                           {resumeData.public ? (
+                           {localResume.public ? (
                               <EyeIcon className="size-4" />
                            ) : (
                               <EyeOffIcon className="size-4" />
                            )}
-                           {resumeData.public ? 'Public' : 'Private'}
+                           {localResume.public ? 'Public' : 'Private'}
                         </button>
                         <button
                            onClick={downloadResume}
@@ -359,9 +355,9 @@ const ResumeGenerator = () => {
                   </div>
                   {/* Resume Preview */}
                   <ResumePreview
-                     data={resumeData}
-                     template={resumeData.template}
-                     accentColor={resumeData.accent_color}
+                     data={localResume}
+                     template={localResume.template}
+                     accentColor={localResume.accent_color}
                   />
                </div>
             </div>

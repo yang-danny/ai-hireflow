@@ -10,11 +10,11 @@ import {
 
 export default async function resumeRoutes(fastify: FastifyInstance) {
    // Upload new resume (protected)
-   fastify.post('/upload', {
-      onRequest: [fastify.authenticate],
-      schema: uploadResumeSchema,
-      handler: ResumeController.uploadResume,
-   });
+   // fastify.post('/upload', {
+   //    onRequest: [fastify.authenticate],
+   //    schema: uploadResumeSchema,
+   //    handler: ResumeController.uploadResume,
+   // });
 
    // Get all resumes for logged-in user (protected)
    fastify.get('/', {
@@ -64,9 +64,9 @@ export default async function resumeRoutes(fastify: FastifyInstance) {
    });
 
    // Duplicate resume (protected)
-   fastify.post('/:id/duplicate', {
-      onRequest: [fastify.authenticate],
-      schema: getResumeByIdSchema,
-      handler: ResumeController.duplicateResume,
-   });
+   // fastify.post('/:id/duplicate', {
+   //    onRequest: [fastify.authenticate],
+   //    schema: getResumeByIdSchema,
+   //    handler: ResumeController.duplicateResume,
+   // });
 }

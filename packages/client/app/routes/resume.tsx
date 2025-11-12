@@ -1,80 +1,80 @@
 import {
    CloudUpload,
    FileUser,
-   PencilIcon,
    ShoppingBag,
    SquarePen,
    Trash2Icon,
    XIcon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { Resume } from '../../types/resume.types';
 import { useNavigate } from 'react-router-dom';
-import {
-   uploadResume,
-   getResumes,
-   deleteResume,
-} from '../../services/resume.service';
+import { useResumeStore } from '../../store/useResumeStore';
+import type { Resume } from '../../types/resume.types';
 
-export default function resume() {
-   const [allResumes, setAllResumes] = useState<Resume[]>([]);
+export default function ResumePage() {
+   const navigate = useNavigate();
+   const {
+      resumes,
+      loading,
+      error,
+      fetchResumes,
+      deleteResume,
+      setCurrentResume,
+      createResume,
+   } = useResumeStore();
 
    const [showUploadResume, setShowUploadResume] = useState<boolean>(false);
    const [title, setTitle] = useState<string>('');
-
    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-   const navigate = useNavigate();
 
-   const loadAllResumes = async () => {
-      try {
-         const response = await getResumes();
-         // The response from getResumes should be an array of resumes.
-         setAllResumes(Array.from(response));
-      } catch (error) {}
-   };
+   useEffect(() => {
+      fetchResumes();
+   }, [fetchResumes]);
 
-   const createResume = async (e: React.MouseEvent<HTMLButtonElement>) => {
+   const handleCreateResume = async (
+      e: React.MouseEvent<HTMLButtonElement>
+   ) => {
       e.preventDefault();
+      setCurrentResume(null);
       navigate('/resume-generator');
    };
 
-   useEffect(() => {
-      loadAllResumes();
-   }, []);
+   const handleEditResume = (resume: Resume) => {
+      setCurrentResume(resume);
+      navigate('/resume-generator');
+   };
 
    const handleUploadResume = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!selectedFile) return;
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('file', selectedFile);
 
+      // The user wants to process the file in the frontend.
+      // This requires a library to parse PDF/DOCX, which is not yet installed.
+      // For now, we will just create a new resume with the title.
       try {
-         const newResume = await uploadResume(formData);
-         setAllResumes([...(allResumes || []), newResume]);
+         await createResume({ title });
          setShowUploadResume(false);
          setTitle('');
          setSelectedFile(null);
       } catch (error) {
-         console.error('Failed to upload resume', error);
+         console.error('Failed to create resume', error);
       }
    };
 
-   const handleDeleteResume = async (id: string) => {
-      try {
-         await deleteResume(id);
-         setAllResumes(allResumes.filter((resume) => resume._id !== id));
-      } catch (error) {
-         console.error('Failed to delete resume', error);
-      }
-   };
+   if (loading) {
+      return <div>Loading...</div>;
+   }
+
+   if (error) {
+      return <div>Error: {error}</div>;
+   }
 
    return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
          <div className="w-84 h-64 cussor-pointer bg-(--color-background-card) rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
             <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
                <button
-                  onClick={createResume}
+                  onClick={handleCreateResume}
                   className="w-full  sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-white  cursor-pointer"
                >
                   <SquarePen className="size-18 transition-all duration-300 p-2.5 text-white rounded-full" />
@@ -168,39 +168,38 @@ export default function resume() {
                </div>
             </form>
          )}
-         {allResumes.map((resume) => {
-            return (
-               <div
-                  key={resume._id}
-                  onClick={() =>
-                     navigate('/resume-generator', { state: { resume } })
-                  }
-                  className="relative w-84 h-64 cussor-pointer bg-(--color-background-card) rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]"
-               >
-                  <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
-                     <button className="w-full  sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-white  cursor-pointer">
-                        <FileUser className="size-18 transition-all duration-300 p-2.5 text-white rounded-full" />
-                     </button>
+         {Array.isArray(resumes) &&
+            resumes.map((resume) => {
+               return (
+                  <div
+                     key={resume._id}
+                     onClick={() => handleEditResume(resume)}
+                     className="relative w-84 h-64 cussor-pointer bg-(--color-background-card) rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]"
+                  >
+                     <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
+                        <button className="w-full  sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-white  cursor-pointer">
+                           <FileUser className="size-18 transition-all duration-300 p-2.5 text-white rounded-full" />
+                        </button>
+                     </div>
+                     <p className="text-lg pt-4 group-hover: text-white transition-all duration-300">
+                        {resume.title}
+                     </p>
+                     <p className="absolute bottom-2 text-sm text-gray-400 px-2 text-center">
+                        Update on{' '}
+                        {new Date(resume.updatedAt || '').toLocaleDateString()}
+                     </p>
+                     <div className="absolute top-4 right-4 flex gap-2">
+                        <Trash2Icon
+                           className="text-white cursor-pointer hover:text-red-600 transition-all duration-300"
+                           onClick={(e) => {
+                              e.stopPropagation();
+                              deleteResume(resume._id);
+                           }}
+                        />
+                     </div>
                   </div>
-                  <p className="text-lg pt-4 group-hover: text-white transition-all duration-300">
-                     {resume.title}
-                  </p>
-                  <p className="absolute bottom-2 text-sm text-gray-400 px-2 text-center">
-                     Update on{' '}
-                     {new Date(resume.updatedAt || '').toLocaleDateString()}
-                  </p>
-                  <div className="absolute top-4 right-4 flex gap-2">
-                     <Trash2Icon
-                        className="text-white cursor-pointer hover:text-red-600 transition-all duration-300"
-                        onClick={(e) => {
-                           e.stopPropagation();
-                           handleDeleteResume(resume._id);
-                        }}
-                     />
-                  </div>
-               </div>
-            );
-         })}
+               );
+            })}
       </div>
    );
 }
