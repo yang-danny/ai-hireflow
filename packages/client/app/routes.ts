@@ -15,6 +15,7 @@ export default [
    layout('routes/protected-layout.tsx', [
       route('dashboard', 'routes/dashboard.tsx'),
       route('resume', 'routes/resume.tsx'),
+      route('resume-upload', 'routes/resume-upload.tsx'),
       route('resume-generator', 'routes/resumeGenerator.tsx'),
       route('resume-generator/:id', 'routes/resumeGenerator.tsx', {
          id: 'routes/resumeGeneratorId',

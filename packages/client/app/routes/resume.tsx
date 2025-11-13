@@ -88,7 +88,7 @@ export default function ResumePage() {
          <div className="w-84 h-64 cussor-pointer bg-(--color-background-card) rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
             <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
                <button
-                  onClick={() => setShowUploadResume(true)}
+                  onClick={() => navigate('/resume-upload')}
                   className="w-full  sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-2 text-white  cursor-pointer"
                >
                   <CloudUpload className="size-18 transition-all duration-300 p-2.5 text-white rounded-full" />
@@ -98,7 +98,7 @@ export default function ResumePage() {
                Upload Resume
             </p>
          </div>
-         {showUploadResume && (
+         {/* {showUploadResume && (
             <form
                onSubmit={handleUploadResume}
                onClick={(e) => e.stopPropagation()}
@@ -167,7 +167,7 @@ export default function ResumePage() {
                   />
                </div>
             </form>
-         )}
+         )} */}
          {Array.isArray(resumes) &&
             resumes.map((resume) => {
                return (
