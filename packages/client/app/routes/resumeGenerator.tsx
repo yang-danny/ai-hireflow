@@ -6,7 +6,7 @@ import type { PersonalInfo, Resume } from '../../types/resume.types';
 import ResumePreview from '~/components/ResumePreview';
 import TemplateSelector from '~/components/TemplateSelector';
 import ColorPicker from '~/components/ColorPicker';
-import ProfessinalSummaryForm from '~/components/ProfessinalSummaryForm';
+import ProfessinalSummaryForm from '~/components/ProfessionalSummaryForm';
 import ExperienceForm from '~/components/ExperienceForm';
 import EducationForm from '~/components/EducationForm';
 import ProjectForm from '~/components/ProjectForm';
@@ -18,6 +18,7 @@ import {
    FileType,
    Save,
    Share2Icon,
+   Undo2,
 } from 'lucide-react';
 import { useResumeStore } from '../../store/useResumeStore';
 
@@ -144,7 +145,7 @@ const ResumeGenerator = () => {
                to="/dashboard"
                className="inline-flex items-center text-sm font-medium text-(--color-primary) hover:underline mb-4"
             >
-               Back to Dashboard
+               <Undo2 className="size-6" />
             </Link>
          </div>
          <div className="max-w-7xl mx-auto px-4 pb-8">
@@ -258,7 +259,6 @@ const ResumeGenerator = () => {
                                     professional_summary: data,
                                  }))
                               }
-                              setResumeData={setLocalResume}
                            />
                         )}
                         {activeSection.id === 'experience' && (

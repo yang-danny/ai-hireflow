@@ -1,6 +1,7 @@
 import { Briefcase, Plus, Sparkle, Trash2 } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import type { Experience } from '../../types/resume.types';
+import { enhanceJobDescription } from '../utils/AI';
 
 interface ExperienceFormProps {
    data: Experience[];
@@ -8,6 +9,8 @@ interface ExperienceFormProps {
 }
 
 const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
+   const [isProcessing, setIsProcessing] = useState<number | null>(null);
+   const [error, setError] = useState<string | null>(null);
    const addExperience = () => {
       const newExperience: Experience = {
          company: '',
@@ -35,6 +38,26 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
       };
       onChange(updatedExperiences);
    };
+
+   const handleAIEnhance = async (index: number, description: string) => {
+      if (!description) {
+         setError('Please enter a description to enhance.');
+         return;
+      }
+      setError(null);
+      setIsProcessing(index);
+      try {
+         const enhancedDescription = await enhanceJobDescription(description);
+         updateExperience(index, 'description', enhancedDescription);
+      } catch (err: any) {
+         setError(
+            err.message || 'Failed to enhance description. Please try again.'
+         );
+      } finally {
+         setIsProcessing(null);
+      }
+   };
+
    return (
       <div className="space-y-6">
          <div className="flex items-center justify-between">
@@ -53,6 +76,11 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                <Plus className="size-4" /> Add Experience
             </button>
          </div>
+         {error && (
+            <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
+               <p className="text-red-400 text-sm">{error}</p>
+            </div>
+         )}
          {data.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
                <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
@@ -157,8 +185,24 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                            <label className="text-sm font-medium text-gray-500">
                               Description
                            </label>
-                           <button className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50">
-                              <Sparkle className="size-4" /> Enhance with AI
+                           <button
+                              onClick={() =>
+                                 handleAIEnhance(index, experience.description)
+                              }
+                              disabled={isProcessing === index}
+                              className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
+                           >
+                              {isProcessing === index ? (
+                                 <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-purple-500"></div>
+                                    Enhancing...
+                                 </>
+                              ) : (
+                                 <>
+                                    <Sparkle className="size-4" /> Enhance with
+                                    AI
+                                 </>
+                              )}
                            </button>
                         </div>
                         <textarea
@@ -171,7 +215,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  e.target.value
                               )
                            }
-                           className="w-full text-sm p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                           className="w-full text-sm p-2 border text-gray-500 border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                            placeholder="Describe your key responsibilities and achievements..."
                         />
                      </div>

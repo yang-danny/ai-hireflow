@@ -1,17 +1,12 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { processResumeWithAI } from '../utils/addTextToResume';
-// import { ResumeService } from '../services/resume.service';
+import { Link, useNavigate } from 'react-router';
+import { processResumeWithAI } from '../utils/AI';
 import { extractTextFromPDF } from '../utils/pdfExtractor';
 import { useResumeStore } from 'store/useResumeStore';
+import { Undo2 } from 'lucide-react';
 
 export default function ResumeUpload() {
-   const {
-      currentResume,
-      loading: isSaving,
-      createResume,
-      updateResume,
-   } = useResumeStore();
+   const { loading: isSaving, createResume } = useResumeStore();
    const navigate = useNavigate();
    const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -117,9 +112,15 @@ export default function ResumeUpload() {
    };
 
    return (
-      <div className="min-h-screen bg-[#10141E] p-8">
-         <div className="max-w-2xl mx-auto">
-            <div className="bg-gradient-to-br from-[#2A2D42] to-[#1A1D2A] p-8 rounded-2xl border border-gray-700/50">
+      <div className="min-h-screen pt-16">
+         <div className="max-w-lg mx-auto">
+            <Link
+               to="/dashboard"
+               className="inline-flex items-center text-sm font-medium text-(--color-primary) hover:underline mb-4"
+            >
+               <Undo2 className="size-6" />
+            </Link>
+            <div className="bg-gradient-to-br from-[#2A2D42] to-[#1A1D2A] p-8 rounded-2xl border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
                {/* Header */}
                <div className="mb-8">
                   <h1 className="text-3xl font-bold text-white mb-2">
@@ -264,7 +265,7 @@ export default function ResumeUpload() {
                   <button
                      onClick={handleUpload}
                      disabled={!title || !selectedFile || isProcessing}
-                     className="w-full bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:shadow-cyan-500/40 transition-shadow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                     className="cursor-pointer w-full bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:shadow-cyan-500/40 transition-shadow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                   >
                      {isProcessing ? (
                         <>
@@ -288,7 +289,7 @@ export default function ResumeUpload() {
                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                               ></path>
                            </svg>
-                           Processing...
+                           Processing...pleae wait...
                         </>
                      ) : (
                         'Upload and Process Resume'
@@ -299,7 +300,7 @@ export default function ResumeUpload() {
                   <button
                      onClick={() => navigate('/dashboard')}
                      disabled={isProcessing}
-                     className="w-full border border-gray-700 text-gray-300 font-medium py-3 px-6 rounded-xl hover:bg-gray-700/50 transition-colors disabled:opacity-50"
+                     className="cursor-pointer w-full border border-gray-700 text-gray-300 font-medium py-3 px-6 rounded-xl hover:bg-gray-700/50 transition-colors disabled:opacity-50"
                   >
                      Cancel
                   </button>

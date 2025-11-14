@@ -176,3 +176,129 @@ Important rules:
       }
    }
 }
+export async function enhanceProfessionalSummary(
+   currentSummary: string
+): Promise<string> {
+   if (!GEMINI_API_KEY) {
+      throw new Error(
+         'Gemini API key is not configured. Please add VITE_GEMINI_API_KEY to your .env file'
+      );
+   }
+
+   try {
+      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+      const safetySettings = [
+         {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_NONE',
+         },
+         {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_NONE',
+         },
+         {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_NONE',
+         },
+         {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_NONE',
+         },
+      ];
+      const model = genAI.getGenerativeModel({
+         model: 'gemini-2.5-flash', // Using flash for faster response
+         generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 4096, // Increased token limit
+         },
+         safetySettings,
+      });
+
+      const prompt = `
+You are a professional resume writer. Enhance and improve the following professional summary from a resume. Make it more compelling, concise, and impactful while retaining the original meaning.
+
+Current Professional Summary:
+"${currentSummary}"
+
+Provide only the enhanced professional summary as a raw string, without any markdown, headings, or introductory text.
+`;
+
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const enhancedSummary = response.text().trim();
+
+      if (!enhancedSummary) {
+         console.error('AI response was empty.', response);
+         throw new Error('AI returned an empty response. Please try again.');
+      }
+
+      return enhancedSummary;
+   } catch (error: any) {
+      console.error('Error enhancing professional summary with AI:', error);
+      // Re-throw the error to be caught by the calling component
+      throw error;
+   }
+}
+
+export async function enhanceJobDescription(
+   description: string
+): Promise<string> {
+   if (!GEMINI_API_KEY) {
+      throw new Error(
+         'Gemini API key is not configured. Please add VITE_GEMINI_API_KEY to your .env file'
+      );
+   }
+
+   try {
+      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+      const safetySettings = [
+         {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_NONE',
+         },
+         {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_NONE',
+         },
+         {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_NONE',
+         },
+         {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_NONE',
+         },
+      ];
+      const model = genAI.getGenerativeModel({
+         model: 'gemini-2.5-flash',
+         generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 2048,
+         },
+         safetySettings,
+      });
+
+      const prompt = `
+You are a professional resume writer. Enhance the following job description, focusing on achievements and impact. Use action verbs and quantify results where possible.
+
+Current Job Description:
+"${description}"
+
+Provide only the enhanced job description as a raw string, without any markdown, headings, or introductory text.
+`;
+
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const enhancedDescription = response.text().trim();
+
+      if (!enhancedDescription) {
+         console.error('AI response was empty.', response);
+         throw new Error('AI returned an empty response. Please try again.');
+      }
+
+      return enhancedDescription;
+   } catch (error: any) {
+      console.error('Error enhancing job description with AI:', error);
+      throw error;
+   }
+}

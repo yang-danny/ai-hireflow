@@ -1,11 +1,4 @@
-import {
-   CloudUpload,
-   FileUser,
-   ShoppingBag,
-   SquarePen,
-   Trash2Icon,
-   XIcon,
-} from 'lucide-react';
+import { CloudUpload, FileUser, SquarePen, Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useResumeStore } from '../../store/useResumeStore';
@@ -13,19 +6,8 @@ import type { Resume } from '../../types/resume.types';
 
 export default function ResumePage() {
    const navigate = useNavigate();
-   const {
-      resumes,
-      loading,
-      error,
-      fetchResumes,
-      deleteResume,
-      setCurrentResume,
-      createResume,
-   } = useResumeStore();
-
-   const [showUploadResume, setShowUploadResume] = useState<boolean>(false);
-   const [title, setTitle] = useState<string>('');
-   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+   const { resumes, fetchResumes, deleteResume, setCurrentResume } =
+      useResumeStore();
 
    useEffect(() => {
       fetchResumes();
@@ -44,34 +26,9 @@ export default function ResumePage() {
       navigate('/resume-generator');
    };
 
-   const handleUploadResume = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (!selectedFile) return;
-
-      // The user wants to process the file in the frontend.
-      // This requires a library to parse PDF/DOCX, which is not yet installed.
-      // For now, we will just create a new resume with the title.
-      try {
-         await createResume({ title });
-         setShowUploadResume(false);
-         setTitle('');
-         setSelectedFile(null);
-      } catch (error) {
-         console.error('Failed to create resume', error);
-      }
-   };
-
-   if (loading) {
-      return <div>Loading...</div>;
-   }
-
-   if (error) {
-      return <div>Error: {error}</div>;
-   }
-
    return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
-         <div className="w-84 h-64 cussor-pointer bg-(--color-background-card) rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
+         <div className="w-84 h-64 cussor-pointer bg-background-card rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
             <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
                <button
                   onClick={handleCreateResume}
@@ -85,7 +42,7 @@ export default function ResumePage() {
             </p>
          </div>
 
-         <div className="w-84 h-64 cussor-pointer bg-(--color-background-card) rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
+         <div className="w-84 h-64 cussor-pointer bg-background-card rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
             <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
                <button
                   onClick={() => navigate('/resume-upload')}
@@ -98,76 +55,7 @@ export default function ResumePage() {
                Upload Resume
             </p>
          </div>
-         {/* {showUploadResume && (
-            <form
-               onSubmit={handleUploadResume}
-               onClick={(e) => e.stopPropagation()}
-               className="fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-10 flex items-center justify-center"
-            >
-               <div className="relative bg-slate-200 border shadow-md rounded-lg w-full max-w-sm p-6">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-700">
-                     Upload Resume
-                  </h2>
-                  <input
-                     type="text"
-                     placeholder="Resume Title"
-                     value={title}
-                     onChange={(e) => setTitle(e.target.value)}
-                     className="w-full px-4 py-2 border border-gray-300 text-slate-700 p-2 rounded-md focus:border-green-500 focus:outline-none"
-                     required
-                  />
-                  <div>
-                     <label
-                        htmlFor="resume-input"
-                        className="block text-sm text-slate-700 py-2"
-                     >
-                        Select Resume File
-                        <div
-                           className="flex flex-col items-center justify-between gap-2 border group text-slate-400 border-slate-400 border-dashed
-                    rounded-md p-4 py-10 my-4 hover:border-green-500 hover:text-green-700 cursor-pointer transition-colors"
-                        >
-                           {selectedFile ? (
-                              <p className="text-green-600 font-medium">
-                                 {selectedFile.name}
-                              </p>
-                           ) : (
-                              <div className="flex flex-col items-center">
-                                 <ShoppingBag className="size-6 mb-2" />
-                                 <p className="text-sm">
-                                    Click to upload or drag and drop
-                                 </p>
-                                 <p className="text-xs text-gray-500 mt-1">
-                                    Supported formats: PDF, DOCX
-                                 </p>
-                              </div>
-                           )}
-                        </div>
-                     </label>
-                     <input
-                        id="resume-input"
-                        type="file"
-                        className="hidden"
-                        onChange={(e) =>
-                           setSelectedFile(
-                              e.target.files ? e.target.files[0] : null
-                           )
-                        }
-                        accept=".pdf,.docx"
-                     />
-                  </div>
-                  <button className="w-full py-2 bg-green-600 text-white founded hover:bg-green-700 transition-colors">
-                     Upload Resume
-                  </button>
-                  <XIcon
-                     className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer transition-colors"
-                     onClick={() => {
-                        setShowUploadResume(false);
-                        setTitle('');
-                     }}
-                  />
-               </div>
-            </form>
-         )} */}
+
          {Array.isArray(resumes) &&
             resumes.map((resume) => {
                return (
