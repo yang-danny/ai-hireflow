@@ -1,5 +1,6 @@
 import { Check, Palette } from 'lucide-react';
 import React, { useState } from 'react';
+import { Button } from './Button';
 interface ColorPickerProps {
    selectedColor: string;
    onChange: (colorValue: string) => void;
@@ -23,14 +24,14 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
    const [isOpen, setIsOpen] = useState<boolean>(false);
    return (
       <div className="relative">
-         <button
-            className="flex items-center gap-1 text-sm text-purple-600 bg-gradient-to-br from-purple-50 to-purple-100 ring-purple-300 hover:ring transition-all font-medium py-2 px-3 rounded-lg"
+         <Button
+            className="flex items-center gap-1 text-sm text-white bg-slate-500/50 hover: transition-all font-medium py-2 px-3 rounded-lg"
             onClick={() => setIsOpen(!isOpen)}
          >
             <Palette size={14} /> <span className="max-sm:hidden">Accent</span>
-         </button>
+         </Button>
          {isOpen && (
-            <div className="absolute grid grid-cols-4 w-70 gap-2 top-full left-0 right-0p-3 z-10 bg-white rounded-md border border-gray-200 shadow-sm">
+            <div className="absolute grid grid-cols-4 w-70 gap-2 top-full left-0 right-0p-3 z-10 bg-(--color-background-card) rounded-md border-2 border-(--color-border) shadow-sm">
                {colors.map((color) => (
                   <div
                      key={color.value}
@@ -49,7 +50,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                            <Check className="size-5 text-white" />
                         </div>
                      )}
-                     <p className="text-xs text-center mt-1 text-gray-600 ">
+                     <p className="text-xs text-center mt-1 text-gray-200 ">
                         {color.name}
                      </p>
                   </div>

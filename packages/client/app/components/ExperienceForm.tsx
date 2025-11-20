@@ -62,16 +62,16 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
       <div className="space-y-6">
          <div className="flex items-center justify-between">
             <div>
-               <h3 className="flex items-center text-lg gap-2 font-semibold text-gray-900">
+               <h3 className="flex items-center text-lg gap-2 font-semibold text-gray-200">
                   Professional Experience
                </h3>
-               <p className="text-sm text-gray-500">
+               <p className="text-sm text-gray-300">
                   Add your job experiences.
                </p>
             </div>
             <button
                onClick={addExperience}
-               className="flex items-centergap-2 px-3 py-1  bg-green-100 text-green-700 rounded text-sm font-medium hover:bg-green-200 transition-colors disabled:opacity-50"
+               className="flex items-center gap-1 text-sm font-bold border-2 px-2 py-2 rounded-lg text-(--color-primary) hover:cursor-pointer hover:text-purple-600 transition-colors disabled:opacity-50"
             >
                <Plus className="size-4" /> Add Experience
             </button>
@@ -94,10 +94,10 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                {data.map((experience, index) => (
                   <div
                      key={index}
-                     className="p-4 border border-gray-200 rounded-lg space-y-3"
+                     className="p-4 border border-gray-600 rounded-lg space-y-3"
                   >
                      <div className="flex justify-between items-start">
-                        <h4 className="text-md font-medium text-gray-500">
+                        <h4 className="text-md font-medium text-gray-300">
                            Experience {index + 1}
                         </h4>
                         <button
@@ -115,7 +115,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                            onChange={(e) =>
                               updateExperience(index, 'company', e.target.value)
                            }
-                           className="px-3 py-2 text-sm rounded-lg text-gray-500 border border-gray-300"
+                           className="px-3 py-2 text-sm rounded-lg text-gray-300 border border-gray-600 focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none"
                            placeholder="Company Name"
                         />
 
@@ -130,7 +130,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  e.target.value
                               )
                            }
-                           className="px-3 py-2 text-sm rounded-lg text-gray-500 border border-gray-300"
+                           className="px-3 py-2 text-sm rounded-lg text-gray-300 border border-gray-600 focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none"
                            placeholder="Position"
                         />
 
@@ -145,7 +145,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  e.target.value
                               )
                            }
-                           className="px-3 py-2 text-sm rounded-lg text-gray-500 border border-gray-300"
+                           className="px-3 py-2 text-sm rounded-lg text-gray-300 border border-gray-600 focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none"
                         />
 
                         {/* <label className='block text-sm font-medium text-gray-700'>End Date</label> */}
@@ -160,7 +160,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  e.target.value
                               )
                            }
-                           className="wpx-3 py-2 text-sm rounded-lg text-gray-500 border border-gray-300 disabled:bg-gray-100"
+                           className="w-full px-3 py-2 text-sm rounded-lg text-gray-300 border border-gray-600 focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none disabled:bg-gray-100"
                         />
                      </div>
                      <label className="flex items-center gap-2">
@@ -176,13 +176,13 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                            }}
                            className="w-4 h-4 bg-white rounded border border-gray-300"
                         />
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-300">
                            Current Job
                         </span>
                      </label>
                      <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                           <label className="text-sm font-medium text-gray-500">
+                           <label className="text-sm font-medium text-gray-300">
                               Description
                            </label>
                            <button
@@ -190,7 +190,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  handleAIEnhance(index, experience.description)
                               }
                               disabled={isProcessing === index}
-                              className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
+                              className="flex items-center gap-1 text-sm font-bold border-2 px-2 py-2 rounded-lg text-(--color-primary) hover:cursor-pointer hover:text-purple-600 transition-colors disabled:opacity-50"
                            >
                               {isProcessing === index ? (
                                  <>
@@ -215,7 +215,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  e.target.value
                               )
                            }
-                           className="w-full text-sm p-2 border text-gray-500 border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                           className="w-full text-sm p-2 border text-gray-300 border-gray-600 rounded-md focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none transition-colors"
                            placeholder="Describe your key responsibilities and achievements..."
                         />
                      </div>

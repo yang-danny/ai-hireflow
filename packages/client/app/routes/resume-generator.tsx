@@ -21,6 +21,7 @@ import {
    Undo2,
 } from 'lucide-react';
 import { useResumeStore } from '../../store/useResumeStore';
+import { Button } from '~/components/Button';
 
 const ResumeGenerator = () => {
    const {
@@ -151,16 +152,16 @@ const ResumeGenerator = () => {
          <div className="max-w-7xl mx-auto px-4 pb-8">
             <div className="grid lg:grid-cols-12 gap-8">
                {/* Left Panel */}
-               <div className="relative lg:col-span-5 rounded-lg overflow-hidden">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                     <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
+               <div className="relative lg:col-span-5 rounded-lg overflow-hidden bg-(--color-background-card)">
+                  <div className="rounded-lg shadow-sm border-2 border-(--color-border)">
+                     <hr className="absolute top-0 left-0 right-0 border-2 border-(--color-border) bg-(--color-background-card-inner)" />
                      <hr
                         className="absolute top-0 left-0 h-1 bg-gradient-to-r from-cyan-400 to-teal-500 border-none transition-all duration-1000"
                         style={{
                            width: `${(activeSectionIndex * 100) / (sections.length - 1)}%`,
                         }}
                      />
-                     <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
+                     <div className="flex justify-between items-center mb-6 border-b-2 border-gray-600 py-1">
                         <div className="flex items-center gap-2 p-2">
                            <TemplateSelector
                               selectedTemplete={localResume.template}
@@ -184,7 +185,7 @@ const ResumeGenerator = () => {
                         <div className="flex items-center">
                            {activeSectionIndex !== 0 && (
                               <button
-                                 className="flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all"
+                                 className="flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-200 hover:text-(--color-primary) transition-all"
                                  onClick={() =>
                                     setActiveSectionIndex((prevIndex: number) =>
                                        Math.max(prevIndex - 1, 0)
@@ -196,7 +197,7 @@ const ResumeGenerator = () => {
                               </button>
                            )}
                            <button
-                              className={`flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-50 cursor-not-allowed'}`}
+                              className={`flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-200 hover:text-(--color-primary) transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-50 cursor-not-allowed'}`}
                               onClick={() =>
                                  setActiveSectionIndex((prevIndex: number) =>
                                     Math.min(prevIndex + 1, sections.length - 1)
@@ -211,8 +212,8 @@ const ResumeGenerator = () => {
                         </div>
                      </div>
                      <div className="space-y-6 p-4">
-                        <div className="flex flex-col justify-between border-b border-dashed border-gray-300">
-                           <label className="flex items-center gap-2 text-md font-bold text-gray-600">
+                        <div className="flex flex-col justify-between border-b-2 border-(--color-primary)">
+                           <label className="flex items-center gap-2 text-md font-bold text-gray-200">
                               <FileType className="size-6" /> Resume Title:{' '}
                               <span className="text-red-500">*</span>
                            </label>
@@ -225,7 +226,7 @@ const ResumeGenerator = () => {
                                     title: e.target.value,
                                  }))
                               }
-                              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors text-sm text-gray-600 "
+                              className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none transition-colors text-sm text-gray-600 "
                               placeholder={`Enter resume title`}
                               required={true}
                            />
@@ -308,14 +309,14 @@ const ResumeGenerator = () => {
                         )}
                      </div>
                      <div className="space-y-6 p-4">
-                        <button
+                        <Button
                            onClick={handleSaveChanges}
-                           disabled={isSaving}
-                           className="cursor-pointer flex items-center gap-2 bg-gradient-to-br from-green-100 to bg-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                           // disabled={isSaving}
+                           className="cursor-pointer flex items-center gap-2 transition-all rounded-md px-6 py-2 mt-6 text-sm"
                         >
                            <Save className="size-4" />
                            {isSaving ? 'Saving...' : 'Save Changes'}
-                        </button>
+                        </Button>
                      </div>
                   </div>
                </div>
@@ -327,15 +328,15 @@ const ResumeGenerator = () => {
                         {localResume.public && (
                            <button
                               onClick={handleShare}
-                              className="flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-blue-100 to bg-blue-200 ring-blue-300 text-blue-600 ring hover:ring transition-colors rounded-lg"
+                              className="flex items-center gap-1 text-sm font-bold border-2 px-6 py-2.5 rounded-lg text-(--color-primary) hover:cursor-pointer text-(--color-primary-dark) transition-colors"
                            >
                               <Share2Icon className="size-4" />
                               Share
                            </button>
                         )}
-                        <button
+                        <Button
                            onClick={changeResumeVisibility}
-                           className="flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-purple-100 to bg-purple-200 ring-purple-300 text-purple-600 ring hover:ring transition-colors rounded-lg"
+                           className="flex items-center gap-1 text-sm text-white bg-slate-500/50 hover: transition-all font-medium py-2 px-3 rounded-lg"
                         >
                            {localResume.public ? (
                               <EyeIcon className="size-4" />
@@ -343,14 +344,14 @@ const ResumeGenerator = () => {
                               <EyeOffIcon className="size-4" />
                            )}
                            {localResume.public ? 'Public' : 'Private'}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                            onClick={downloadResume}
-                           className="flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-green-100 to bg-green-200 ring-green-300 text-green-600 ring hover:ring transition-colors rounded-lg"
+                           className="flex items-center gap-1 text-sm rounded-lg"
                         >
                            <DownloadIcon className="size-4" />
                            Download
-                        </button>
+                        </Button>
                      </div>
                   </div>
                   {/* Resume Preview */}

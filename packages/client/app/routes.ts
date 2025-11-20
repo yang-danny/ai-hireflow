@@ -16,9 +16,9 @@ export default [
       route('dashboard', 'routes/dashboard.tsx'),
       route('resume', 'routes/resume.tsx'),
       route('resume-upload', 'routes/resume-upload.tsx'),
-      route('resume-generator', 'routes/resumeGenerator.tsx'),
-      route('resume-generator/:id', 'routes/resumeGenerator.tsx', {
-         id: 'routes/resumeGeneratorId',
+      route('resume-generator', 'routes/resume-generator.tsx'),
+      route('resume-generator/:id', 'routes/resume-generator.tsx', {
+         id: 'routes/resume-generator-id',
       }),
    ]),
 ] satisfies RouteConfig;

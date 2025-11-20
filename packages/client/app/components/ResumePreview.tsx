@@ -33,11 +33,11 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({
       }
    };
    return (
-      <div className="w-full bg-gray-100">
+      <div className="w-full bg-gray-300 ">
          <div
             id="resume-preview"
             className={
-               'border border-gray-200 print:shadow-none print:border-none' +
+               'border border-gray-200  print:shadow-none print:border-none' +
                classes
             }
          >

@@ -28,10 +28,10 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ data, onChange }) => {
    return (
       <div className="space-y-4">
          <div>
-            <h3 className="flex items-center text-lg gap-2 font-semibold text-gray-900">
+            <h3 className="flex items-center text-lg gap-2 font-semibold text-gray-200">
                Skills
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-300">
                Add your technical and soft skills.
             </p>
          </div>
@@ -40,14 +40,14 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ data, onChange }) => {
                type="text"
                value={newSkill}
                onChange={(e) => setNewSkill(e.target.value)}
-               className="w-full px-3 py-2 text-sm rounded-lg text-gray-500 border border-gray-300"
+               className="w-full px-3 py-2 text-sm rounded-lg text-gray-300 border border-gray-600 focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none"
                placeholder="Enter a skill (e.g., Python, JavaScript)"
                onKeyPress={handleKeyPress}
             />
             <button
                onClick={addSkill}
                disabled={!newSkill.trim()}
-               className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+               className="flex items-center gap-1 text-sm font-bold border-2 px-2 py-2 rounded-lg text-(--color-primary) hover:cursor-pointer hover:text-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                <Plus className="size-4" /> Add
             </button>
@@ -57,12 +57,12 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ data, onChange }) => {
                {data.map((skill, index) => (
                   <span
                      key={index}
-                     className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                     className="flex items-center gap-1 px-3 py-1 border border-(--color-primary) text-(--color-primary) cursor-pointer hover:text-(--color-primary)/50 hover:border-(--color-primary)/50 transition-colors rounded-full text-sm"
                   >
                      {skill}
                      <button
                         onClick={() => removeSkill(index)}
-                        className="ml-1 rounded-full p-0.5 hover:bg-blue-200 transition-colors"
+                        className="ml-1 rounded-full hover:bg-(--color-primary)/50 hover:text-white cursor-pointer p-0.5 transition-colors"
                      >
                         <X className="w-3 h-3" />
                      </button>
@@ -76,8 +76,8 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ data, onChange }) => {
                <p className="text-sm">Click "Add Skill" to add your skills</p>
             </div>
          )}
-         <div className="bg-blue-50 p-3 rouunded-lg">
-            <p className="text-sm text-blue-800">
+         <div className="bg-gray-600 p-3 rounded-lg">
+            <p className="text-sm text-gray-300">
                <strong>Tips:</strong>Add 8-12 relevant skills. Include both
                technical(e.g., Python, JavaScript, React...) and soft skills
                (leadership, teamwork, communication...).

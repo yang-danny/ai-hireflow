@@ -47,17 +47,17 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({
    return (
       <div className="space-y-4">
          <div>
-            <h3 className="flex items-center text-lg gap-2 font-semibold text-gray-900">
+            <h3 className="flex items-center text-lg gap-2 font-semibold text-gray-200">
                Professional Summary
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-300">
                Briefly summarize your professional background and key skills.
             </p>
          </div>
          <button
             onClick={() => handleAIEnhance()}
             disabled={isProcessing}
-            className="flex items-center gap-1 px-2 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1 text-sm font-bold border-2 px-2 py-2 rounded-lg text-(--color-primary) hover:cursor-pointer hover:text-purple-600 transition-colors disabled:opacity-50"
          >
             {isProcessing ? (
                <>
@@ -87,7 +87,7 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({
                   setSummary(e.target.value);
                   onChange(e.target.value);
                }}
-               className="w-full p-3 px-4 mt-2 border text-sm text-gray-500 border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none"
+               className="w-full p-3 px-4 mt-2 border text-sm text-gray-600 border-gray-600 rounded-lg focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none transition-colors resize-none"
                placeholder="Write a professional summary that highlights your key strengths and career objectives..."
             />
             <p className="text-xs text-gray-500 max-w-4/5 mx-auto text-center">

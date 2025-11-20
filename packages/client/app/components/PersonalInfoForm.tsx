@@ -7,8 +7,10 @@ import {
    MapPin,
    BriefcaseBusinessIcon,
    Globe,
+   Linkedin,
+   Github,
 } from 'lucide-react';
-import { GithubIcon, LinkedInIconLight } from './icons/icons';
+
 interface PersonalInfoFormProps {
    data: PersonalInfo;
    onChange: (data: PersonalInfo) => void;
@@ -69,17 +71,17 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
          key: 'linkedin',
          label: 'LinkedIn Profile',
          type: 'url',
-         icon: LinkedInIconLight,
+         icon: Linkedin,
       },
-      { key: 'github', label: 'GitHub Profile', type: 'url', icon: GithubIcon },
+      { key: 'github', label: 'GitHub Profile', type: 'url', icon: Github },
       { key: 'website', label: 'Personal Website', type: 'url', icon: Globe },
    ];
    return (
       <div>
-         <h3 className="text-lg mb-2 font-semibold text-gray-900">
+         <h3 className="text-lg mb-2 font-semibold text-gray-200">
             Personal Information
          </h3>
-         <p className="text-sm text-gray-600">
+         <p className="text-sm text-gray-300">
             Get Started with the Personal Information
          </p>
          <div className="flex items-center gap-2">
@@ -95,7 +97,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                      className="w-16 h-16 rounded-full object-cover mt-5 ring ring-slate-300"
                   />
                ) : (
-                  <div className="inline-flex items-center gap-2 mt-5 text-slate-600 hover:text-slate-700 cursor-pointer">
+                  <div className="inline-flex items-center gap-2 mt-5 text-gray-300 hover:text-gray-100 cursor-pointer">
                      <User className="size-10 p-2.5 border rounded-full" />
                      Upload user image
                   </div>
@@ -134,7 +136,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
             const Icon = field.icon;
             return (
                <div key={field.key} className="space-y-1 mt-5">
-                  <label className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
                      <Icon className="size-4" />
                      {field.label}{' '}
                      {field.required && <span className="text-red-500">*</span>}
@@ -143,7 +145,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                      type={field.type}
                      value={data[field.key] || ''}
                      onChange={(e) => handleChange(field.key, e.target.value)}
-                     className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors text-sm text-gray-600 "
+                     className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring focus:ring-(--color-primary) focus:border-(--color-primary) outline-none transition-colors text-sm text-gray-600 "
                      placeholder={`Enter your ${field.label.toLowerCase()}`}
                      required={field.required}
                   />
