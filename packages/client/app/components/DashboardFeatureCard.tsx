@@ -33,7 +33,7 @@ export function DashboardFeatureCard({
             {/* Button */}
             <button
                onClick={onClick}
-               className="w-full py-2 px-6 bg-primary text-white text-base font-bold rounded-xl hover:bg-primary-dark transition-colors"
+               className="w-full py-2 px-6 bg-primary text-white text-base font-bold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer"
             >
                {buttonText}
             </button>

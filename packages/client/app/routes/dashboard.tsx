@@ -68,7 +68,7 @@ export default function Dashboard() {
          case 'home':
          default:
             return (
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 ">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 cursor-pointer">
                   {features.map((feature) => (
                      <DashboardFeatureCard key={feature.title} {...feature} />
                   ))}

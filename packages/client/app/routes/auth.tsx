@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import {
-   GithubIcon,
-   GoogleIcon,
-   LinkedInIcon,
-   LogoIcon,
-} from '../components/icons/icons';
+import { GoogleIcon, LinkedInIcon, LogoIcon } from '../components/icons/icons';
 import { useAuthStore } from '../../store/useAuthStore';
-
+import { Github } from 'lucide-react';
 const InputField = ({
    id,
    label,
@@ -275,7 +270,7 @@ const Auth = () => {
                   <button
                      type="submit"
                      disabled={isLoading}
-                     className="w-full bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:shadow-cyan-500/40 transition-shadow duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                     className="cursor-pointer w-full bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:shadow-cyan-500/40 transition-shadow duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                   >
                      {isLoading ? (
                         <>
@@ -329,7 +324,7 @@ const Auth = () => {
                      disabled={isLoading}
                   />
                   <SocialButton
-                     icon={<GithubIcon className="w-6 h-6" />}
+                     icon={<Github className="w-6 h-6" />}
                      text="Continue with GitHub"
                      onClick={() => alert('GitHub login coming soon!')}
                      disabled={isLoading}
@@ -343,7 +338,7 @@ const Auth = () => {
                   <button
                      onClick={toggleAuthMode}
                      disabled={isLoading}
-                     className="font-semibold text-cyan-400 hover:text-cyan-300 ml-1 disabled:opacity-50"
+                     className="font-semibold text-cyan-400 hover:text-cyan-300 ml-1 disabled:opacity-50 cursor-pointer"
                   >
                      {isSignIn ? 'Sign Up' : 'Sign In'}
                   </button>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import UserIcon from '~/components/icons/UserIcon';
 import PersonalInfoForm from '~/components/PersonalInfoForm';
 import type { PersonalInfo, Resume } from '../../types/resume.types';
 import ResumePreview from '~/components/ResumePreview';
@@ -23,7 +22,6 @@ import {
 } from 'lucide-react';
 import { useResumeStore } from '../../store/useResumeStore';
 import { Button } from '~/components/Button';
-import { captureResumeFromLinkedIn } from '~/utils/AI';
 
 const ResumeGenerator = () => {
    const {
@@ -63,32 +61,26 @@ const ResumeGenerator = () => {
       {
          id: 'personal',
          name: 'Personal Information',
-         icon: <UserIcon width={16} height={16} color="currentColor" />,
       },
       {
          id: 'summary',
          name: 'Summary',
-         icon: <UserIcon width={16} height={16} color="currentColor" />,
       },
       {
          id: 'experience',
          name: 'Experience',
-         icon: <UserIcon width={16} height={16} color="currentColor" />,
       },
       {
          id: 'education',
          name: 'Education',
-         icon: <UserIcon width={16} height={16} color="currentColor" />,
       },
       {
          id: 'projects',
          name: 'Projects',
-         icon: <UserIcon width={16} height={16} color="currentColor" />,
       },
       {
          id: 'skills',
          name: 'Skills',
-         icon: <UserIcon width={16} height={16} color="currentColor" />,
       },
    ];
    const activeSection = sections[activeSectionIndex];
