@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { PersonalInfo } from '../../types/resume.types';
 import {
    User,
@@ -10,6 +10,7 @@ import {
    Linkedin,
    Github,
 } from 'lucide-react';
+import { removeImageBackground } from '~/utils/AI';
 
 interface PersonalInfoFormProps {
    data: PersonalInfo;
@@ -26,9 +27,59 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
    setRemoveBackground,
    errors,
 }) => {
+   const [isProcessing, setIsProcessing] = useState(false);
+   const [processingError, setProcessingError] = useState('');
+
    const handleChange = (field: keyof PersonalInfo, value: any) => {
       onChange({ ...data, [field]: value });
    };
+
+   // Handle background removal when toggle is enabled
+   useEffect(() => {
+      const processBackgroundRemoval = async () => {
+         // Only process if:
+         // 1. Remove background is enabled
+         // 2. Image exists
+         // 3. Image is a File object (not a URL string from previous upload)
+         // 4. Not already processing
+         if (
+            removeBackground &&
+            data.image &&
+            typeof data.image === 'object' &&
+            !isProcessing
+         ) {
+            setIsProcessing(true);
+            setProcessingError('');
+
+            try {
+               // Remove background from the image
+               const processedBlob = await removeImageBackground(data.image);
+
+               // Convert blob to File to maintain the same type
+               const processedFile = new File(
+                  [processedBlob],
+                  data.image.name.replace(/\.(jpg|jpeg|png)$/i, '_no_bg.png'),
+                  { type: 'image/png' }
+               );
+
+               // Update the image with the processed version
+               handleChange('image', processedFile);
+            } catch (error: any) {
+               console.error('Background removal failed:', error);
+               setProcessingError(
+                  error.message ||
+                     'Failed to remove background. Please try again.'
+               );
+               // Turn off the toggle if processing failed
+               setRemoveBackground(false);
+            } finally {
+               setIsProcessing(false);
+            }
+         }
+      };
+
+      processBackgroundRemoval();
+   }, [removeBackground]); // Only trigger when removeBackground changes
 
    type Field = {
       key: keyof Omit<PersonalInfo, 'image'>;
@@ -115,7 +166,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
             </label>
             {typeof data.image === 'object' && (
                <div className="flex flex-col gap-1 pl-4 text-sm">
-                  <p>Remove Background</p>
+                  <p className="text-gray-300">Remove Background</p>
                   <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
                      <input
                         type="checkbox"
@@ -124,10 +175,21 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                            setRemoveBackground((prev: boolean) => !prev)
                         }
                         checked={removeBackground}
+                        disabled={isProcessing}
                      />
                      <div className="w-9 h-5 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
                      <span className="dot absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4"></span>
                   </label>
+                  {isProcessing && (
+                     <p className="text-blue-400 text-xs mt-1">
+                        🤖 Processing image...
+                     </p>
+                  )}
+                  {processingError && (
+                     <p className="text-red-400 text-xs mt-1">
+                        {processingError}
+                     </p>
+                  )}
                </div>
             )}
          </div>

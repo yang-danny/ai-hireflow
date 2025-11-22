@@ -11,6 +11,7 @@ import ExperienceForm from '~/components/ExperienceForm';
 import EducationForm from '~/components/EducationForm';
 import ProjectForm from '~/components/ProjectForm';
 import SkillsForm from '~/components/SkillsForm';
+import LinkedInImport from '~/components/LinkedInImport';
 import {
    DownloadIcon,
    EyeIcon,
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useResumeStore } from '../../store/useResumeStore';
 import { Button } from '~/components/Button';
+import { captureResumeFromLinkedIn } from '~/utils/AI';
 
 const ResumeGenerator = () => {
    const {
@@ -105,6 +107,16 @@ const ResumeGenerator = () => {
    };
    const downloadResume = () => {
       window.print();
+   };
+
+   // Check if all required fields are filled
+   const isFormValid = () => {
+      return (
+         localResume.title?.trim() &&
+         localResume.personal_info.full_name?.trim() &&
+         localResume.personal_info.email?.trim() &&
+         localResume.personal_info.phone?.trim()
+      );
    };
 
    const handleSaveChanges = async () => {
@@ -309,14 +321,37 @@ const ResumeGenerator = () => {
                         )}
                      </div>
                      <div className="space-y-6 p-4">
-                        <Button
-                           onClick={handleSaveChanges}
-                           // disabled={isSaving}
-                           className="cursor-pointer flex items-center gap-2 transition-all rounded-md px-6 py-2 mt-6 text-sm"
-                        >
-                           <Save className="size-4" />
-                           {isSaving ? 'Saving...' : 'Save Changes'}
-                        </Button>
+                        <div className="flex justify-between gap-3">
+                           <LinkedInImport
+                              onImport={(capturedData) => {
+                                 // Merge captured data with current resume
+                                 setLocalResume((prev) => ({
+                                    ...prev,
+                                    ...capturedData,
+                                    _id: prev._id,
+                                    personal_info: {
+                                       ...capturedData.personal_info,
+                                    },
+                                 }));
+                                 // Auto-set title if name was captured
+                                 if (capturedData.personal_info?.full_name) {
+                                    setLocalResume((prev) => ({
+                                       ...prev,
+                                       title: `${capturedData.personal_info?.full_name} Resume-LinkedIn`,
+                                    }));
+                                 }
+                                 setErrors({});
+                              }}
+                           />
+                           <Button
+                              onClick={handleSaveChanges}
+                              disabled={isSaving || !isFormValid()}
+                              className="cursor-pointer flex items-center gap-2 transition-all rounded-md px-6 py-2 mt-6 text-sm"
+                           >
+                              <Save className="size-4" />
+                              {isSaving ? 'Saving...' : 'Save Changes'}
+                           </Button>
+                        </div>
                      </div>
                   </div>
                </div>

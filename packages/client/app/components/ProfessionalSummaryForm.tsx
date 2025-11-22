@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkle } from 'lucide-react';
+import { Sparkle, WandSparkles } from 'lucide-react';
 import type { Resume } from '../../types/resume.types';
 import { enhanceProfessionalSummary } from '../utils/AI';
 
@@ -66,7 +66,7 @@ const ProfessionalSummaryForm: React.FC<ProfessionalSummaryFormProps> = ({
                </>
             ) : (
                <>
-                  <Sparkle className="size-6" /> Enhance with AI
+                  <WandSparkles className="size-6" /> Enhance with AI
                </>
             )}
          </button>

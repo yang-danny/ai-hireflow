@@ -1,9 +1,10 @@
 interface ButtonProps {
    children: React.ReactNode;
    variant?: 'primary' | 'secondary' | 'outline';
-   onClick?: () => void;
+   onClick?: () => void | Promise<void>;
    href?: string;
    className?: string;
+   disabled?: boolean;
 }
 
 export function Button({
@@ -12,6 +13,7 @@ export function Button({
    onClick,
    href,
    className = '',
+   disabled = false,
 }: ButtonProps) {
    const baseStyles =
       'px-6 py-3 rounded-lg font-bold text-sm tracking-wide transition-all duration-200';
@@ -24,7 +26,9 @@ export function Button({
          'border-2 border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white',
    };
 
-   const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${className}`;
+   const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed' : '';
+
+   const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${disabledStyles} ${className}`;
 
    if (href) {
       return (
@@ -35,7 +39,11 @@ export function Button({
    }
 
    return (
-      <button onClick={onClick} className={combinedClassName}>
+      <button
+         onClick={onClick}
+         disabled={disabled}
+         className={combinedClassName}
+      >
          {children}
       </button>
    );

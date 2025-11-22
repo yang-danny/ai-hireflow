@@ -1,4 +1,4 @@
-import { Briefcase, Plus, Sparkle, Trash2 } from 'lucide-react';
+import { Briefcase, Plus, Sparkle, Trash2, WandSparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import type { Experience } from '../../types/resume.types';
 import { enhanceJobDescription } from '../utils/AI';
@@ -199,8 +199,8 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ data, onChange }) => {
                                  </>
                               ) : (
                                  <>
-                                    <Sparkle className="size-4" /> Enhance with
-                                    AI
+                                    <WandSparkles className="size-4" /> Enhance
+                                    with AI
                                  </>
                               )}
                            </button>
