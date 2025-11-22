@@ -124,12 +124,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onImport }) => {
                            setCaptureError('');
                         }}
                         placeholder="https://www.linkedin.com/in/username"
-                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs"
-                        style={{
-                           backgroundColor: '#0f172a',
-                           borderColor: '#475569',
-                           color: '#e2e8f0',
-                        }}
+                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs bg-(--color-background-card) border-(--color-border) text-(--color-text)"
                         disabled={isCapturing}
                      />
                      <p className="text-xs mt-1" style={{ color: '#64748b' }}>
@@ -153,12 +148,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onImport }) => {
                            setCaptureError('');
                         }}
                         placeholder="Go to your LinkedIn profile, select all (Ctrl/Cmd + A), copy, and paste here..."
-                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs min-h-[100px] resize-y"
-                        style={{
-                           backgroundColor: '#0f172a',
-                           borderColor: '#475569',
-                           color: '#e2e8f0',
-                        }}
+                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs min-h-[100px] resize-y bg-(--color-background-card) border-(--color-border) text-(--color-text)"
                         disabled={isCapturing}
                      />
                   </div>
@@ -190,7 +180,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onImport }) => {
                            setLinkedInContent('');
                            setCaptureError('');
                         }}
-                        className="flex items-center gap-1 text-sm text-white bg-slate-500/50 hover: transition-all font-medium py-2 px-3 rounded-lg"
+                        className="cursor-pointer flex items-center gap-1 text-sm text-white bg-slate-500/50 hover: transition-all font-medium py-2 px-3 rounded-lg"
                         disabled={isCapturing}
                      >
                         Cancel
