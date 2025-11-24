@@ -10,7 +10,7 @@ import { CoverLetterIcon } from '../components/icons/icons';
 import { InterviewPrepIcon } from '../components/icons/icons';
 import Resume from './resume';
 import Analyzer from './analyzer';
-import CoverLetter from './coverLetter';
+import CoverLetter from './cover-letter';
 import Interview from './interview';
 
 export default function Dashboard() {

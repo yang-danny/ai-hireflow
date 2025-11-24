@@ -12,6 +12,7 @@ export default [
 
    route('/auth/success', 'routes/authCallback.tsx'),
    route('/auth/error', 'routes/authError.tsx'),
+   route('/cover-letter', 'routes/cover-letter.tsx'),
    layout('routes/protected-layout.tsx', [
       route('dashboard', 'routes/dashboard.tsx'),
       route('resume', 'routes/resume.tsx'),

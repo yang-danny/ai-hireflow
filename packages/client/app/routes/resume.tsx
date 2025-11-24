@@ -27,7 +27,7 @@ export default function ResumePage() {
    };
 
    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4  ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mr-2  ">
          <div className="cursor-pointer w-84 h-64 bg-background-card rounded-[20px] flex flex-col items-center justify-center border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
             <div className="w-16 h-16  bg-primary rounded-xl flex items-center justify-center">
                <button

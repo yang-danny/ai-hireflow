@@ -56,8 +56,6 @@ async function generateContentWithAI(
    const response = result.response;
    let text = response.text();
 
-   console.log('Raw AI response:', text);
-
    // Clean up the response - remove markdown code blocks if present
    text = text.trim();
    text = text.replace(/```json\s*/g, '');
@@ -151,8 +149,6 @@ Important rules:
          }
       }
 
-      console.log('Cleaned text:', text);
-
       // Parse the JSON
       let parsedData;
       try {
@@ -189,8 +185,6 @@ Important rules:
          accent_color: '#00c4cc',
          public: false,
       };
-
-      console.log('Processed resume object:', resume);
 
       return resume;
    } catch (error: any) {
@@ -440,8 +434,6 @@ ${profileContent}
          public: false,
       };
 
-      console.log('Processed LinkedIn resume object:', resume);
-
       return resume;
    } catch (error: any) {
       handleAIError(error, 'capturing resume from LinkedIn');
@@ -476,5 +468,218 @@ export async function removeImageBackground(imageFile: File): Promise<Blob> {
       throw new Error(
          error.message || 'Failed to remove background. Please try again.'
       );
+   }
+}
+
+/**
+ * Generates a cover letter based on job details and resume information.
+ * @param jobDetails Object containing company, position, location, and job description
+ * @param resumeText The resume text or resume object
+ * @param tone The tone of the cover letter (conservative, balanced, enthusiastic)
+ * @returns The generated cover letter text
+ */
+export async function generateCoverLetter(
+   jobDetails: {
+      companyName: string;
+      jobTitle: string;
+      location?: string;
+      jobDescription: string;
+   },
+   resumeText: string,
+   tone: 'conservative' | 'balanced' | 'enthusiastic' = 'balanced'
+): Promise<string> {
+   try {
+      const safetySettings = [
+         {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+      ];
+
+      const modelParams: ModelParams = {
+         model: 'gemini-2.5-pro',
+         generationConfig: {
+            temperature:
+               tone === 'conservative' ? 0.3 : tone === 'balanced' ? 0.5 : 0.7,
+            maxOutputTokens: 4096,
+         },
+         safetySettings,
+      };
+
+      const toneGuidelines = {
+         conservative:
+            'Use professional, formal language. Be respectful and traditional. Avoid overly enthusiastic language.',
+         balanced:
+            'Use professional yet personable language. Strike a balance between formality and warmth.',
+         enthusiastic:
+            'Use energetic, passionate language while maintaining professionalism. Show genuine excitement about the opportunity.',
+      };
+
+      const prompt = `
+You are an expert cover letter writer. Generate a compelling, personalized cover letter based on the following information.
+
+TONE: ${tone.toUpperCase()}
+${toneGuidelines[tone]}
+
+JOB DETAILS:
+- Company: ${jobDetails.companyName}
+- Position: ${jobDetails.jobTitle}
+${jobDetails.location ? `- Location: ${jobDetails.location}` : ''}
+
+JOB DESCRIPTION:
+${jobDetails.jobDescription}
+
+CANDIDATE'S RESUME:
+${resumeText}
+
+INSTRUCTIONS:
+1. Create a professional cover letter that is 3-4 paragraphs long
+2. Start with a strong opening that expresses interest in the specific position
+3. Highlight 2-3 key qualifications from the resume that match the job requirements
+4. Show knowledge of the company and explain why you want to work there
+5. Include specific examples and achievements from the resume
+6. End with a call to action
+7. Use the specified tone throughout
+8. DO NOT include placeholder text for applicant name, address, or date - start directly with the salutation
+9. Use "Dear Hiring Manager," as the salutation
+10. End with "Sincerely," followed by a blank line for signature
+11. Keep the letter concise and impactful (approximately 250-280 words)
+
+CRITICAL: Return ONLY the cover letter text itself. DO NOT include:
+- The candidate's resume
+- Any resume sections (Experience, Education, Skills, etc.)
+- The job description
+- Any metadata or headers
+- Any commentary or explanations
+
+Your output should start with "Dear Hiring Manager," and end with "Sincerely," - nothing else.
+`;
+
+      const coverLetter = await generateContentWithAI(modelParams, prompt);
+
+      if (!coverLetter) {
+         throw new Error('AI returned an empty response. Please try again.');
+      }
+
+      // Clean up the response - remove any resume content or metadata
+      let cleanedLetter = coverLetter.trim();
+
+      // Remove any markdown code blocks
+      cleanedLetter = cleanedLetter.replace(/```[\s\S]*?```/g, '');
+
+      // Remove common resume headers and sections (case insensitive, multiline)
+      const resumePatterns = [
+         /CANDIDATE'S RESUME:[\s\S]*/gi,
+         /RESUME:[\s\S]*/gi,
+         /^[\s\S]*?(?=Dear Hiring Manager|Dear [A-Z])/i,
+         /EXPERIENCE:[\s\S]*/gi,
+         /WORK EXPERIENCE:[\s\S]*/gi,
+         /EDUCATION:[\s\S]*/gi,
+         /SKILLS:[\s\S]*/gi,
+         /PROFESSIONAL SUMMARY:[\s\S]*/gi,
+         /OBJECTIVE:[\s\S]*/gi,
+         /JOB DESCRIPTION:[\s\S]*/gi,
+         /COMPANY:[\s\S]*?(?=Dear)/gi,
+      ];
+
+      for (const pattern of resumePatterns) {
+         cleanedLetter = cleanedLetter.replace(pattern, '');
+      }
+
+      // Split into lines for processing
+      const lines = cleanedLetter.split('\n');
+
+      // Find the start of the letter (salutation)
+      const letterStart = lines.findIndex((line) => {
+         const lowerLine = line.toLowerCase().trim();
+         return (
+            lowerLine.startsWith('dear ') ||
+            lowerLine.startsWith('to whom it may concern') ||
+            lowerLine.includes('dear hiring manager')
+         );
+      });
+
+      // Find the end of the letter (closing)
+      let letterEnd = -1;
+      for (let i = lines.length - 1; i > letterStart; i--) {
+         const lowerLine = lines[i].toLowerCase().trim();
+         if (
+            lowerLine.startsWith('sincerely') ||
+            lowerLine.startsWith('best regards') ||
+            lowerLine.startsWith('yours truly') ||
+            lowerLine.startsWith('respectfully')
+         ) {
+            letterEnd = i;
+            break;
+         }
+      }
+
+      // Extract only the letter content
+      if (letterStart !== -1 && letterEnd !== -1) {
+         // Include from salutation to closing, plus a few blank lines after
+         cleanedLetter = lines.slice(letterStart, letterEnd + 4).join('\n');
+      } else if (letterStart !== -1) {
+         // If no closing found, take from salutation onwards but stop at obvious resume markers
+         let endIndex = lines.length;
+         for (let i = letterStart + 1; i < lines.length; i++) {
+            const line = lines[i].toLowerCase().trim();
+            // Stop if we hit resume-like content
+            if (
+               line.includes('resume:') ||
+               line.includes('experience:') ||
+               line.includes('education:') ||
+               line.includes('skills:') ||
+               line.includes('professional summary:') ||
+               line.includes('work history:') ||
+               line.match(/^\s*---+\s*$/) ||
+               line.match(/^\d{4}\s*-\s*\d{4}/) || // Date ranges like "2020 - 2023"
+               line.match(/^[A-Z\s]+:$/)
+            ) {
+               // All caps headers
+               endIndex = i;
+               break;
+            }
+         }
+         cleanedLetter = lines.slice(letterStart, endIndex).join('\n');
+      }
+
+      // Final cleanup pass - remove any trailing resume sections
+      cleanedLetter =
+         cleanedLetter
+            .split('\n\n\n')
+            .find(
+               (section) =>
+                  section.toLowerCase().includes('dear') ||
+                  section.toLowerCase().includes('sincerely')
+            ) || cleanedLetter;
+
+      // Remove horizontal rules and content after them
+      cleanedLetter = cleanedLetter.replace(/\n\s*[-=_]{3,}\s*\n[\s\S]*$/g, '');
+
+      const result = cleanedLetter.trim();
+
+      // Validation: ensure we got something that looks like a letter
+      if (!result.toLowerCase().includes('dear') || result.length < 100) {
+         console.warn(
+            'Cleanup may have been too aggressive, returning original'
+         );
+         return coverLetter.trim();
+      }
+
+      return result;
+   } catch (error: any) {
+      handleAIError(error, 'generating cover letter');
    }
 }
