@@ -1,17 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-   CloudUpload,
-   MousePointerClick,
-   WandSparkles,
    FileText,
+   Sparkles,
+   MousePointerClick,
+   CloudUpload,
+   WandSparkles,
 } from 'lucide-react';
-import { generateCoverLetter, processResumeWithAI } from '../utils/AI';
+import { useResumeStore } from 'store/useResumeStore';
+import { analyseResume, type AnalysisResult } from '../utils/AI';
 import { extractTextFromPDF } from '../utils/pdfExtractor';
-import { useResumeStore } from '../../store/useResumeStore';
-import type { Resume } from '../../types/resume.types';
-import CoverLetterPreview from '../components/CoverLetterPreview';
-
-type CoverLetterTone = 'conservative' | 'balanced' | 'enthusiastic';
+import AnalyseResult from '../components/AnalyseResult';
 
 interface FormData {
    companyName: string;
@@ -20,10 +18,9 @@ interface FormData {
    jobDescription: string;
    resumeFile: File | null;
    selectedResumeId: string | null;
-   tone: CoverLetterTone;
 }
-
-export default function CoverLetter() {
+export default function ResumeAnalyzer() {
+   const [error, setError] = useState('');
    const { resumes, fetchResumes } = useResumeStore();
    const [formData, setFormData] = useState<FormData>({
       companyName: '',
@@ -32,20 +29,18 @@ export default function CoverLetter() {
       jobDescription: '',
       resumeFile: null,
       selectedResumeId: null,
-      tone: 'balanced',
    });
-   const [generatedLetter, setGeneratedLetter] = useState<string>('');
-   const [isGenerating, setIsGenerating] = useState(false);
+   const [isAnalysing, setIsAnalysing] = useState(false);
    const [isDragging, setIsDragging] = useState(false);
-   const [error, setError] = useState('');
    const [showResumeSelector, setShowResumeSelector] = useState(false);
-   const [showPreview, setShowPreview] = useState(false);
+   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+      null
+   );
 
    useEffect(() => {
       // Fetch saved resumes when component mounts
       fetchResumes();
    }, [fetchResumes]);
-
    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) {
@@ -57,7 +52,18 @@ export default function CoverLetter() {
          setError('');
       }
    };
-
+   const selectedResume = formData.selectedResumeId
+      ? resumes.find((r) => r._id === formData.selectedResumeId)
+      : null;
+   const handleSelectSavedResume = (resumeId: string) => {
+      setFormData({
+         ...formData,
+         selectedResumeId: resumeId,
+         resumeFile: null,
+      });
+      setShowResumeSelector(false);
+      setError('');
+   };
    const handleDragOver = (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragging(true);
@@ -81,36 +87,25 @@ export default function CoverLetter() {
       }
    };
 
-   const handleSelectSavedResume = (resumeId: string) => {
-      setFormData({
-         ...formData,
-         selectedResumeId: resumeId,
-         resumeFile: null,
-      });
-      setShowResumeSelector(false);
-      setError('');
-   };
-
-   const convertResumeToText = (resume: Resume): string => {
-      // Convert resume object to text format for AI
+   // Convert resume object to text for analysis
+   const resumeToText = (resume: any): string => {
       let text = '';
 
-      // Personal Info
-      if (resume.personal_info.full_name) {
-         text += `${resume.personal_info.full_name}\n`;
+      // Personal info
+      if (resume.personal_info) {
+         const info = resume.personal_info;
+         if (info.full_name) text += `${info.full_name}\n`;
+         if (info.profession) text += `${info.profession}\n`;
+         if (info.email) text += `Email: ${info.email}\n`;
+         if (info.phone) text += `Phone: ${info.phone}\n`;
+         if (info.location) text += `Location: ${info.location}\n`;
+         if (info.linkedin) text += `LinkedIn: ${info.linkedin}\n`;
+         if (info.github) text += `GitHub: ${info.github}\n`;
+         if (info.website) text += `Website: ${info.website}\n`;
+         text += '\n';
       }
-      if (resume.personal_info.email) {
-         text += `Email: ${resume.personal_info.email}\n`;
-      }
-      if (resume.personal_info.phone) {
-         text += `Phone: ${resume.personal_info.phone}\n`;
-      }
-      if (resume.personal_info.location) {
-         text += `Location: ${resume.personal_info.location}\n`;
-      }
-      text += '\n';
 
-      // Professional Summary
+      // Professional summary
       if (resume.professional_summary) {
          text += `PROFESSIONAL SUMMARY\n${resume.professional_summary}\n\n`;
       }
@@ -118,7 +113,7 @@ export default function CoverLetter() {
       // Experience
       if (resume.experience && resume.experience.length > 0) {
          text += 'EXPERIENCE\n';
-         resume.experience.forEach((exp) => {
+         resume.experience.forEach((exp: any) => {
             text += `${exp.position} at ${exp.company}\n`;
             text += `${exp.start_date} - ${exp.is_current ? 'Present' : exp.end_date}\n`;
             text += `${exp.description}\n\n`;
@@ -128,172 +123,101 @@ export default function CoverLetter() {
       // Education
       if (resume.education && resume.education.length > 0) {
          text += 'EDUCATION\n';
-         resume.education.forEach((edu) => {
+         resume.education.forEach((edu: any) => {
             text += `${edu.degree} in ${edu.field}\n`;
             text += `${edu.institution}${edu.gpa ? ` - GPA: ${edu.gpa}` : ''}\n`;
-            text += `${edu.graduation_date}\n\n`;
+            text += `Graduated: ${edu.graduation_date}\n\n`;
          });
-      }
-
-      // Skills
-      if (resume.skills && resume.skills.length > 0) {
-         text += `SKILLS\n${resume.skills.join(', ')}\n\n`;
       }
 
       // Projects
       if (resume.project && resume.project.length > 0) {
          text += 'PROJECTS\n';
-         resume.project.forEach((proj) => {
-            text += `${proj.name} (${proj.type})\n${proj.description}\n\n`;
+         resume.project.forEach((proj: any) => {
+            text += `${proj.name} (${proj.type})\n`;
+            text += `${proj.description}\n\n`;
          });
+      }
+
+      // Skills
+      if (resume.skills && resume.skills.length > 0) {
+         text += `SKILLS\n${resume.skills.join(', ')}\n`;
       }
 
       return text;
    };
 
-   const handleGenerate = async () => {
-      // Validation
-      if (!formData.companyName.trim()) {
-         setError('Please enter a company name');
-         return;
-      }
-      if (!formData.jobTitle.trim()) {
-         setError('Please enter a job title');
-         return;
-      }
-      if (!formData.jobDescription.trim()) {
-         setError('Please enter a job description');
-         return;
-      }
-      if (!formData.resumeFile && !formData.selectedResumeId) {
-         setError('Please select a saved resume or upload a resume file');
-         return;
-      }
-
-      setIsGenerating(true);
-      setError('');
-
+   const handleAnalyze = async () => {
       try {
+         // Validation
+         if (!formData.companyName.trim()) {
+            setError('Please enter a company name');
+            return;
+         }
+         if (!formData.jobTitle.trim()) {
+            setError('Please enter a job title');
+            return;
+         }
+         if (!formData.jobDescription.trim()) {
+            setError('Please enter a job description');
+            return;
+         }
+         if (!formData.resumeFile && !formData.selectedResumeId) {
+            setError('Please select or upload a resume');
+            return;
+         }
+
+         setError('');
+         setIsAnalysing(true);
+         setAnalysisResult(null);
+
+         // Extract resume text
          let resumeText = '';
-         let applicantInfo = {
-            name: '',
-            phone: '',
-            email: '',
-         };
-
-         // Get resume text from either uploaded file or saved resume
          if (formData.resumeFile) {
-            const pdfText = await extractTextFromPDF(formData.resumeFile);
-
-            // Process the PDF text with AI to get structured data
-            const processedResume = await processResumeWithAI(
-               pdfText,
-               'Uploaded Resume'
-            );
-
-            // Use the processed resume data
-            applicantInfo = {
-               name: processedResume.personal_info?.full_name || '',
-               phone: processedResume.personal_info?.phone || '',
-               email: processedResume.personal_info?.email || '',
-            };
-
-            // Convert processed resume to text format for the cover letter generator
-            resumeText = JSON.stringify(processedResume, null, 2);
-         } else if (formData.selectedResumeId) {
-            const selectedResume = resumes.find(
-               (r) => r._id === formData.selectedResumeId
-            );
-            if (selectedResume) {
-               resumeText = convertResumeToText(selectedResume);
-               applicantInfo = {
-                  name: selectedResume.personal_info?.full_name || '',
-                  phone: selectedResume.personal_info?.phone || '',
-                  email: selectedResume.personal_info?.email || '',
-               };
-            }
+            // Extract text from uploaded PDF
+            resumeText = await extractTextFromPDF(formData.resumeFile);
+         } else if (selectedResume) {
+            // Convert saved resume to text
+            resumeText = resumeToText(selectedResume);
          }
 
-         if (!resumeText) {
-            throw new Error('Failed to extract resume information');
-         }
-
-         // Generate cover letter with AI
-         const coverLetter = await generateCoverLetter(
+         // Call AI analysis
+         const result = await analyseResume(
             {
                companyName: formData.companyName,
                jobTitle: formData.jobTitle,
                location: formData.location,
                jobDescription: formData.jobDescription,
             },
-            resumeText,
-            formData.tone
+            resumeText
          );
 
-         setGeneratedLetter(coverLetter);
-         // Store applicant info in state for preview
-         setFormData((prev) => ({
-            ...prev,
-            applicantInfo,
-         }));
-         setShowPreview(true);
+         setAnalysisResult(result);
       } catch (err: any) {
-         console.error('Error generating cover letter:', err);
-         setError(
-            err.message || 'Failed to generate cover letter. Please try again.'
-         );
+         console.error('Analysis error:', err);
+         setError(err.message || 'Failed to analyze resume. Please try again.');
       } finally {
-         setIsGenerating(false);
+         setIsAnalysing(false);
       }
    };
 
-   // If showing preview, render the preview component
-   if (showPreview && generatedLetter) {
-      const selectedResume = formData.selectedResumeId
-         ? resumes.find((r) => r._id === formData.selectedResumeId)
-         : null;
+   const handleNewAnalysis = () => {
+      setAnalysisResult(null);
+      setError('');
+   };
 
-      let applicantName = '';
-      let applicantPhone = '';
-      let applicantEmail = '';
-
-      // Use applicant info from saved resume or extracted from PDF
-      if (selectedResume) {
-         applicantName = selectedResume.personal_info?.full_name || '';
-         applicantPhone = selectedResume.personal_info?.phone || '';
-         applicantEmail = selectedResume.personal_info?.email || '';
-      } else if ((formData as any).applicantInfo) {
-         // Use extracted info from PDF upload
-         applicantName = (formData as any).applicantInfo?.name || 'Applicant';
-         applicantPhone = (formData as any).applicantInfo?.phone || '';
-         applicantEmail = (formData as any).applicantInfo?.email || '';
-      }
-
-      // Ensure applicant name is only one line (in case it contains extra content)
-      if (applicantName && applicantName.includes('\n')) {
-         applicantName = applicantName.split('\n')[0].trim();
-      }
-
+   // When analysis is complete, show only results (similar to CoverLetterPreview)
+   if (analysisResult) {
       return (
-         <CoverLetterPreview
-            key={generatedLetter.substring(0, 50)} // Force re-render when letter changes
-            coverLetter={generatedLetter}
-            jobTitle={formData.jobTitle}
-            companyName={formData.companyName}
-            companyLocation={formData.location}
-            applicantName={applicantName}
-            applicantPhone={applicantPhone}
-            applicantEmail={applicantEmail}
+         <AnalyseResult
+            result={analysisResult}
+            onNewAnalysis={handleNewAnalysis}
          />
       );
    }
 
-   const selectedResume = formData.selectedResumeId
-      ? resumes.find((r) => r._id === formData.selectedResumeId)
-      : null;
-
    return (
-      <div className="bg-(--color-background-dark)">
+      <div className=" bg-(--color-background-dark)">
          {/* Main Content */}
          <div className="">
             <div className="flex-1">
@@ -374,51 +298,6 @@ export default function CoverLetter() {
                         rows={6}
                         className="w-full px-4 py-3 border border-gray-600 bg-(--color-input-bg) text-(--color-input-text) rounded-lg outline-none focus:ring-2 focus:ring-(--color-primary) resize-none"
                      />
-                  </div>
-
-                  {/* Tone Selector */}
-                  <div className="space-y-2">
-                     <label className="block text-white font-medium text-base">
-                        Tone
-                     </label>
-                     <div className="grid grid-cols-3 gap-0 bg-(--color-input-bg) rounded-lg p-2 border border-gray-600">
-                        <button
-                           onClick={() =>
-                              setFormData({ ...formData, tone: 'conservative' })
-                           }
-                           className={`px-4 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                              formData.tone === 'conservative'
-                                 ? 'bg-(--color-primary) text-(--color-background-dark)'
-                                 : 'text-white/50 hover:text-white'
-                           }`}
-                        >
-                           Conservative
-                        </button>
-                        <button
-                           onClick={() =>
-                              setFormData({ ...formData, tone: 'balanced' })
-                           }
-                           className={`px-4 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                              formData.tone === 'balanced'
-                                 ? 'bg-(--color-primary) text-(--color-background-dark)'
-                                 : 'text-white/50 hover:text-white'
-                           }`}
-                        >
-                           Balanced
-                        </button>
-                        <button
-                           onClick={() =>
-                              setFormData({ ...formData, tone: 'enthusiastic' })
-                           }
-                           className={`px-4 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                              formData.tone === 'enthusiastic'
-                                 ? 'bg-(--color-primary) text-(--color-background-dark)'
-                                 : 'text-white/50 hover:text-white'
-                           }`}
-                        >
-                           Enthusiastic
-                        </button>
-                     </div>
                   </div>
 
                   <label className="block text-white font-medium text-base">
@@ -529,20 +408,20 @@ export default function CoverLetter() {
                      </div>
                   )}
 
-                  {/* Generate Button */}
+                  {/* Analysing Button */}
                   <button
-                     onClick={handleGenerate}
-                     disabled={isGenerating}
-                     className="cursor-pointer w-full flex justify-center items-center gap-2 text-sm font-bold border-2 border-(--color-primary) px-4 py-3 rounded-lg text-(--color-primary) hover:bg-(--color-primary)/10 transition-colors"
+                     onClick={handleAnalyze}
+                     disabled={isAnalysing}
+                     className="cursor-pointer w-full flex justify-center items-center gap-2 text-sm font-bold border-2 border-(--color-primary) px-4 py-3 rounded-lg text-(--color-primary) hover:bg-(--color-primary)/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                     {isGenerating ? (
+                     {isAnalysing ? (
                         <>
-                           <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
-                           Generating...
+                           <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-(--color-primary)"></div>
+                           Analysing...
                         </>
                      ) : (
                         <>
-                           <WandSparkles className="size-6" /> Generate with AI
+                           <WandSparkles className="size-6" /> Analyse with AI
                         </>
                      )}
                   </button>

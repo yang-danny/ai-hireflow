@@ -683,3 +683,201 @@ Your output should start with "Dear Hiring Manager," and end with "Sincerely," -
       handleAIError(error, 'generating cover letter');
    }
 }
+
+/**
+ * Interface for category-specific feedback
+ */
+export interface CategoryFeedback {
+   score: number;
+   feedback: string;
+}
+
+/**
+ * Interface for the complete resume analysis result
+ */
+export interface AnalysisResult {
+   overallScore: number;
+   structure: CategoryFeedback;
+   toneAndStyle: CategoryFeedback;
+   skills: CategoryFeedback;
+   content: CategoryFeedback;
+   atsScore: number;
+   atsSuggestions: string[];
+}
+
+/**
+ * Analyzes a resume against job requirements and returns detailed feedback.
+ * @param jobDetails Object containing company name, job title, location, and job description
+ * @param resumeText The resume text content to analyze
+ * @returns Comprehensive analysis result with scores and feedback
+ */
+export async function analyseResume(
+   jobDetails: {
+      companyName: string;
+      jobTitle: string;
+      location?: string;
+      jobDescription: string;
+   },
+   resumeText: string
+): Promise<AnalysisResult> {
+   try {
+      const safetySettings = [
+         {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+      ];
+
+      const modelParams: ModelParams = {
+         model: 'gemini-2.5-pro',
+         generationConfig: {
+            temperature: 0.3, // Lower temperature for more consistent analysis
+            maxOutputTokens: 8192,
+         },
+         safetySettings,
+      };
+
+      const prompt = `
+You are an expert resume analyzer and career coach. Analyze the following resume against the provided job requirements and return a comprehensive evaluation.
+
+JOB DETAILS:
+- Company: ${jobDetails.companyName}
+- Position: ${jobDetails.jobTitle}
+${jobDetails.location ? `- Location: ${jobDetails.location}` : ''}
+
+JOB DESCRIPTION:
+${jobDetails.jobDescription}
+
+RESUME TO ANALYZE:
+${resumeText}
+
+Analyze the resume across multiple dimensions and return ONLY a valid JSON object (no markdown, no code blocks, just raw JSON) with this exact structure:
+
+{
+  "overallScore": number (0-100, weighted average of all categories),
+  "structure": {
+    "score": number (0-100),
+    "feedback": "Detailed feedback about resume structure, formatting, organization, section ordering, readability, white space usage, and visual hierarchy. Include specific suggestions for improvement."
+  },
+  "toneAndStyle": {
+    "score": number (0-100),
+    "feedback": "Analysis of language tone, writing style, professionalism, use of action verbs, consistency, and overall presentation. Provide specific examples and improvement suggestions."
+  },
+  "skills": {
+    "score": number (0-100),
+    "feedback": "Evaluation of skills alignment with job requirements, technical competencies, soft skills representation, and skill relevancy. Identify missing critical skills and over-represented irrelevant skills."
+  },
+  "content": {
+    "score": number (0-100),
+    "feedback": "Assessment of content quality, achievement quantification, impact demonstration, relevance to target role, experience alignment, and overall completeness. Suggest specific improvements."
+  },
+  "atsScore": number (0-100, focused on ATS compatibility),
+  "atsSuggestions": [
+    "At least 3-5 specific, actionable suggestions to improve ATS compatibility. Focus on keyword usage, formatting compatibility, section headers, file format, special characters, tables/columns, and other ATS-specific factors."
+  ]
+}
+
+ANALYSIS CRITERIA:
+
+1. **Structure (${jobDetails.jobTitle} context):**
+   - Logical flow and section organization
+   - Appropriate length and density
+   - Visual hierarchy and readability
+   - Professional formatting
+
+2. **Tone & Style:**
+   - Professional and appropriate language
+   - Strong action verbs and active voice
+   - Consistent tense and style
+   - Clear and concise communication
+
+3. **Skills Match:**
+   - Alignment with required job skills
+   - Relevant technical skills for ${jobDetails.jobTitle}
+   - Soft skills demonstration
+   - Industry-specific competencies
+
+4. **Content Quality:**
+   - Quantified achievements and results
+   - Relevance to ${jobDetails.companyName} and ${jobDetails.jobTitle}
+   - Demonstrated impact and value
+   - Appropriate level of detail
+
+5. **ATS Optimization:**
+   - Keyword matching from job description
+   - ATS-friendly formatting (no tables, columns, headers/footers)
+   - Standard section headers
+   - Readable fonts and structure
+   - Proper file format compatibility
+
+SCORING GUIDELINES:
+- 90-100: Excellent, minimal improvements needed
+- 80-89: Very good, minor refinements suggested
+- 70-79: Good, some improvements recommended
+- 60-69: Fair, several improvements needed
+- Below 60: Needs significant work
+
+Provide constructive, specific, and actionable feedback. Focus on improvements that will increase the candidate's chances for ${jobDetails.jobTitle} at ${jobDetails.companyName}.
+
+Return ONLY the JSON object, no additional text or formatting.
+`;
+
+      let text = await generateContentWithAI(modelParams, prompt);
+
+      // If text doesn't start with {, try to find the JSON object
+      if (!text.startsWith('{')) {
+         const jsonMatch = text.match(/\{[\s\S]*\}/);
+         if (jsonMatch) {
+            text = jsonMatch[0];
+         }
+      }
+
+      // Parse the JSON
+      let parsedData: AnalysisResult;
+      try {
+         parsedData = JSON.parse(text);
+      } catch (parseError) {
+         console.error('JSON parse error:', parseError);
+         console.error('Failed to parse text:', text);
+         throw new Error('AI returned invalid JSON. Please try again.');
+      }
+
+      // Validate the structure
+      if (
+         typeof parsedData.overallScore !== 'number' ||
+         typeof parsedData.atsScore !== 'number' ||
+         !parsedData.structure ||
+         !parsedData.toneAndStyle ||
+         !parsedData.skills ||
+         !parsedData.content ||
+         !Array.isArray(parsedData.atsSuggestions)
+      ) {
+         throw new Error('AI returned incomplete analysis. Please try again.');
+      }
+
+      // Ensure scores are within valid range
+      const clampScore = (score: number) => Math.max(0, Math.min(100, score));
+      parsedData.overallScore = clampScore(parsedData.overallScore);
+      parsedData.atsScore = clampScore(parsedData.atsScore);
+      parsedData.structure.score = clampScore(parsedData.structure.score);
+      parsedData.toneAndStyle.score = clampScore(parsedData.toneAndStyle.score);
+      parsedData.skills.score = clampScore(parsedData.skills.score);
+      parsedData.content.score = clampScore(parsedData.content.score);
+
+      return parsedData;
+   } catch (error: any) {
+      handleAIError(error, 'analyzing resume');
+   }
+}

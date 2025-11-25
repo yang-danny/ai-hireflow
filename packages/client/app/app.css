@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
 @import 'tailwindcss';
 
@@ -55,6 +55,19 @@
    --color-preview-border: #374151;
    --color-ai-enhance-start: #a855f7;
    --color-ai-enhance-end: #7c3aed;
+
+   /* Analyzer specific colors */
+   --color-analyzer-bg: #1f1f3a;
+   --color-analyzer-border: #30273a;
+   --color-analyzer-input-bg: #30273a;
+   --color-analyzer-placeholder: #aa9abc;
+   --color-analyzer-label: #d1d5db;
+   --color-analyzer-overlay: rgba(48, 39, 58, 0.5);
+   --color-analyzer-card-bg: rgba(26, 26, 46, 0.5);
+   --color-analyzer-summary-border: rgba(0, 196, 204, 0.3);
+   --color-feedback-great: #4ade80;
+   --color-feedback-tip: #facc15;
+   --color-score-text: #9ca3af;
 }
 
 /* Custom utilities */
@@ -124,6 +137,12 @@
 /* Progress bar fill */
 @utility progress-bar-fill {
    background-color: #00c4cc;
+}
+
+/* Backdrop blur for header */
+@utility backdrop-blur-header {
+   backdrop-filter: blur(4px);
+   background-color: rgba(26, 26, 46, 0.8);
 }
 
 /* Text styles */

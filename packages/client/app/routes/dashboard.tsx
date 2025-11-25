@@ -9,7 +9,7 @@ import { ResumeAnalyzerIcon } from '../components/icons/icons';
 import { CoverLetterIcon } from '../components/icons/icons';
 import { InterviewPrepIcon } from '../components/icons/icons';
 import Resume from './resume';
-import Analyzer from './analyzer';
+import Analyzer from './resume-analyzer';
 import CoverLetter from './cover-letter';
 import Interview from './interview';
 

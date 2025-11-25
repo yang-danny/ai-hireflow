@@ -12,7 +12,7 @@ export default [
 
    route('/auth/success', 'routes/authCallback.tsx'),
    route('/auth/error', 'routes/authError.tsx'),
-   route('/cover-letter', 'routes/cover-letter.tsx'),
+
    layout('routes/protected-layout.tsx', [
       route('dashboard', 'routes/dashboard.tsx'),
       route('resume', 'routes/resume.tsx'),
@@ -21,5 +21,7 @@ export default [
       route('resume-generator/:id', 'routes/resume-generator.tsx', {
          id: 'routes/resume-generator-id',
       }),
+      route('resume-analyzer', 'routes/resume-analyzer.tsx'),
+      route('cover-letter', 'routes/cover-letter.tsx'),
    ]),
 ] satisfies RouteConfig;
