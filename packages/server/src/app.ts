@@ -14,6 +14,7 @@ import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import resumeRoutes from './routes/resume.routes.js';
+import jobRoutes from './routes/job.routes.js';
 
 export async function buildApp(): Promise<FastifyInstance> {
    const fastify = Fastify({
@@ -60,7 +61,8 @@ export async function buildApp(): Promise<FastifyInstance> {
             health: '/api/health',
             auth: '/api/auth',
             users: '/api/users',
-            resumes: '/api/resumes', // NEW
+            resumes: '/api/resumes',
+            jobs: '/api/jobs',
          },
       };
    });
@@ -69,7 +71,8 @@ export async function buildApp(): Promise<FastifyInstance> {
    await fastify.register(healthRoutes, { prefix: '/api/health' });
    await fastify.register(authRoutes, { prefix: '/api/auth' });
    await fastify.register(userRoutes, { prefix: '/api/users' });
-   await fastify.register(resumeRoutes, { prefix: '/api/resumes' }); // NEW
+   await fastify.register(resumeRoutes, { prefix: '/api/resumes' });
+   await fastify.register(jobRoutes, { prefix: '/api/jobs' });
 
    return fastify;
 }

@@ -118,9 +118,9 @@ export default function AnalyseResult({
       <div className="flex-1">
          <div className="bg-(--color-background-card) border border-(--color-analyzer-border) rounded-xl p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between">
-               <h2 className="text-white text-2xl font-bold">
+               <h3 className="text-gray-400 text-base font-medium">
                   Resume Analysis Result
-               </h2>
+               </h3>
                {onNewAnalysis && (
                   <button
                      onClick={onNewAnalysis}

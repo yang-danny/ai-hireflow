@@ -11,7 +11,7 @@ import { InterviewPrepIcon } from '../components/icons/icons';
 import Resume from './resume';
 import Analyzer from './resume-analyzer';
 import CoverLetter from './cover-letter';
-import Interview from './interview';
+import InterviewPreparation from './interview-preparation';
 
 export default function Dashboard() {
    const { user } = useAuthStore();
@@ -64,7 +64,7 @@ export default function Dashboard() {
          case 'coverLetter':
             return <CoverLetter />;
          case 'interview':
-            return <Interview />;
+            return <InterviewPreparation />;
          case 'home':
          default:
             return (

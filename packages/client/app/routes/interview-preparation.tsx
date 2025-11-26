@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { WandSparkles } from 'lucide-react';
 import { useResumeStore } from 'store/useResumeStore';
-import { analyseResume, type AnalysisResult } from '../utils/AI';
+import {
+   generateInterviewPreparation,
+   type InterviewPreparationResult,
+} from '../utils/AI';
 import { extractTextFromPDF } from '../utils/pdfExtractor';
-import AnalyseResult from '../components/AnalyseResult';
+import PreparationDetails from '../components/PreparationDetails';
 import JobInformation, { type JobInfoData } from '../components/JobInformation';
 import ResumeSelect from '../components/ResumeSelect';
 
@@ -15,9 +18,9 @@ interface FormData {
    resumeFile: File | null;
    selectedResumeId: string | null;
 }
-export default function ResumeAnalyzer() {
+export default function InterviewPreparation() {
    const [error, setError] = useState('');
-   const { resumes, fetchResumes } = useResumeStore();
+   const { resumes } = useResumeStore();
    const [jobInfo, setJobInfo] = useState<JobInfoData>({
       companyName: '',
       jobTitle: '',
@@ -28,10 +31,9 @@ export default function ResumeAnalyzer() {
    const [selectedResumeId, setSelectedResumeId] = useState<string | null>(
       null
    );
-   const [isAnalysing, setIsAnalysing] = useState(false);
-   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
-      null
-   );
+   const [isGenerating, setIsGenerating] = useState(false);
+   const [preparationResult, setPreparationResult] =
+      useState<InterviewPreparationResult | null>(null);
 
    const selectedResume = selectedResumeId
       ? resumes.find((r) => r._id === selectedResumeId)
@@ -97,7 +99,7 @@ export default function ResumeAnalyzer() {
       return text;
    };
 
-   const handleAnalyze = async () => {
+   const handleGenerate = async () => {
       try {
          // Validation
          if (!jobInfo.companyName.trim()) {
@@ -118,8 +120,8 @@ export default function ResumeAnalyzer() {
          }
 
          setError('');
-         setIsAnalysing(true);
-         setAnalysisResult(null);
+         setIsGenerating(true);
+         setPreparationResult(null);
 
          // Extract resume text
          let resumeText = '';
@@ -131,29 +133,32 @@ export default function ResumeAnalyzer() {
             resumeText = resumeToText(selectedResume);
          }
 
-         // Call AI analysis
-         const result = await analyseResume(jobInfo, resumeText);
+         // Call AI generation
+         const result = await generateInterviewPreparation(jobInfo, resumeText);
 
-         setAnalysisResult(result);
+         setPreparationResult(result);
       } catch (err: any) {
-         console.error('Analysis error:', err);
-         setError(err.message || 'Failed to analyze resume. Please try again.');
+         console.error('Generation error:', err);
+         setError(
+            err.message || 'Failed to generate preparation. Please try again.'
+         );
       } finally {
-         setIsAnalysing(false);
+         setIsGenerating(false);
       }
    };
 
-   const handleNewAnalysis = () => {
-      setAnalysisResult(null);
+   const handleNewPreparation = () => {
+      setPreparationResult(null);
       setError('');
    };
 
-   // When analysis is complete, show only results (similar to CoverLetterPreview)
-   if (analysisResult) {
+   // When preparation is complete, show results
+   if (preparationResult) {
       return (
-         <AnalyseResult
-            result={analysisResult}
-            onNewAnalysis={handleNewAnalysis}
+         <PreparationDetails
+            preparationResult={preparationResult}
+            jobTitle={jobInfo.jobTitle}
+            onNewPreparation={handleNewPreparation}
          />
       );
    }
@@ -182,20 +187,20 @@ export default function ResumeAnalyzer() {
                      </div>
                   )}
 
-                  {/* Analysing Button */}
                   <button
-                     onClick={handleAnalyze}
-                     disabled={isAnalysing}
+                     onClick={handleGenerate}
+                     disabled={isGenerating}
                      className="cursor-pointer w-full flex justify-center items-center gap-2 text-sm font-bold border-2 border-(--color-primary) px-4 py-3 rounded-lg text-(--color-primary) hover:bg-(--color-primary)/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                     {isAnalysing ? (
+                     {isGenerating ? (
                         <>
                            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-(--color-primary)"></div>
-                           Analysing...
+                           Generating...
                         </>
                      ) : (
                         <>
-                           <WandSparkles className="size-6" /> Analyse with AI
+                           <WandSparkles className="size-6" /> Interview
+                           Preparation with AI
                         </>
                      )}
                   </button>

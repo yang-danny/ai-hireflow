@@ -881,3 +881,349 @@ Return ONLY the JSON object, no additional text or formatting.
       handleAIError(error, 'analyzing resume');
    }
 }
+
+/**
+ * Interface for preparation plan
+ */
+export interface PreparationPlan {
+   timeline: string;
+   employerResearch: string;
+   technicalResources: Array<{
+      name: string;
+      description: string;
+      url?: string;
+   }>;
+   skillAlignment: string;
+   practiceAndFinalPrep: string;
+}
+
+/**
+ * Interface for mock questions
+ */
+export interface MockQuestions {
+   technicalQuestions: string[];
+   behavioralQuestions: string[];
+   questionsToAsk: string[];
+}
+
+/**
+ * Interface for interview analytics
+ */
+export interface InterviewAnalytics {
+   confidence: number;
+   clarity: number;
+   logicAndStructure: number;
+   toneAndPronunciation: number;
+   improvementSuggestions: string[];
+}
+
+/**
+ * Interface for complete interview preparation result
+ */
+export interface InterviewPreparationResult {
+   preparationPlan: PreparationPlan;
+   mockQuestions: MockQuestions;
+}
+
+/**
+ * Generates comprehensive interview preparation content based on job details and resume.
+ * @param jobDetails Object containing company name, job title, location, and job description
+ * @param resumeText The resume text content to analyze
+ * @returns Complete interview preparation with plan and mock questions
+ */
+export async function generateInterviewPreparation(
+   jobDetails: {
+      companyName: string;
+      jobTitle: string;
+      location?: string;
+      jobDescription: string;
+   },
+   resumeText: string
+): Promise<InterviewPreparationResult> {
+   try {
+      const safetySettings = [
+         {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+      ];
+
+      const modelParams: ModelParams = {
+         model: 'gemini-2.5-pro',
+         generationConfig: {
+            temperature: 0.5,
+            maxOutputTokens: 8192,
+         },
+         safetySettings,
+      };
+
+      const prompt = `
+You are an expert career coach and interview preparation specialist. Generate a comprehensive interview preparation guide based on the following information.
+
+JOB DETAILS:
+- Company: ${jobDetails.companyName}
+- Position: ${jobDetails.jobTitle}
+${jobDetails.location ? `- Location: ${jobDetails.location}` : ''}
+
+JOB DESCRIPTION:
+${jobDetails.jobDescription}
+
+CANDIDATE'S RESUME:
+${resumeText}
+
+Generate a comprehensive interview preparation guide and return ONLY a valid JSON object (no markdown, no code blocks, just raw JSON) with this exact structure:
+
+{
+  "preparationPlan": {
+    "timeline": "A detailed timeline for interview preparation with specific phases and time allocations. Include what to do in each phase (e.g., Week 1: Research company, Week 2: Practice technical skills, etc.)",
+    "employerResearch": "Detailed guidance on researching ${jobDetails.companyName}, the interviewer role, company culture, recent news, products/services, competitors, and how to use this information effectively in the interview. Be specific.",
+    "technicalResources": [
+      {
+        "name": "Resource name",
+        "description": "Brief description of what this resource provides",
+        "url": "Optional URL to the resource (can be empty string if not applicable)"
+      }
+    ],
+    "skillAlignment": "Detailed strategy for aligning the candidate's skills and experiences from their resume with the job requirements. Highlight specific experiences to emphasize and how to present them effectively.",
+    "practiceAndFinalPrep": "Comprehensive final preparation checklist including mock interview tips, what to prepare the day before, day-of preparation, common pitfalls to avoid, and confidence-building techniques."
+  },
+  "mockQuestions": {
+    "technicalQuestions": [
+      "At least 5 technical questions specific to ${jobDetails.jobTitle} at ${jobDetails.companyName}. Base these on the job description and industry standards."
+    ],
+    "behavioralQuestions": [
+      "At least 5 behavioral questions using STAR method framework. Include questions about teamwork, conflict resolution, leadership, problem-solving, and handling challenges."
+    ],
+    "questionsToAsk": [
+      "At least 3 thoughtful questions the candidate should ask the interviewer. Make them specific to ${jobDetails.companyName} and ${jobDetails.jobTitle}."
+    ]
+  }
+}
+
+IMPORTANT GUIDELINES:
+
+1. **Preparation Plan:**
+   - Timeline should be realistic and actionable (e.g., 2-4 weeks)
+   - Employer research should be specific to ${jobDetails.companyName}
+   - Technical resources must be at least 5-7 objects with name, description, and optional url, relevant to ${jobDetails.jobTitle}
+   - Skill alignment should reference specific items from the candidate's resume
+   - Practice tips should be comprehensive and actionable
+
+2. **Mock Questions:**
+   - Technical questions should match the job level and requirements
+   - Include at least 5 technical questions
+   - Include at least 5 behavioral questions
+   - Include at least 3 questions for the candidate to ask
+   - Questions should be realistic and commonly asked in ${jobDetails.jobTitle} interviews
+
+3. **Quality:**
+   - Be specific and actionable
+   - Personalize content based on the resume and job description
+   - Provide concrete examples and resources
+   - Focus on practical, useful information
+
+Return ONLY the JSON object, no additional text or formatting.
+`;
+
+      let text = await generateContentWithAI(modelParams, prompt);
+
+      // If text doesn't start with {, try to find the JSON object
+      if (!text.startsWith('{')) {
+         const jsonMatch = text.match(/\{[\s\S]*\}/);
+         if (jsonMatch) {
+            text = jsonMatch[0];
+         }
+      }
+
+      // Parse the JSON
+      let parsedData: InterviewPreparationResult;
+      try {
+         parsedData = JSON.parse(text);
+      } catch (parseError) {
+         console.error('JSON parse error:', parseError);
+         console.error('Failed to parse text:', text);
+         throw new Error('AI returned invalid JSON. Please try again.');
+      }
+
+      // Validate the structure
+      if (
+         !parsedData.preparationPlan ||
+         !parsedData.mockQuestions ||
+         typeof parsedData.preparationPlan.timeline !== 'string' ||
+         typeof parsedData.preparationPlan.employerResearch !== 'string' ||
+         !Array.isArray(parsedData.preparationPlan.technicalResources) ||
+         typeof parsedData.preparationPlan.skillAlignment !== 'string' ||
+         typeof parsedData.preparationPlan.practiceAndFinalPrep !== 'string' ||
+         !Array.isArray(parsedData.mockQuestions.technicalQuestions) ||
+         !Array.isArray(parsedData.mockQuestions.behavioralQuestions) ||
+         !Array.isArray(parsedData.mockQuestions.questionsToAsk)
+      ) {
+         throw new Error(
+            'AI returned incomplete preparation data. Please try again.'
+         );
+      }
+
+      // Validate minimum question counts
+      if (parsedData.mockQuestions.technicalQuestions.length < 5) {
+         throw new Error(
+            'Insufficient technical questions generated. Please try again.'
+         );
+      }
+      if (parsedData.mockQuestions.behavioralQuestions.length < 5) {
+         throw new Error(
+            'Insufficient behavioral questions generated. Please try again.'
+         );
+      }
+      if (parsedData.mockQuestions.questionsToAsk.length < 3) {
+         throw new Error(
+            'Insufficient questions to ask generated. Please try again.'
+         );
+      }
+
+      return parsedData;
+   } catch (error: any) {
+      handleAIError(error, 'generating interview preparation');
+   }
+}
+
+/**
+ * Generates interview analytics based on recorded answers during mock interview.
+ * @param questions Array of questions that were asked
+ * @param answers Array of answers provided by the candidate
+ * @param jobTitle The job title for context
+ * @returns Interview analytics with scores and suggestions
+ */
+export async function generateInterviewAnalytics(
+   questions: string[],
+   answers: string[],
+   jobTitle: string
+): Promise<InterviewAnalytics> {
+   try {
+      const safetySettings = [
+         {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+         {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: HarmBlockThreshold.BLOCK_NONE,
+         },
+      ];
+
+      const modelParams: ModelParams = {
+         model: 'gemini-2.5-pro',
+         generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 4096,
+         },
+         safetySettings,
+      };
+
+      // Format Q&A pairs
+      const qaText = questions
+         .map(
+            (q, i) =>
+               `Q${i + 1}: ${q}\nA${i + 1}: ${answers[i] || 'No answer provided'}`
+         )
+         .join('\n\n');
+
+      const prompt = `
+You are an expert interview coach. Analyze the following mock interview performance for a ${jobTitle} position and provide detailed analytics.
+
+INTERVIEW TRANSCRIPT:
+${qaText}
+
+Analyze the candidate's responses and return ONLY a valid JSON object (no markdown, no code blocks, just raw JSON) with this exact structure:
+
+{
+  "confidence": number (0-100, evaluate based on answer completeness, assertiveness, and conviction),
+  "clarity": number (0-100, evaluate based on how clear and understandable the answers are),
+  "logicAndStructure": number (0-100, evaluate based on answer organization, use of frameworks like STAR, logical flow),
+  "toneAndPronunciation": number (0-100, evaluate based on professionalism, word choice, grammar, and communication style - note: for text responses, focus on written tone and grammar),
+  "improvementSuggestions": [
+    "At least 3-5 specific, actionable suggestions for improvement. Be constructive and detailed."
+  ]
+}
+
+SCORING GUIDELINES:
+- 90-100: Excellent, professional-level responses
+- 80-89: Very good, minor improvements needed
+- 70-79: Good, some areas to work on
+- 60-69: Fair, needs improvement
+- Below 60: Needs significant work
+
+ANALYSIS CRITERIA:
+1. **Confidence**: Does the candidate answer decisively? Are they providing complete responses?
+2. **Clarity**: Are the answers easy to understand? Is there unnecessary rambling?
+3. **Logic & Structure**: Do answers follow a clear structure (STAR for behavioral)? Is there logical flow?
+4. **Tone & Pronunciation**: For text, evaluate: professional language, grammar, word choice, and communication style
+5. **Improvement Suggestions**: Provide specific, actionable feedback tailored to ${jobTitle}
+
+Return ONLY the JSON object, no additional text or formatting.
+`;
+
+      let text = await generateContentWithAI(modelParams, prompt);
+
+      // If text doesn't start with {, try to find the JSON object
+      if (!text.startsWith('{')) {
+         const jsonMatch = text.match(/\{[\s\S]*\}/);
+         if (jsonMatch) {
+            text = jsonMatch[0];
+         }
+      }
+
+      // Parse the JSON
+      let parsedData: InterviewAnalytics;
+      try {
+         parsedData = JSON.parse(text);
+      } catch (parseError) {
+         console.error('JSON parse error:', parseError);
+         console.error('Failed to parse text:', text);
+         throw new Error('AI returned invalid JSON. Please try again.');
+      }
+
+      // Validate the structure
+      if (
+         typeof parsedData.confidence !== 'number' ||
+         typeof parsedData.clarity !== 'number' ||
+         typeof parsedData.logicAndStructure !== 'number' ||
+         typeof parsedData.toneAndPronunciation !== 'number' ||
+         !Array.isArray(parsedData.improvementSuggestions)
+      ) {
+         throw new Error('AI returned incomplete analytics. Please try again.');
+      }
+
+      // Ensure scores are within valid range
+      const clampScore = (score: number) => Math.max(0, Math.min(100, score));
+      parsedData.confidence = clampScore(parsedData.confidence);
+      parsedData.clarity = clampScore(parsedData.clarity);
+      parsedData.logicAndStructure = clampScore(parsedData.logicAndStructure);
+      parsedData.toneAndPronunciation = clampScore(
+         parsedData.toneAndPronunciation
+      );
+
+      return parsedData;
+   } catch (error: any) {
+      handleAIError(error, 'generating interview analytics');
+   }
+}

@@ -23,5 +23,6 @@ export default [
       }),
       route('resume-analyzer', 'routes/resume-analyzer.tsx'),
       route('cover-letter', 'routes/cover-letter.tsx'),
+      route('interview-preparation', 'routes/interview-preparation.tsx'),
    ]),
 ] satisfies RouteConfig;
