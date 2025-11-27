@@ -4,10 +4,12 @@ import { errorHandler } from './utils/errorHandler.js';
 // Plugins
 import envPlugin from './plugins/env.plugin.js';
 import corsPlugin from './plugins/cors.plugin.js';
-// import helmetPlugin from './plugins/helmet.plugin.js'; // COMMENT THIS OUT
+import helmetPlugin from './plugins/helmet.plugin.js';
 import databasePlugin from './plugins/database.plugin.js';
 import jwtPlugin from './plugins/jwt.plugin.js';
 import oauthPlugin from './plugins/oauth.plugin.js';
+import rateLimitPlugin from './plugins/rateLimit.plugin.js';
+import csrfPlugin from './plugins/csrf.plugin.js';
 
 // Routes
 import healthRoutes from './routes/health.routes.js';
@@ -42,12 +44,14 @@ export async function buildApp(): Promise<FastifyInstance> {
    // Set error handler
    fastify.setErrorHandler(errorHandler);
 
-   // Register plugins - CORS FIRST!
+   // Register plugins in order
    await fastify.register(envPlugin);
-   await fastify.register(corsPlugin); // Must be early
-   // await fastify.register(helmetPlugin); // DISABLED for now
+   await fastify.register(corsPlugin); // CORS must be early
+   await fastify.register(helmetPlugin); // Security headers
+   await fastify.register(rateLimitPlugin); // Rate limiting
    await fastify.register(databasePlugin);
    await fastify.register(jwtPlugin);
+   await fastify.register(csrfPlugin); // CSRF protection (after cookie/jwt)
    await fastify.register(oauthPlugin);
    // Root route
    fastify.get('/', async (request, reply) => {

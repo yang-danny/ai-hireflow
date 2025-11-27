@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams, useLocation } from 'react-router';
 import { GoogleIcon, LinkedInIcon, LogoIcon } from '../components/icons/icons';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Github } from 'lucide-react';
@@ -71,6 +71,7 @@ const SocialButton = ({
 
 const Auth = () => {
    const navigate = useNavigate();
+   const location = useLocation();
    const [searchParams] = useSearchParams();
    const {
       login,
@@ -82,7 +83,7 @@ const Auth = () => {
       isAuthenticated,
    } = useAuthStore();
 
-   const [isSignIn, setIsSignIn] = useState(true);
+   const isSignIn = location.pathname !== '/register';
    const [formData, setFormData] = useState({
       name: '',
       email: '',
@@ -180,7 +181,7 @@ const Auth = () => {
    };
 
    const toggleAuthMode = () => {
-      setIsSignIn(!isSignIn);
+      navigate(isSignIn ? '/register' : '/login');
       setFormData({ name: '', email: '', password: '' });
       setFormErrors({ name: '', email: '', password: '' });
    };

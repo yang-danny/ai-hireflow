@@ -14,16 +14,24 @@ interface NavItemProps {
    label: string;
    onClick: () => void;
    active?: boolean;
+   testId?: string;
 }
 
 interface DashboardSidebarProps {
    setActiveComponent: (component: string) => void;
 }
 
-function NavItem({ icon, label, onClick, active = false }: NavItemProps) {
+function NavItem({
+   icon,
+   label,
+   onClick,
+   active = false,
+   testId,
+}: NavItemProps) {
    return (
       <button
          onClick={onClick}
+         data-testid={testId}
          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
             active
                ? 'gradient-nav-active text-white'
@@ -60,6 +68,7 @@ export function DashboardSidebar({
          icon: <HomeNavIcon width={16} height={16} color="currentColor" />,
          label: 'Home',
          component: 'home',
+         testId: 'nav-home',
       },
       {
          icon: (
@@ -67,6 +76,7 @@ export function DashboardSidebar({
          ),
          label: 'AI Resume Generator',
          component: 'resume',
+         testId: 'nav-resume-generator',
       },
       {
          icon: (
@@ -74,11 +84,13 @@ export function DashboardSidebar({
          ),
          label: 'AI Resume Analyzer',
          component: 'analyzer',
+         testId: 'nav-resume-analyzer',
       },
       {
          icon: <CoverLetterIcon width={16} height={16} color="currentColor" />,
          label: 'AI Cover Letter Generator',
          component: 'coverLetter',
+         testId: 'nav-cover-letter',
       },
       {
          icon: (
@@ -86,6 +98,7 @@ export function DashboardSidebar({
          ),
          label: 'AI Interview Preparation',
          component: 'interview',
+         testId: 'nav-interview-prep',
       },
    ];
 
@@ -106,6 +119,7 @@ export function DashboardSidebar({
                   label={item.label}
                   onClick={() => handleNavClick(item.component)}
                   active={activeItem === item.component}
+                  testId={item.testId}
                />
             ))}
          </nav>
@@ -148,6 +162,7 @@ export function DashboardSidebar({
 
          {/* Mobile Sidebar */}
          <aside
+            data-sidebar="mobile"
             className={`fixed inset-y-0 left-0 bg-(--color-background-sidebar) backdrop-blur-xl p-6 flex flex-col z-40 transform ${
                isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
             } transition-transform duration-300 ease-in-out lg:hidden `}
@@ -163,7 +178,10 @@ export function DashboardSidebar({
          )}
 
          {/* Desktop Sidebar */}
-         <aside className="w-80 bg-(--color-background-sidebar) backdrop-blur-xl p-6 hidden lg:flex flex-col flex-shrink-0 min-h-screen">
+         <aside
+            data-sidebar="desktop"
+            className="w-80 bg-(--color-background-sidebar) backdrop-blur-xl p-6 hidden lg:flex flex-col flex-shrink-0 min-h-screen"
+         >
             {sidebarContent}
          </aside>
       </>

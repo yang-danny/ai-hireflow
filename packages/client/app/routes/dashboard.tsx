@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { DashboardSidebar } from '../components/DashboardSidebar';
 import { DashboardHeader } from '../components/DashboardHeader';
@@ -8,10 +8,24 @@ import { ResumeGeneratorIcon } from '../components/icons/icons';
 import { ResumeAnalyzerIcon } from '../components/icons/icons';
 import { CoverLetterIcon } from '../components/icons/icons';
 import { InterviewPrepIcon } from '../components/icons/icons';
-import Resume from './resume';
-import Analyzer from './resume-analyzer';
-import CoverLetter from './cover-letter';
-import InterviewPreparation from './interview-preparation';
+
+// Lazy load route components for code splitting
+const Resume = lazy(() => import('./resume'));
+const Analyzer = lazy(() => import('./resume-analyzer'));
+const CoverLetter = lazy(() => import('./cover-letter'));
+const InterviewPreparation = lazy(() => import('./interview-preparation'));
+
+// Loading component for Suspense fallback
+function LoadingSkeleton() {
+   return (
+      <div className="flex items-center justify-center p-12">
+         <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-4 border-t-primary border-gray-700 rounded-full animate-spin" />
+            <p className="text-sm text-(--color-text-secondary)">Loading...</p>
+         </div>
+      </div>
+   );
+}
 
 export default function Dashboard() {
    const { user } = useAuthStore();
@@ -96,7 +110,9 @@ export default function Dashboard() {
                   onNavigate={(destination) => setActiveComponent('/')}
                />
                <div className="flex flex-col lg:flex-row gap-4 p-6">
-                  {renderContent()}
+                  <Suspense fallback={<LoadingSkeleton />}>
+                     {renderContent()}
+                  </Suspense>
                   {/* Right Sidebar - Quick Tips */}
                   <aside className="w-full lg:w-80 flex-shrink-0 ">
                      <DashboardQuickTips />

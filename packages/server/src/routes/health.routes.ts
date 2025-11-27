@@ -1,22 +1,36 @@
 import type { FastifyInstance } from 'fastify';
-import { healthCheck } from '../controllers/health.controller.js';
+import {
+   healthCheck,
+   readinessCheck,
+   livenessCheck,
+} from '../controllers/health.controller.js';
 
 export default async function healthRoutes(fastify: FastifyInstance) {
+   // Main health check - comprehensive
    fastify.get('/', {
       schema: {
-         description: 'Health check endpoint',
+         description:
+            'Comprehensive health check with database and memory status',
          tags: ['health'],
-         response: {
-            200: {
-               type: 'object',
-               properties: {
-                  success: { type: 'boolean' },
-                  message: { type: 'string' },
-                  data: { type: 'object' },
-               },
-            },
-         },
       },
       handler: healthCheck,
+   });
+
+   // Readiness check - is service ready to receive traffic?
+   fastify.get('/ready', {
+      schema: {
+         description: 'Readiness probe for load balancers',
+         tags: ['health'],
+      },
+      handler: readinessCheck,
+   });
+
+   // Liveness check - is service alive?
+   fastify.get('/live', {
+      schema: {
+         description: 'Liveness probe for container orchestration',
+         tags: ['health'],
+      },
+      handler: livenessCheck,
    });
 }

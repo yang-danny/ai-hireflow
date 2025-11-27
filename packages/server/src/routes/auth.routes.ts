@@ -1,5 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import { AuthController } from '../controllers/auth.controller.js';
+import {
+   loginRateLimit,
+   registerRateLimit,
+} from '../plugins/rateLimit.plugin.js';
 
 export default async function authRoutes(fastify: FastifyInstance) {
    // Manual Google OAuth start (if plugin route doesn't work)
@@ -45,6 +49,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
    // Register with email/password
    fastify.post('/register', {
+      ...registerRateLimit,
       schema: {
          body: {
             type: 'object',
@@ -61,6 +66,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 
    // Login with email/password
    fastify.post('/login', {
+      ...loginRateLimit,
       schema: {
          body: {
             type: 'object',

@@ -1,6 +1,7 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { AuthService } from '../services/auth.service.js';
 import type { GoogleUserInfo } from '../types/oauth.js';
+import { sanitizeUserData } from '../utils/sanitize.js';
 
 interface RegisterBody {
    email: string;
@@ -120,11 +121,14 @@ export class AuthController {
             });
          }
 
+         // Sanitize inputs to prevent XSS
+         const sanitizedData = sanitizeUserData({ email, name });
+
          // Register user
          const user = await AuthService.registerWithEmail(
-            email,
+            sanitizedData.email || email,
             password,
-            name
+            sanitizedData.name || name
          );
 
          // Generate JWT token

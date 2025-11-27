@@ -29,8 +29,8 @@ async function oauthPlugin(fastify: FastifyInstance) {
       });
 
       fastify.log.info('✅ Google OAuth2 configured successfully');
-   } catch (error) {
-      fastify.log.error('❌ Failed to configure Google OAuth2:', error);
+   } catch (error: unknown) {
+      fastify.log.error({ err: error }, '❌ Failed to configure Google OAuth2');
       throw error;
    }
 }

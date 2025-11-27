@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { LogoIcon } from './icons/icons';
 import { Button } from './Button';
 import type { NavigationItem } from '../types/schema';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 interface HeaderProps {
    navigation: NavigationItem[];
@@ -47,18 +47,18 @@ export function Header({ navigation }: HeaderProps) {
                   </button>
                ) : (
                   <div className="hidden md:flex items-center gap-4">
-                     <button
-                        onClick={() => navigate('/auth')}
+                     <Link
+                        to="/login"
                         className="text-sm font-bold border-2 px-6 py-2.5 my-1 rounded-lg text-(--color-primary) hover:cursor-pointer text-(--color-primary-dark) transition-colors"
                      >
                         Sign In
-                     </button>
-                     <button
-                        onClick={() => navigate('/auth')}
+                     </Link>
+                     <Link
+                        to="/register"
                         className="px-4 py-2 bg-gradient-to-r from-cyan-400 to-teal-500 text-white font-medium rounded-lg hover:cursor-pointer shadow-lg hover:shadow-cyan-500/40 transition-shadow"
                      >
-                        Get Started
-                     </button>
+                        Sign Up
+                     </Link>
                   </div>
                )}
                {/* Mobile Menu Button */}
@@ -92,10 +92,15 @@ export function Header({ navigation }: HeaderProps) {
                         </a>
                      ))}
                      <div className="flex flex-col gap-3 mt-4">
-                        <button className="text-sm font-bold text-(--color-primary)">
+                        <Link
+                           to="/login"
+                           className="text-sm font-bold text-(--color-primary)"
+                        >
                            Login
-                        </button>
-                        <Button variant="primary">Start Now</Button>
+                        </Link>
+                        <Link to="/register">
+                           <Button variant="primary">Sign Up</Button>
+                        </Link>
                      </div>
                   </nav>
                </div>

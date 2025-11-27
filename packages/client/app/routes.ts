@@ -9,6 +9,8 @@ export default [
    index('routes/home.tsx'),
 
    route('/auth', 'routes/auth.tsx'),
+   route('/login', 'routes/login.tsx'),
+   route('/register', 'routes/register.tsx'),
 
    route('/auth/success', 'routes/authCallback.tsx'),
    route('/auth/error', 'routes/authError.tsx'),

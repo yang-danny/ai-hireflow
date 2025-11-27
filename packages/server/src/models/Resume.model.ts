@@ -156,7 +156,13 @@ const ResumeSchema = new Schema<IResumeDocument>(
 );
 
 // Indexes for better query performance
+// Compound index for user's resumes sorted by creation date
 ResumeSchema.index({ userId: 1, createdAt: -1 });
+// Compound index for user's resumes sorted by update date (most common query)
+ResumeSchema.index({ userId: 1, updatedAt: -1 });
+// Index for public resumes
 ResumeSchema.index({ public: 1, createdAt: -1 });
+// Text index for searching resume titles
+ResumeSchema.index({ title: 'text' });
 
 export default mongoose.model<IResumeDocument>('Resume', ResumeSchema);

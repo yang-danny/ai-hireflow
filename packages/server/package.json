@@ -10,7 +10,11 @@
       "build": "tsc",
       "start": "node dist/server.js",
       "clean": "rm -rf dist",
-      "type-check": "tsc --noEmit"
+      "type-check": "tsc --noEmit",
+      "test": "vitest run",
+      "test:watch": "vitest",
+      "test:ui": "vitest --ui",
+      "test:coverage": "vitest run --coverage"
    },
    "keywords": [
       "fastify",
@@ -24,24 +28,38 @@
    "dependencies": {
       "@fastify/cookie": "^9.2.0",
       "@fastify/cors": "^8.4.2",
+      "@fastify/csrf-protection": "^6.4.1",
       "@fastify/env": "^4.3.0",
       "@fastify/helmet": "^11.1.1",
       "@fastify/jwt": "^7.2.3",
       "@fastify/oauth2": "^7.4.0",
+      "@fastify/rate-limit": "^8.1.1",
+      "@sentry/node": "^10.27.0",
+      "@sentry/profiling-node": "^10.27.0",
+      "axios-retry": "^4.5.0",
       "bcrypt": "^5.1.1",
       "dotenv": "^16.3.1",
       "fastify": "^4.25.2",
       "fastify-plugin": "^4.5.1",
       "jsonwebtoken": "^9.0.2",
-      "mongoose": "^8.0.3"
+      "mongoose": "^8.0.3",
+      "opossum": "^9.0.0",
+      "winston": "^3.18.3",
+      "winston-daily-rotate-file": "^5.0.0",
+      "xss": "^1.0.15"
    },
    "devDependencies": {
       "@types/bcrypt": "^5.0.2",
       "@types/jsonwebtoken": "^9.0.5",
       "@types/node": "^20.10.6",
+      "@types/opossum": "^8.1.9",
+      "@types/supertest": "^6.0.3",
+      "@vitest/ui": "^4.0.14",
       "nodemon": "^3.0.2",
       "pino-pretty": "^10.3.1",
+      "supertest": "^7.1.4",
       "tsx": "^4.20.6",
-      "typescript": "^5.3.3"
+      "typescript": "^5.3.3",
+      "vitest": "^4.0.14"
    }
 }
