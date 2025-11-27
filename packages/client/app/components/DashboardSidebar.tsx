@@ -16,6 +16,10 @@ interface NavItemProps {
    active?: boolean;
 }
 
+interface DashboardSidebarProps {
+   setActiveComponent: (component: string) => void;
+}
+
 function NavItem({ icon, label, onClick, active = false }: NavItemProps) {
    return (
       <button
@@ -32,7 +36,9 @@ function NavItem({ icon, label, onClick, active = false }: NavItemProps) {
    );
 }
 
-export function DashboardSidebar({ setActiveComponent }) {
+export function DashboardSidebar({
+   setActiveComponent,
+}: DashboardSidebarProps) {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
    const [activeItem, setActiveItem] = useState('home');
 

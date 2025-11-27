@@ -124,7 +124,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onImport }) => {
                            setCaptureError('');
                         }}
                         placeholder="https://www.linkedin.com/in/username"
-                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs bg-(--color-background-card) border-(--color-border) text-(--color-text)"
+                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs bg-(--color-background-card) border-2 border-(--color-border) text-(--color-text) hover:border-(--color-primary)"
                         disabled={isCapturing}
                      />
                      <p className="text-xs mt-1" style={{ color: '#64748b' }}>
@@ -138,7 +138,14 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onImport }) => {
                         className="block text-xs font-medium mb-2"
                         style={{ color: '#cbd5e1' }}
                      >
-                        Or Paste Profile Content{' '}
+                        <div className="flex items-center my-6">
+                           <hr className="flex-grow border-gray-700" />
+                           <span className="mx-4 text-gray-500 text-sm font-medium">
+                              OR
+                           </span>
+                           <hr className="flex-grow border-gray-700" />
+                        </div>
+                        Paste Profile Content{' '}
                         <span style={{ color: '#60a5fa' }}>(Recommended)</span>
                      </label>
                      <textarea
@@ -148,7 +155,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onImport }) => {
                            setCaptureError('');
                         }}
                         placeholder="Go to your LinkedIn profile, select all (Ctrl/Cmd + A), copy, and paste here..."
-                        className="w-full px-3 py-2 border rounded-lg outline-none transition-colors text-xs min-h-[100px] resize-y bg-(--color-background-card) border-(--color-border) text-(--color-text)"
+                        className="w-full px-3 py-2 border-2 rounded-lg outline-none transition-colors text-xs min-h-[100px] resize-y bg-(--color-background-card) border-(--color-border) text-(--color-text) hover:border-(--color-primary)"
                         disabled={isCapturing}
                      />
                   </div>

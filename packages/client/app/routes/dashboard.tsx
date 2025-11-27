@@ -91,7 +91,10 @@ export default function Dashboard() {
          <main className="flex-1 flex flex-col border-l-2 border-border relative z-10">
             {/* Center Content */}
             <div className="flex-1 flex flex-col">
-               <DashboardHeader user={user} />
+               <DashboardHeader
+                  user={user}
+                  onNavigate={(destination) => setActiveComponent('/')}
+               />
                <div className="flex flex-col lg:flex-row gap-4 p-6">
                   {renderContent()}
                   {/* Right Sidebar - Quick Tips */}
