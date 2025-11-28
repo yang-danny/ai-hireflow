@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 
 /**
  * Hook to trap focus within a container (for modals, dialogs)
@@ -125,12 +125,12 @@ export const focusClasses =
 /**
  * Keyboard navigation handler
  */
-export function useKeyboardNavigation(
-   items: any[],
+export function useKeyboardNavigation<T>(
+   items: T[],
    onSelect: (index: number) => void,
    isActive: boolean = true
 ) {
-   const selectedIndexRef = useRef(0);
+   const [selectedIndex, setSelectedIndex] = useState(0);
 
    useEffect(() => {
       if (!isActive) return;
@@ -139,29 +139,29 @@ export function useKeyboardNavigation(
          switch (e.key) {
             case 'ArrowDown':
                e.preventDefault();
-               selectedIndexRef.current = Math.min(
-                  selectedIndexRef.current + 1,
-                  items.length - 1
-               );
-               onSelect(selectedIndexRef.current);
+               setSelectedIndex((prev: number) => {
+                  const next = Math.min(prev + 1, items.length - 1);
+                  onSelect(next);
+                  return next;
+               });
                break;
             case 'ArrowUp':
                e.preventDefault();
-               selectedIndexRef.current = Math.max(
-                  selectedIndexRef.current - 1,
-                  0
-               );
-               onSelect(selectedIndexRef.current);
+               setSelectedIndex((prev: number) => {
+                  const next = Math.max(prev - 1, 0);
+                  onSelect(next);
+                  return next;
+               });
                break;
             case 'Home':
                e.preventDefault();
-               selectedIndexRef.current = 0;
-               onSelect(selectedIndexRef.current);
+               setSelectedIndex(0);
+               onSelect(0);
                break;
             case 'End':
                e.preventDefault();
-               selectedIndexRef.current = items.length - 1;
-               onSelect(selectedIndexRef.current);
+               setSelectedIndex(items.length - 1);
+               onSelect(items.length - 1);
                break;
          }
       };
@@ -170,5 +170,5 @@ export function useKeyboardNavigation(
       return () => window.removeEventListener('keydown', handleKeyboard);
    }, [items.length, onSelect, isActive]);
 
-   return selectedIndexRef.current;
+   return selectedIndex;
 }

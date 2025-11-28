@@ -55,6 +55,7 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({
                      target="_blank"
                      href={data.personal_info?.linkedin}
                      className="flex items-center gap-2"
+                     rel="noreferrer"
                   >
                      <Linkedin className="size-4" />
                      <span className="break-all text-xs">
@@ -71,6 +72,7 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({
                      target="_blank"
                      href={data.personal_info?.website}
                      className="flex items-center gap-2"
+                     rel="noreferrer"
                   >
                      <Globe className="size-4" />
                      <span className="break-all text-xs">

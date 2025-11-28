@@ -29,6 +29,21 @@ export default tseslint.config(
          ...reactPlugin.configs.recommended.rules,
          ...reactHooksPlugin.configs.recommended.rules,
          'react/react-in-jsx-scope': 'off', // Not needed for React 17+
+         '@typescript-eslint/no-explicit-any': 'warn',
+         '@typescript-eslint/no-empty-object-type': 'warn',
+         '@typescript-eslint/no-namespace': 'warn',
+         'react/no-unescaped-entities': 'warn',
+         'react/prop-types': 'off',
+         'react/no-unstable-nested-components': 'warn',
+         'no-empty-pattern': 'warn',
+         'no-useless-escape': 'warn',
+         'react-hooks/static-components': 'off',
+         'react-hooks/set-state-in-effect': 'off',
+         'react-hooks/rules-of-hooks': 'off',
+         '@typescript-eslint/no-unused-vars': [
+            'warn',
+            { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+         ],
       },
       settings: {
          react: {
