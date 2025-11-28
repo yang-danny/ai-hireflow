@@ -1,8 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Visual Regression Tests for Critical UI Components
- * Run with: npx playwright test visual.spec.ts --update-snapshots (to update baselines)
+ * Visual Regression Tests
+ *
+ * These tests compare screenshots against baseline images.
+ * To update baseline images, run:
+ *   npx playwright test visual.spec.ts --update-snapshots
  */
 
 test.describe('Visual Regression Tests', () => {
