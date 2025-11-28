@@ -16,7 +16,9 @@
    "type": "module",
    "main": "index.js",
    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
+      "test": "npm run test --workspaces --if-present",
+      "build": "npm run build --workspaces --if-present",
+      "lint": "prettier --check .",
       "dev": "concurrently \"npm run dev -w packages/client\" \"npm run dev -w packages/server\"",
       "format": "prettier --write .",
       "prepare": "husky",
