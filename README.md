@@ -114,7 +114,7 @@ AI-HireFlow/
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/YOUR_ORG/AI-HireFlow.git
+   git clone https://github.com/yang-danny/AI-HireFlow.git
    cd AI-HireFlow
    ```
 
@@ -442,12 +442,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Fastify Team**: High-performance web framework
 - **Open Source Community**: All the incredible libraries used
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/YOUR_ORG/AI-HireFlow/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/YOUR_ORG/AI-HireFlow/discussions)
-- **Email**: support@ai-hireflow.com
-
 ---
 
-**Built with ❤️ by the AI-HireFlow Team**
+**Built with ❤️ by Danny Yang**
