@@ -8,7 +8,7 @@ async function rateLimitPlugin(fastify: FastifyInstance) {
       global: true,
       max: 100,
       timeWindow: '1 minute',
-      cache: 10000,
+      redis: fastify.redis, // Use the Redis instance from fastify-redis
       allowList: ['127.0.0.1'],
       skipOnError: false,
       ban: 3, // Ban after 3 violations

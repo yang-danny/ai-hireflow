@@ -192,3 +192,68 @@ export const deleteUser = async (
       });
    }
 };
+
+export const uploadAvatar = async (
+   request: FastifyRequest,
+   reply: FastifyReply
+) => {
+   try {
+      const data = await request.file();
+
+      if (!data) {
+         return reply.code(400).send({
+            success: false,
+            message: 'No file uploaded',
+         });
+      }
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(data.mimetype)) {
+         return reply.code(400).send({
+            success: false,
+            message: 'Invalid file type. Only JPEG, PNG, and WebP are allowed',
+         });
+      }
+
+      // Read file buffer
+      const buffer = await data.toBuffer();
+
+      // Validate file size (5MB max)
+      if (buffer.length > 5 * 1024 * 1024) {
+         return reply.code(400).send({
+            success: false,
+            message: 'File too large. Maximum size is 5MB',
+         });
+      }
+
+      // Import image service
+      const { ImageService } = await import('../services/image.service.js');
+
+      // Save optimized avatar
+      const filename = await ImageService.saveAvatar(request.user.id, buffer);
+
+      // Update user avatar in database
+      const avatarUrl = `/uploads/avatars/${filename}`;
+      const user = await User.findByIdAndUpdate(
+         request.user.id,
+         { avatar: avatarUrl },
+         { new: true }
+      ).select('-password');
+
+      return reply.code(200).send({
+         success: true,
+         message: 'Avatar uploaded successfully',
+         data: {
+            user,
+            avatarUrl,
+         },
+      });
+   } catch (error) {
+      return reply.code(500).send({
+         success: false,
+         message: 'Error uploading avatar',
+         error: (error as Error).message,
+      });
+   }
+};

@@ -1,4 +1,9 @@
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { type FastifyInstance } from 'fastify';
+import {
+   serializerCompiler,
+   validatorCompiler,
+   type ZodTypeProvider,
+} from 'fastify-type-provider-zod';
 import { errorHandler } from './utils/errorHandler.js';
 
 // Plugins
@@ -9,7 +14,16 @@ import databasePlugin from './plugins/database.plugin.js';
 import jwtPlugin from './plugins/jwt.plugin.js';
 import oauthPlugin from './plugins/oauth.plugin.js';
 import rateLimitPlugin from './plugins/rateLimit.plugin.js';
+import redisPlugin from './plugins/redis.plugin.js';
 import csrfPlugin from './plugins/csrf.plugin.js';
+import mongoSanitizePlugin from './plugins/mongoSanitize.plugin.js';
+import multipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Routes
 import healthRoutes from './routes/health.routes.js';
@@ -18,28 +32,32 @@ import userRoutes from './routes/user.routes.js';
 import resumeRoutes from './routes/resume.routes.js';
 import jobRoutes from './routes/job.routes.js';
 
+// ... imports
+
 export async function buildApp(): Promise<FastifyInstance> {
    const fastify = Fastify({
       logger: {
+         level: process.env.NODE_ENV === 'production' ? 'info' : 'info',
          transport:
-            process.env.NODE_ENV === 'development'
+            process.env.NODE_ENV !== 'production'
                ? {
                     target: 'pino-pretty',
                     options: {
+                       colorize: true,
                        translateTime: 'HH:MM:ss Z',
                        ignore: 'pid,hostname',
                     },
                  }
                : undefined,
       },
-      ajv: {
-         customOptions: {
-            removeAdditional: 'all',
-            coerceTypes: true,
-            useDefaults: true,
-         },
-      },
+      disableRequestLogging: process.env.NODE_ENV === 'test',
    });
+
+   // Set validator and serializer
+   fastify.withTypeProvider<ZodTypeProvider>();
+
+   fastify.setValidatorCompiler(validatorCompiler);
+   fastify.setSerializerCompiler(serializerCompiler);
 
    // Set error handler
    fastify.setErrorHandler(errorHandler);
@@ -48,6 +66,16 @@ export async function buildApp(): Promise<FastifyInstance> {
    await fastify.register(envPlugin);
    await fastify.register(corsPlugin); // CORS must be early
    await fastify.register(helmetPlugin); // Security headers
+   await fastify.register(mongoSanitizePlugin); // NoSQL Injection protection
+   await fastify.register(multipart); // File uploads
+
+   // Static file serving for avatars
+   await fastify.register(fastifyStatic, {
+      root: path.join(__dirname, '../uploads'),
+      prefix: '/uploads/',
+   });
+
+   await fastify.register(redisPlugin);
    await fastify.register(rateLimitPlugin); // Rate limiting
    await fastify.register(databasePlugin);
    await fastify.register(jwtPlugin);

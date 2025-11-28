@@ -4,6 +4,8 @@ import {
    loginRateLimit,
    registerRateLimit,
 } from '../plugins/rateLimit.plugin.js';
+import { loginSchema, registerSchema } from '../schemas/auth.zod.schema.js';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 export default async function authRoutes(fastify: FastifyInstance) {
    /**
@@ -11,22 +13,20 @@ export default async function authRoutes(fastify: FastifyInstance) {
     * Redirects the user to the Google authorization URL.
     * @route GET /api/auth/google/start
     */
-   fastify.get('/google/start', {
-      handler: async (request, reply) => {
-         try {
-            const authUrl = await fastify.googleOAuth2.generateAuthorizationUri(
-               request,
-               reply
-            );
-            return reply.redirect(authUrl);
-         } catch (error: any) {
-            fastify.log.error('OAuth start error:', error);
-            return reply.status(500).send({
-               success: false,
-               message: error.message,
-            });
-         }
-      },
+   fastify.get('/google/start', async (request, reply) => {
+      try {
+         const authUrl = await fastify.googleOAuth2.generateAuthorizationUri(
+            request,
+            reply
+         );
+         return reply.redirect(authUrl);
+      } catch (error: any) {
+         fastify.log.error('OAuth start error:', error);
+         return reply.status(500).send({
+            success: false,
+            message: error.message,
+         });
+      }
    });
 
    /**
@@ -64,18 +64,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
     * @route POST /api/auth/register
     * @body {email, password, name}
     */
-   fastify.post('/register', {
+   fastify.withTypeProvider<ZodTypeProvider>().post('/register', {
       ...registerRateLimit,
       schema: {
-         body: {
-            type: 'object',
-            required: ['email', 'password', 'name'],
-            properties: {
-               email: { type: 'string', format: 'email' },
-               password: { type: 'string', minLength: 6 },
-               name: { type: 'string', minLength: 2 },
-            },
-         },
+         body: registerSchema,
       },
       handler: AuthController.register,
    });
@@ -85,17 +77,10 @@ export default async function authRoutes(fastify: FastifyInstance) {
     * @route POST /api/auth/login
     * @body {email, password}
     */
-   fastify.post('/login', {
+   fastify.withTypeProvider<ZodTypeProvider>().post('/login', {
       ...loginRateLimit,
       schema: {
-         body: {
-            type: 'object',
-            required: ['email', 'password'],
-            properties: {
-               email: { type: 'string', format: 'email' },
-               password: { type: 'string' },
-            },
-         },
+         body: loginSchema,
       },
       handler: AuthController.login,
    });

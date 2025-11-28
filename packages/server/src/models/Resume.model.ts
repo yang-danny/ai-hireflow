@@ -156,8 +156,6 @@ const ResumeSchema = new Schema<IResumeDocument>(
 );
 
 // Indexes for better query performance
-// Compound index for user's resumes sorted by creation date
-ResumeSchema.index({ userId: 1, createdAt: -1 });
 // Compound index for user's resumes sorted by update date (most common query)
 ResumeSchema.index({ userId: 1, updatedAt: -1 });
 // Index for public resumes

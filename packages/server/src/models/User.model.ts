@@ -69,7 +69,4 @@ const UserSchema = new Schema<IUserDocument>(
    }
 );
 
-// Index for faster queries
-UserSchema.index({ email: 1, googleId: 1, linkedinId: 1 });
-
 export default mongoose.model<IUserDocument>('User', UserSchema);

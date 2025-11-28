@@ -11,8 +11,41 @@ interface HealthCheckResult {
       status: 'connected' | 'disconnected' | 'connecting';
       responseTime?: number;
    };
+   redis: {
+      status: 'connected' | 'disconnected';
+      responseTime?: number;
+   };
    version: string;
    environment: string;
+}
+
+/**
+ * Check Redis connection health
+ */
+async function checkRedisHealth(redis: any): Promise<{
+   status: 'connected' | 'disconnected';
+   responseTime?: number;
+}> {
+   const startTime = Date.now();
+
+   try {
+      if (!redis) {
+         return { status: 'disconnected' };
+      }
+
+      await redis.ping();
+      const responseTime = Date.now() - startTime;
+
+      return {
+         status: 'connected',
+         responseTime,
+      };
+   } catch (error) {
+      logger.error('Redis health check failed:', error);
+      return {
+         status: 'disconnected',
+      };
+   }
 }
 
 /**
@@ -61,6 +94,7 @@ export async function healthCheck(
 ) {
    try {
       const dbHealth = await checkDatabaseHealth();
+      const redisHealth = await checkRedisHealth(request.server.redis);
 
       const memoryUsage = process.memoryUsage();
       const heapUsedPercentage =
@@ -69,7 +103,10 @@ export async function healthCheck(
       // Determine overall health status
       let overallStatus: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
 
-      if (dbHealth.status === 'disconnected') {
+      if (
+         dbHealth.status === 'disconnected' ||
+         redisHealth.status === 'disconnected'
+      ) {
          overallStatus = 'unhealthy';
       } else if (dbHealth.status === 'connecting' || heapUsedPercentage > 90) {
          overallStatus = 'degraded';
@@ -81,6 +118,7 @@ export async function healthCheck(
          uptime: process.uptime(),
          memory: memoryUsage,
          database: dbHealth,
+         redis: redisHealth,
          version: process.env.npm_package_version || '1.0.0',
          environment: process.env.NODE_ENV || 'development',
       };
@@ -112,8 +150,9 @@ export async function readinessCheck(
    reply: FastifyReply
 ) {
    const dbHealth = await checkDatabaseHealth();
+   const redisHealth = await checkRedisHealth(request.server.redis);
 
-   if (dbHealth.status === 'connected') {
+   if (dbHealth.status === 'connected' && redisHealth.status === 'connected') {
       return reply.status(200).send({
          status: 'ready',
          timestamp: new Date().toISOString(),

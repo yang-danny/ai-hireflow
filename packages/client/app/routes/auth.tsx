@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router';
 import { GoogleIcon, LinkedInIcon, LogoIcon } from '../components/icons/icons';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Github } from 'lucide-react';
+import { showToast } from '~/components/Toast';
 const InputField = ({
    id,
    label,
@@ -163,16 +164,18 @@ const Auth = () => {
                email: formData.email,
                password: formData.password,
             });
+            showToast.success('Login successful!');
          } else {
             await register({
                name: formData.name,
                email: formData.email,
                password: formData.password,
             });
+            showToast.success('Registration successful!');
          }
          // Navigation happens automatically via useEffect
       } catch (error) {
-         console.error('Auth error:', error);
+         showToast.error('Auth error: ' + error);
       }
    };
 

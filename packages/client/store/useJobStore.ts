@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Job } from '../types/job.types';
 import api from '../services/api';
-
+import { showToast } from '~/components/Toast';
 interface JobState {
    jobs: Job[];
    currentJob: Job | null;
@@ -65,6 +65,7 @@ export const useJobStore = create<JobStore>()(
                   currentJob: newJob,
                   loading: false,
                }));
+               showToast.success('Job created successfully!');
                return newJob;
             } catch (error: any) {
                const errorMessage =
@@ -89,6 +90,7 @@ export const useJobStore = create<JobStore>()(
                         : state.currentJob,
                   loading: false,
                }));
+               showToast.success('Job updated successfully!');
             } catch (error: any) {
                const errorMessage =
                   error.response?.data?.message || 'Failed to update job.';
@@ -106,6 +108,7 @@ export const useJobStore = create<JobStore>()(
                      state.currentJob?._id === id ? null : state.currentJob,
                   loading: false,
                }));
+               showToast.success('Job deleted successfully!');
             } catch (error: any) {
                const errorMessage =
                   error.response?.data?.message || 'Failed to delete job.';

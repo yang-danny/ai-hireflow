@@ -1,8 +1,12 @@
 import { buildApp } from './app';
 import { Logger } from './utils/logger';
+import { ImageService } from './services/image.service';
 
 async function start() {
    try {
+      // Initialize image service
+      await ImageService.init();
+
       const fastify = await buildApp();
 
       const port = Number(process.env.PORT) || 3000;
@@ -29,9 +33,22 @@ async function start() {
       for (const signal of signals) {
          process.on(signal, async () => {
             Logger.info(`${signal} received, shutting down gracefully`);
-            await fastify.close();
-            Logger.success('Server closed successfully');
-            process.exit(0);
+
+            // Force exit after 10 seconds if graceful shutdown hangs
+            const forceExitTimeout = setTimeout(() => {
+               Logger.error('Force shutting down due to timeout');
+               process.exit(1);
+            }, 10000);
+
+            try {
+               await fastify.close();
+               clearTimeout(forceExitTimeout);
+               Logger.success('Server closed successfully');
+               process.exit(0);
+            } catch (err) {
+               Logger.error('Error during shutdown:', err);
+               process.exit(1);
+            }
          });
       }
    } catch (error) {

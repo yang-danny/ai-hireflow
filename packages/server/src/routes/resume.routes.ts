@@ -5,68 +5,71 @@ import {
    updateResumeSchema,
    getResumeByIdSchema,
    getResumesSchema,
-   uploadResumeSchema,
-} from '../schemas/resume.schema.js';
+} from '../schemas/resume.zod.schema.js';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 export default async function resumeRoutes(fastify: FastifyInstance) {
    // Upload new resume (protected)
-   // fastify.post('/upload', {
+   // fastify.withTypeProvider<ZodTypeProvider>().post('/upload', {
    //    onRequest: [fastify.authenticate],
-   //    schema: uploadResumeSchema,
+   //    schema: { body: uploadResumeSchema },
    //    handler: ResumeController.uploadResume,
    // });
 
    // Get all resumes for logged-in user (protected)
-   fastify.get('/', {
+   fastify.withTypeProvider<ZodTypeProvider>().get('/', {
       onRequest: [fastify.authenticate],
-      schema: getResumesSchema,
+      schema: { querystring: getResumesSchema },
       handler: ResumeController.getUserResumes,
    });
 
    // Get public resumes (no auth required)
-   fastify.get('/public', {
-      schema: getResumesSchema,
+   fastify.withTypeProvider<ZodTypeProvider>().get('/public', {
+      schema: { querystring: getResumesSchema },
       handler: ResumeController.getPublicResumes,
    });
 
    // Get single resume by ID
-   fastify.get('/:id', {
-      schema: getResumeByIdSchema,
+   fastify.withTypeProvider<ZodTypeProvider>().get('/:id', {
+      schema: { params: getResumeByIdSchema },
       handler: ResumeController.getResumeById,
    });
 
    // Create new resume (protected)
-   fastify.post('/', {
+   fastify.withTypeProvider<ZodTypeProvider>().post('/', {
       onRequest: [fastify.authenticate],
-      schema: createResumeSchema,
+      schema: { body: createResumeSchema },
       handler: ResumeController.createResume,
    });
 
    // Update resume (protected)
-   fastify.put('/:id', {
+   fastify.withTypeProvider<ZodTypeProvider>().put('/:id', {
       onRequest: [fastify.authenticate],
-      schema: updateResumeSchema,
+      schema: {
+         params: getResumeByIdSchema,
+         body: updateResumeSchema.omit({ id: true }), // id is in params
+      },
       handler: ResumeController.updateResume,
    });
 
    // Delete resume (protected)
-   fastify.delete('/:id', {
+   fastify.withTypeProvider<ZodTypeProvider>().delete('/:id', {
       onRequest: [fastify.authenticate],
-      schema: getResumeByIdSchema,
+      schema: { params: getResumeByIdSchema },
       handler: ResumeController.deleteResume,
    });
 
    // Toggle public status (protected)
-   fastify.patch('/:id/toggle-public', {
+   fastify.withTypeProvider<ZodTypeProvider>().patch('/:id/toggle-public', {
       onRequest: [fastify.authenticate],
-      schema: getResumeByIdSchema,
+      schema: { params: getResumeByIdSchema },
       handler: ResumeController.togglePublicStatus,
    });
 
    // Duplicate resume (protected)
-   // fastify.post('/:id/duplicate', {
+   // fastify.withTypeProvider<ZodTypeProvider>().post('/:id/duplicate', {
    //    onRequest: [fastify.authenticate],
-   //    schema: getResumeByIdSchema,
+   //    schema: { params: getResumeByIdSchema },
    //    handler: ResumeController.duplicateResume,
    // });
 }

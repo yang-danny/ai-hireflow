@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Resume } from '../types/resume.types';
 import api from '../services/api';
-
+import { showToast } from '~/components/Toast';
 interface ResumeState {
    resumes: Resume[];
    currentResume: Resume | null;
@@ -65,6 +65,7 @@ export const useResumeStore = create<ResumeStore>()(
                   currentResume: newResume,
                   loading: false,
                }));
+               showToast.success('Resume created successfully!');
                return newResume;
             } catch (error: any) {
                const errorMessage =
@@ -89,6 +90,7 @@ export const useResumeStore = create<ResumeStore>()(
                         : state.currentResume,
                   loading: false,
                }));
+               showToast.success('Resume updated successfully!');
             } catch (error: any) {
                const errorMessage =
                   error.response?.data?.message || 'Failed to update resume.';
@@ -108,6 +110,7 @@ export const useResumeStore = create<ResumeStore>()(
                         : state.currentResume,
                   loading: false,
                }));
+               showToast.success('Resume deleted successfully!');
             } catch (error: any) {
                const errorMessage =
                   error.response?.data?.message || 'Failed to delete resume.';

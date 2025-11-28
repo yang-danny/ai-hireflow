@@ -27,6 +27,7 @@ declare module 'fastify' {
          GOOGLE_CLIENT_SECRET: string;
          GOOGLE_REDIRECT_URI: string;
          FRONTEND_URL: string;
+         REDIS_URL: string;
       };
    }
 }

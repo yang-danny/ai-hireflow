@@ -11,6 +11,7 @@ export interface EnvConfig {
    GOOGLE_CLIENT_SECRET: string;
    GOOGLE_REDIRECT_URI: string;
    FRONTEND_URL: string;
+   REDIS_URL: string;
 }
 
 export const envSchema = {
@@ -66,6 +67,10 @@ export const envSchema = {
       FRONTEND_URL: {
          type: 'string',
          default: 'http://localhost:5173',
+      },
+      REDIS_URL: {
+         type: 'string',
+         default: 'redis://localhost:6379',
       },
    },
 };

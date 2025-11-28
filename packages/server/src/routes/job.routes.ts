@@ -5,41 +5,45 @@ import {
    updateJobSchema,
    getJobByIdSchema,
    getJobsSchema,
-} from '../schemas/job.schema.js';
+} from '../schemas/job.zod.schema.js';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 export default async function jobRoutes(fastify: FastifyInstance) {
    // Get all jobs for logged-in user (protected)
-   fastify.get('/', {
+   fastify.withTypeProvider<ZodTypeProvider>().get('/', {
       onRequest: [fastify.authenticate],
-      schema: getJobsSchema,
+      schema: { querystring: getJobsSchema },
       handler: JobController.getUserJobs,
    });
 
    // Get single job by ID (protected)
-   fastify.get('/:id', {
+   fastify.withTypeProvider<ZodTypeProvider>().get('/:id', {
       onRequest: [fastify.authenticate],
-      schema: getJobByIdSchema,
+      schema: { params: getJobByIdSchema },
       handler: JobController.getJobById,
    });
 
    // Create new job (protected)
-   fastify.post('/', {
+   fastify.withTypeProvider<ZodTypeProvider>().post('/', {
       onRequest: [fastify.authenticate],
-      schema: createJobSchema,
+      schema: { body: createJobSchema },
       handler: JobController.createJob,
    });
 
    // Update job (protected)
-   fastify.put('/:id', {
+   fastify.withTypeProvider<ZodTypeProvider>().put('/:id', {
       onRequest: [fastify.authenticate],
-      schema: updateJobSchema,
+      schema: {
+         params: getJobByIdSchema,
+         body: updateJobSchema.omit({ id: true }), // id is in params
+      },
       handler: JobController.updateJob,
    });
 
    // Delete job (protected)
-   fastify.delete('/:id', {
+   fastify.withTypeProvider<ZodTypeProvider>().delete('/:id', {
       onRequest: [fastify.authenticate],
-      schema: getJobByIdSchema,
+      schema: { params: getJobByIdSchema },
       handler: JobController.deleteJob,
    });
 }

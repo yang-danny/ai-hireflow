@@ -51,8 +51,6 @@ const JobSchema = new Schema<IJobDocument>(
 );
 
 // Indexes for better query performance
-// Compound index for user's jobs sorted by creation date
-JobSchema.index({ userId: 1, createdAt: -1 });
 // Compound index for user's jobs sorted by update date (most recently used)
 JobSchema.index({ userId: 1, updatedAt: -1 });
 // Text indexes for searching jobs

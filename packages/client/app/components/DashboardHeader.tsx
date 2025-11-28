@@ -3,7 +3,7 @@ import { BellNotificationIcon, HomeNavIcon, LogoutIcon } from './icons/icons';
 import type { User } from '../../types/auth.types';
 import { LayoutDashboard, UserPen } from 'lucide-react';
 import { useAuthStore } from 'store/useAuthStore';
-
+import { showToast } from '~/components/Toast';
 interface DashboardHeaderProps {
    user: User;
    onNavigate?: (destination: string) => void;
@@ -16,6 +16,7 @@ export function DashboardHeader({ user, onNavigate }: DashboardHeaderProps) {
 
    const handleLogout = () => {
       logout();
+      showToast.success('Operation successful!');
       onNavigate?.('/');
    };
    // Close popup when clicking outside

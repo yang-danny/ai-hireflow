@@ -13,6 +13,9 @@ describe('Resume CRUD Operations', () => {
    beforeEach(async () => {
       app = await buildApp();
       await app.ready();
+      if (app.redis) {
+         await app.redis.flushall();
+      }
 
       // Create authenticated user
       const uniqueEmail = `test-${Date.now()}@example.com`;

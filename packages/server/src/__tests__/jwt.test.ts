@@ -12,6 +12,9 @@ describe('JWT Token Validation', () => {
    beforeEach(async () => {
       app = await buildApp();
       await app.ready();
+      if (app.redis) {
+         await app.redis.flushall();
+      }
 
       // Register and get token
       testEmail = `test-${Date.now()}@example.com`;

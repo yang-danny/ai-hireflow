@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router';
 import { useAuthStore } from '../../store/useAuthStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import RouteLoadingFallback from '../components/RouteLoadingFallback';
 
 export default function ProtectedLayout() {
    const { isAuthenticated, token, fetchUser } = useAuthStore();
@@ -33,5 +34,9 @@ export default function ProtectedLayout() {
       return <Navigate to="/auth" replace />;
    }
 
-   return <Outlet />;
+   return (
+      <Suspense fallback={<RouteLoadingFallback />}>
+         <Outlet />
+      </Suspense>
+   );
 }

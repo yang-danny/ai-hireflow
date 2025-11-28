@@ -1,5 +1,4 @@
 import Resume, { IResumeDocument } from '../models/Resume.model.js';
-import mongoose from 'mongoose';
 
 export class ResumeService {
    /**
