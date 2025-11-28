@@ -3,7 +3,9 @@ import { useEffect, useRef, type RefObject } from 'react';
 /**
  * Hook to trap focus within a container (for modals, dialogs)
  */
-export function useFocusTrap(isActive: boolean): RefObject<HTMLDivElement> {
+export function useFocusTrap(
+   isActive: boolean
+): RefObject<HTMLDivElement | null> {
    const containerRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => {
@@ -73,7 +75,7 @@ export function useReturnFocus(isActive: boolean) {
 export function useAutoFocus<T extends HTMLElement>(
    shouldFocus: boolean,
    delay: number = 0
-): RefObject<T> {
+): RefObject<T | null> {
    const elementRef = useRef<T>(null);
 
    useEffect(() => {

@@ -12,7 +12,7 @@ export default async function healthRoutes(fastify: FastifyInstance) {
          description:
             'Comprehensive health check with database and memory status',
          tags: ['health'],
-      },
+      } as any,
       handler: healthCheck,
    });
 
@@ -21,7 +21,7 @@ export default async function healthRoutes(fastify: FastifyInstance) {
       schema: {
          description: 'Readiness probe for load balancers',
          tags: ['health'],
-      },
+      } as any,
       handler: readinessCheck,
    });
 
@@ -30,7 +30,7 @@ export default async function healthRoutes(fastify: FastifyInstance) {
       schema: {
          description: 'Liveness probe for container orchestration',
          tags: ['health'],
-      },
+      } as any,
       handler: livenessCheck,
    });
 }
