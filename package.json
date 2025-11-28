@@ -18,7 +18,8 @@
    "scripts": {
       "test": "npm run test --workspaces --if-present",
       "build": "npm run build --workspaces --if-present",
-      "lint": "prettier --check .",
+      "lint": "eslint .",
+      "lint:fix": "eslint . --fix",
       "dev": "concurrently \"npm run dev -w packages/client\" \"npm run dev -w packages/server\"",
       "format": "prettier --write .",
       "prepare": "husky",
@@ -28,10 +29,16 @@
       "packages/*"
    ],
    "devDependencies": {
+      "@eslint/js": "^9.39.1",
       "@playwright/test": "^1.57.0",
       "concurrently": "^9.2.1",
+      "eslint": "^9.39.1",
+      "eslint-plugin-react": "^7.37.5",
+      "eslint-plugin-react-hooks": "^7.0.1",
+      "globals": "^16.5.0",
       "husky": "^9.1.7",
-      "lightningcss": "^1.30.2"
+      "lightningcss": "^1.30.2",
+      "typescript-eslint": "^8.48.0"
    },
    "dependencies": {
       "@fastify/oauth2": "^8.1.2",

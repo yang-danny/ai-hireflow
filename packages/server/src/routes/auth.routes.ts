@@ -6,7 +6,11 @@ import {
 } from '../plugins/rateLimit.plugin.js';
 
 export default async function authRoutes(fastify: FastifyInstance) {
-   // Manual Google OAuth start (if plugin route doesn't work)
+   /**
+    * Initiates the Google OAuth flow manually.
+    * Redirects the user to the Google authorization URL.
+    * @route GET /api/auth/google/start
+    */
    fastify.get('/google/start', {
       handler: async (request, reply) => {
          try {
@@ -25,7 +29,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       },
    });
 
-   // Debug route - check OAuth configuration
+   /**
+    * Debug route to check OAuth configuration.
+    * Returns the current Google OAuth settings (excluding secrets).
+    * @route GET /api/auth/google/config
+    */
    fastify.get('/google/config', {
       handler: async (request, reply) => {
          return {
@@ -42,12 +50,20 @@ export default async function authRoutes(fastify: FastifyInstance) {
       },
    });
 
-   // Google OAuth - Callback
+   /**
+    * Google OAuth callback handler.
+    * Exchanges the authorization code for tokens and logs the user in.
+    * @route GET /api/auth/google/callback
+    */
    fastify.get('/google/callback', {
       handler: AuthController.googleCallback,
    });
 
-   // Register with email/password
+   /**
+    * Registers a new user with email and password.
+    * @route POST /api/auth/register
+    * @body {email, password, name}
+    */
    fastify.post('/register', {
       ...registerRateLimit,
       schema: {
@@ -64,7 +80,11 @@ export default async function authRoutes(fastify: FastifyInstance) {
       handler: AuthController.register,
    });
 
-   // Login with email/password
+   /**
+    * Logs in a user with email and password.
+    * @route POST /api/auth/login
+    * @body {email, password}
+    */
    fastify.post('/login', {
       ...loginRateLimit,
       schema: {
@@ -80,13 +100,21 @@ export default async function authRoutes(fastify: FastifyInstance) {
       handler: AuthController.login,
    });
 
-   // Get current user (protected)
+   /**
+    * Retrieves the currently authenticated user's profile.
+    * Requires a valid JWT token.
+    * @route GET /api/auth/me
+    */
    fastify.get('/me', {
       onRequest: [fastify.authenticate],
       handler: AuthController.me,
    });
 
-   // Logout
+   /**
+    * Logs out the current user.
+    * Clears the authentication cookie.
+    * @route POST /api/auth/logout
+    */
    fastify.post('/logout', {
       handler: AuthController.logout,
    });
