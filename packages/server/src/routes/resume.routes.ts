@@ -20,19 +20,31 @@ export default async function resumeRoutes(fastify: FastifyInstance) {
    fastify.withTypeProvider<ZodTypeProvider>().get('/', {
       onRequest: [fastify.authenticate],
       schema: { querystring: getResumesSchema },
-      handler: ResumeController.getUserResumes,
+      async handler(request, reply) {
+         // Private cache for user-specific data (5 minutes)
+         reply.headers(fastify.cacheControl.private(300));
+         return ResumeController.getUserResumes(request as any, reply);
+      },
    });
 
    // Get public resumes (no auth required)
    fastify.withTypeProvider<ZodTypeProvider>().get('/public', {
       schema: { querystring: getResumesSchema },
-      handler: ResumeController.getPublicResumes,
+      async handler(request, reply) {
+         // Public cache with stale-while-revalidate (5min fresh, 10min stale)
+         reply.headers(fastify.cacheControl.staleWhileRevalidate(300, 600));
+         return ResumeController.getPublicResumes(request as any, reply);
+      },
    });
 
    // Get single resume by ID
    fastify.withTypeProvider<ZodTypeProvider>().get('/:id', {
       schema: { params: getResumeByIdSchema },
-      handler: ResumeController.getResumeById,
+      async handler(request, reply) {
+         // Medium cache with ETag support (5 minutes)
+         reply.headers(fastify.cacheControl.medium());
+         return ResumeController.getResumeById(request as any, reply);
+      },
    });
 
    // Create new resume (protected)

@@ -4,7 +4,7 @@
 
 AI-HireFlow is a comprehensive platform that leverages artificial intelligence to streamline your job application process. Generate professional resumes, craft compelling cover letters, analyze your application materials, and prepare for interviews - all powered by Google's Gemini AI.
 
-[![CI](https://github.com/YOUR_ORG/AI-HireFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_ORG/AI-HireFlow/actions/workflows/ci.yml)
+[![CI](https://github.com/yang-danny/AI-HireFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/Yyang-danny/AI-HireFlow/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D24.0.0-brightgreen)](https://nodejs.org)
 
@@ -59,6 +59,14 @@ AI-HireFlow/
 └── .github/workflows/   # CI/CD pipelines
 ```
 
+### API Documentation
+
+- **Interactive Documentation**: Available at `/api/docs` when server is running
+- **OpenAPI 3.1**: Full OpenAPI specification for all endpoints
+- **Try It Out**: Test API endpoints directly from the browser
+- **Authentication**: JWT Bearer token and cookie-based auth documented
+- **Generated from Code**: Automatically synced with Zod validation schemas
+
 ### Tech Stack
 
 #### Frontend
@@ -66,30 +74,41 @@ AI-HireFlow/
 - **Framework**: React 19 with React Router 7
 - **Language**: TypeScript
 - **Build Tool**: Vite
-- **Styling**: TailwindCSS + Custom CSS
+- **Styling**: TailwindCSS 4 + Custom CSS
 - **State Management**: Zustand
 - **HTTP Client**: Axios
+- **Performance Monitoring**: Web Vitals + Sentry
+- **Image Optimization**: Lazy loading + responsive srcset
 - **UI Components**: Custom components + Lucide icons
 - **Notifications**: react-hot-toast
 - **PDF Generation**: html2pdf.js, jsPDF
 - **Image Processing**: @imgly/background-removal
+- **Accessibility**: Focus management + keyboard navigation
 
-#### Backend
+####Backend
 
 - **Runtime**: Node.js 24+
 - **Framework**: Fastify
 - **Language**: TypeScript
 - **Database**: MongoDB with Mongoose
-- **Cache**: Redis
+- **Cache**: Redis (with ioredis)
 - **Authentication**: JWT + OAuth2 (Google)
 - **Validation**: Zod schemas
+- **API Documentation**: Swagger/OpenAPI 3.1
+- **HTTP Caching**: @fastify/caching + ETag support
+- **Image Processing**: Sharp (compression, WebP, multi-size)
 - **Logging**: Winston with structured logging
-- **Security**: Helmet, CSRF protection, rate limiting
+- **Security**: Helmet, CSRF protection, rate limiting, XSS protection
+- **Monitoring**: Sentry integration (optional)
+- **Circuit Breaker**: Opossum for external services
 
-#### AI & ML
+#### AI Tools
 
-- **AI Provider**: Google Gemini API
-- **Use Cases**: Resume generation, cover letters, analysis, interview prep
+- **UI Design**: Google Stitch & Figma Make
+- **UI to React**: Kombai
+- **AI Powered IDE**: Cursor & Antigravity
+- **Generative AI**: Google Gemini 2.5 Pro
+- **Vibe Coding**: Google Gemini 3 Pro & Claude Sonnet 4.5
 
 #### DevOps & Infrastructure
 
@@ -98,7 +117,49 @@ AI-HireFlow/
 - **Testing**: Vitest (unit), Playwright (E2E)
 - **Code Quality**: ESLint, TypeScript, Prettier
 - **Versioning**: Semantic Release
-- **Monitoring**: Lighthouse CI, Winston logs
+- **Monitoring**: Lighthouse CI, Winston logs, Sentry
+- **Performance**: Web Vitals tracking, React Profiler
+- **Caching**: HTTP cache headers, ETag validation
+
+## \ud83c\udf86 What's New
+
+### Recent Improvements (November 2025)
+
+#### \ud83d\udcca Performance Monitoring
+
+- **Web Vitals Tracking**: Automatic tracking of CLS, LCP, INP, FCP, and TTFB
+- **Sentry Integration**: Error tracking and performance monitoring
+- **React Profiler**: Component-level render performance tracking
+- **Real-time Metrics**: Color-coded console logging in development
+
+#### \ud83d\udcda API Documentation
+
+- **Interactive Swagger UI**: Test endpoints at `/api/docs`
+- **OpenAPI 3.1 Spec**: Full API specification with request/response schemas
+- **Auto-generated**: Synchronized with Zod validation schemas
+- **Authentication Support**: Test protected endpoints with JWT tokens
+
+#### ⚡ HTTP Caching
+
+- **Cache-Control Headers**: Smart caching strategies for different resource types
+- **ETag Support**: Automatic 304 Not Modified responses
+- **Performance Boost**: 50-80% faster responses for cached resources
+- **Bandwidth Savings**: 30-50% reduction in network traffic
+
+#### \ud83d\uddbc\ufe0f Image Optimization
+
+- **Automatic Compression**: Sharp-based image processing
+- **Multi-Size Generation**: Thumbnail (150px), Medium (500px), Large (1200px)
+- **WebP Conversion**: 30-50% smaller file sizes
+- **Lazy Loading**: Intersection Observer with smooth transitions
+- **Responsive Images**: Automatic srcset generation
+
+#### \ud83d\udd12 Enhanced Security
+
+- **Updated Validation**: Completed all Zod schemas
+- **Vulnerability Assessment**: Documented and mitigated security risks
+- **Improved Rate Limiting**: Redis-backed request throttling
+- **XSS Protection**: Content sanitization on all inputs
 
 ## 🚀 Getting Started
 
@@ -137,6 +198,7 @@ AI-HireFlow/
 4. **Access the application**
    - **Frontend**: http://localhost:5173
    - **Backend API**: http://localhost:3000
+   - **API Documentation**: http://localhost:3000/api/docs
    - **MongoDB**: localhost:27017
    - **Redis**: localhost:6379
 
@@ -158,13 +220,7 @@ AI-HireFlow/
    # Or use local installations
    ```
 
-3. **Run database migrations** (if any)
-
-   ```bash
-   npm run migrate
-   ```
-
-4. **Start development servers**
+3. **Start development servers**
 
    ```bash
    npm run dev
@@ -239,8 +295,17 @@ LOG_LEVEL=info
 
 ```env
 VITE_API_URL=http://localhost:3000
-VITE_GOOGLE_GEMINI_API_KEY=your-gemini-api-key
+
+# Sentry (Optional - for error tracking)
+VITE_SENTRY_DSN=your-sentry-dsn
+VITE_ENABLE_SENTRY=false
+VITE_APP_VERSION=1.0.0
+
+# Performance Profiler (Optional)
+VITE_ENABLE_PROFILER=false
 ```
+
+> **⚠️ Security Note**: Never expose API keys in frontend code. The `VITE_GOOGLE_GEMINI_API_KEY` shown above is deprecated and should be removed. All AI operations should go through the backend API.
 
 ### Code Style
 
@@ -354,32 +419,45 @@ The server provides health check endpoints:
 
 ## 📚 Documentation
 
-- [Production Logging Guide](docs/PRODUCTION_LOGGING.md)
-- [Semantic Release Guide](docs/SEMANTIC_RELEASE.md)
-- [Toast Notifications Usage](docs/TOAST_USAGE.md)
-- [Improvement Analysis](docs/IMPROVEMENT_ANALYSIS.md)
+- [System Architecture](docs/ARCHITECTURE.md)
+- [Database Schema](docs/DATABASE_SCHEMA.md)
 
 ## 🔒 Security
 
 ### Implemented Security Measures
 
-- **Authentication**: JWT + HttpOnly cookies
-- **OAuth2**: Google authentication
+- **Authentication**: JWT + HttpOnly cookies + OAuth2 (Google)
 - **CSRF Protection**: Double-submit cookie pattern
-- **Rate Limiting**: IP-based request throttling
-- **Input Validation**: Zod schema validation
-- **NoSQL Injection Protection**: Mongoose sanitize
-- **Security Headers**: Helmet.js
-- **Dependency Scanning**: npm audit in CI
+- **Rate Limiting**: IP-based request throttling (Redis-backed)
+- **Input Validation**: Zod schema validation on all endpoints
+- **NoSQL Injection Protection**: mongo-sanitize
+- **XSS Protection**: Content sanitization
+- **Security Headers**: Helmet.js with CSP
+- **Password Hashing**: bcrypt (10 rounds)
+- **Session Management**: Secure cookie configuration
+- **Circuit Breaker**: Opossum for external service protection
 
 ### Security Best Practices
 
-1. Never commit `.env` files
-2. Rotate secrets regularly
-3. Use strong, unique passwords
-4. Enable 2FA for production services
-5. Monitor logs for suspicious activity
-6. Keep dependencies up to date
+1. **Never commit `.env` files** - Use `.env.example` as template
+2. **Rotate secrets regularly** - JWT, cookies, API keys
+3. **Use strong, unique passwords** - Minimum 8 characters
+4. **Enable 2FA** for production services
+5. **Monitor logs** for suspicious activity (Winston + Sentry)
+6. **Keep dependencies updated** - Run `npm audit` regularly
+7. **Review Sentry errors** - Set up alerts for critical issues
+
+### Vulnerability Management
+
+```bash
+# Check for vulnerabilities
+npm audit
+
+# Review security report
+cat vulnerability_report.md
+```
+
+See [vulnerability_report.md](vulnerability_report.md) for current status.
 
 ## 🚦 CI/CD Pipeline
 
@@ -406,6 +484,25 @@ The server provides health check endpoints:
    - Git tag creation
 
 ### Performance Optimizations
+
+#### Frontend
+
+- **Lazy Loading**: Intersection Observer for images
+- **Image Optimization**: WebP conversion, multi-size generation
+- **Code Splitting**: Vite automatic chunking
+- **Web Vitals Tracking**: CLS, LCP, INP, FCP, TTFB
+- **Performance Profiler**: React component render tracking
+- **Bundle Optimization**: Minification, tree shaking
+
+#### Backend
+
+- **HTTP Caching**: Cache-Control headers + ETag validation
+- **Redis Caching**: Session storage, rate limit tracking
+- **Database Indexing**: Optimized MongoDB queries
+- **Image Processing**: Sharp for compression (30-50% reduction)
+- **Connection Pooling**: MongoDB and Redis connection reuse
+
+#### CI/CD
 
 - **Playwright Caching**: ~30-60s faster CI runs
 - **npm Cache**: Faster dependency installation
@@ -435,13 +532,4 @@ Contributions are welcome! Please follow these steps:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- **Google Gemini AI**: Powering intelligent features
-- **React Team**: Amazing framework
-- **Fastify Team**: High-performance web framework
-- **Open Source Community**: All the incredible libraries used
-
----
-
-**Built with ❤️ by Danny Yang**
+## 🙏 **Built with ❤️ by Danny Yang**

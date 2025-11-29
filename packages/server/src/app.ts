@@ -10,6 +10,9 @@ import { errorHandler } from './utils/errorHandler.js';
 import envPlugin from './plugins/env.plugin.js';
 import corsPlugin from './plugins/cors.plugin.js';
 import helmetPlugin from './plugins/helmet.plugin.js';
+import swaggerPlugin from './plugins/swagger.plugin.js';
+import cachingPlugin from './plugins/caching.plugin.js';
+import etagPlugin from './plugins/etag.plugin.js';
 import databasePlugin from './plugins/database.plugin.js';
 import jwtPlugin from './plugins/jwt.plugin.js';
 import oauthPlugin from './plugins/oauth.plugin.js';
@@ -66,6 +69,9 @@ export async function buildApp(): Promise<FastifyInstance> {
    await fastify.register(envPlugin);
    await fastify.register(corsPlugin); // CORS must be early
    await fastify.register(helmetPlugin); // Security headers
+   await fastify.register(swaggerPlugin); // API documentation
+   await fastify.register(cachingPlugin); // HTTP caching
+   await fastify.register(etagPlugin); // ETag support
    await fastify.register(mongoSanitizePlugin); // NoSQL Injection protection
    await fastify.register(multipart); // File uploads
 
@@ -90,6 +96,7 @@ export async function buildApp(): Promise<FastifyInstance> {
          module: 'ESM',
          cors: 'enabled',
          endpoints: {
+            docs: '/api/docs',
             health: '/api/health',
             auth: '/api/auth',
             users: '/api/users',

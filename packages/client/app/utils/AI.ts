@@ -393,8 +393,6 @@ ${profileContent}
          }
       }
 
-      console.log('Cleaned text:', text);
-
       // Parse the JSON
       let parsedData;
       try {
@@ -450,8 +448,6 @@ export async function removeImageBackground(imageFile: File): Promise<Blob> {
       // Dynamically import the background removal library
       const { removeBackground } = await import('@imgly/background-removal');
 
-      console.log('Starting background removal for:', imageFile.name);
-
       // Process the image
       const blob = await removeBackground(imageFile, {
          progress: (key, current, total) => {
@@ -460,8 +456,6 @@ export async function removeImageBackground(imageFile: File): Promise<Blob> {
             );
          },
       });
-
-      console.log('Background removal completed successfully');
       return blob;
    } catch (error: any) {
       console.error('Error removing background:', error);
