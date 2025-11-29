@@ -1,3 +1,9 @@
+## [1.0.12](https://github.com/yang-danny/ai-hireflow/compare/v1.0.11...v1.0.12) (2025-11-29)
+
+### Bug Fixes
+
+- **server:** use dynamic import for ioredis-mock to prevent production dependency error ([d75c483](https://github.com/yang-danny/ai-hireflow/commit/d75c4831cbe581c68a111141dbc0c307823bf803))
+
 ## [1.0.11](https://github.com/yang-danny/ai-hireflow/compare/v1.0.10...v1.0.11) (2025-11-29)
 
 ### Bug Fixes
