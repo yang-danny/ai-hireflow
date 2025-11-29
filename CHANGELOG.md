@@ -1,3 +1,9 @@
+## [1.0.5](https://github.com/yang-danny/ai-hireflow/compare/v1.0.4...v1.0.5) (2025-11-29)
+
+### Bug Fixes
+
+- convert lighthouserc to JSON to ensure config detection ([a114305](https://github.com/yang-danny/ai-hireflow/commit/a1143055c0f72a9499dfd621356327746bb56753))
+
 ## [1.0.4](https://github.com/yang-danny/ai-hireflow/compare/v1.0.3...v1.0.4) (2025-11-29)
 
 ### Bug Fixes
