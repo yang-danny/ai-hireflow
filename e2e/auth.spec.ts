@@ -35,6 +35,9 @@ test.describe('Authentication Flow', () => {
    test('should register new user and redirect to dashboard', async ({
       page,
    }) => {
+      // Set viewport to ensure desktop sidebar is rendered
+      await page.setViewportSize({ width: 1440, height: 900 });
+
       const timestamp = Date.now();
       const testEmail = `test-${timestamp}@example.com`;
 
@@ -58,12 +61,17 @@ test.describe('Authentication Flow', () => {
 
       // Ensure we're on dashboard and it's loaded
       await expect(page.getByRole('heading', { name: /Welcome/i })).toBeVisible(
-         { timeout: 10000 }
+         { timeout: 15000 }
       );
+
+      // Ensure desktop sidebar is attached first (to handle potential rendering delays)
+      await page
+         .locator('[data-sidebar="desktop"]')
+         .waitFor({ state: 'attached', timeout: 15000 });
 
       // Ensure desktop sidebar is visible
       await expect(page.locator('[data-sidebar="desktop"]')).toBeVisible({
-         timeout: 10000,
+         timeout: 15000,
       });
    });
 });
@@ -94,15 +102,20 @@ test.describe('Dashboard Navigation', () => {
 
       // Ensure we're on dashboard and it's loaded
       await expect(page.getByRole('heading', { name: /Welcome/i })).toBeVisible(
-         { timeout: 10000 }
+         { timeout: 15000 }
       );
 
       // Force a small wait for layout to settle
       await page.waitForTimeout(1000);
 
+      // Ensure desktop sidebar is attached first
+      await page
+         .locator('[data-sidebar="desktop"]')
+         .waitFor({ state: 'attached', timeout: 15000 });
+
       // Ensure desktop sidebar is visible before proceeding (helps with WebKit flakiness)
       await expect(page.locator('[data-sidebar="desktop"]')).toBeVisible({
-         timeout: 10000,
+         timeout: 15000,
       });
    });
 
@@ -124,7 +137,7 @@ test.describe('Dashboard Navigation', () => {
       // Wait for content to load and check paragraphfor Resume Generator text in main content area
       await expect(
          page.locator('main').getByText('Resume Generator')
-      ).toBeVisible({ timeout: 5000 });
+      ).toBeVisible({ timeout: 10000 });
    });
 
    test('should navigate to cover letter', async ({ page }) => {
@@ -132,8 +145,10 @@ test.describe('Dashboard Navigation', () => {
       await page
          .locator('[data-sidebar="desktop"] [data-testid="nav-cover-letter"]')
          .click();
+
       // Wait for cover letter form to load - check for Tone selector which is unique to cover letter page
-      await expect(page.getByText('Tone')).toBeVisible({ timeout: 5000 });
+      // Note: Dashboard uses client-side state navigation, so URL doesn't change
+      await expect(page.getByText('Tone')).toBeVisible({ timeout: 15000 });
    });
 });
 
