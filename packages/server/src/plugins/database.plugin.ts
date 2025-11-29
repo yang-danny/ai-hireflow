@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import mongoose from 'mongoose';
-import { connectDB } from '../config/database';
+import { connectDB } from '../config/database.js';
 
 async function databasePlugin(fastify: FastifyInstance) {
    const mongoUri = fastify.config.MONGODB_URI;

@@ -1,6 +1,6 @@
-import { buildApp } from './app';
-import { Logger } from './utils/logger';
-import { ImageService } from './services/image.service';
+import { buildApp } from './app.js';
+import { Logger } from './utils/logger.js';
+import { ImageService } from './services/image.service.js';
 
 async function start() {
    try {
