@@ -60,7 +60,10 @@ async function redisPlugin(fastify: FastifyInstance) {
                   });
                   fastify.log.info('✅ Redis mocked (fallback)');
                } catch (mockErr) {
-                  fastify.log.error('❌ Failed to load Redis mock:', mockErr);
+                  fastify.log.error(
+                     '❌ Failed to load Redis mock:',
+                     mockErr as any
+                  );
                   throw new Error('Redis is required but unavailable');
                }
             } else {
