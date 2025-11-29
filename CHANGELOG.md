@@ -1,3 +1,9 @@
+## [1.0.9](https://github.com/yang-danny/ai-hireflow/compare/v1.0.8...v1.0.9) (2025-11-29)
+
+### Bug Fixes
+
+- **server:** add .js extensions to imports for ESM compatibility in Docker ([79c06fd](https://github.com/yang-danny/ai-hireflow/commit/79c06fde84299f6aee2a46c991de56400577874a))
+
 ## [1.0.8](https://github.com/yang-danny/ai-hireflow/compare/v1.0.7...v1.0.8) (2025-11-29)
 
 ### Bug Fixes
