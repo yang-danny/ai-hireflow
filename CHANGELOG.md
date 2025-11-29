@@ -1,3 +1,9 @@
+## [1.0.8](https://github.com/yang-danny/ai-hireflow/compare/v1.0.7...v1.0.8) (2025-11-29)
+
+### Bug Fixes
+
+- **docker:** remove prepare script before npm ci to prevent husky failure ([cd60258](https://github.com/yang-danny/ai-hireflow/commit/cd60258e8fe2f420a0aaf7bf73d9fe9249eefd43))
+
 ## [1.0.7](https://github.com/yang-danny/ai-hireflow/compare/v1.0.6...v1.0.7) (2025-11-29)
 
 ### Bug Fixes
