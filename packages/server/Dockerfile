@@ -27,8 +27,9 @@ RUN npm run build
 
 FROM node:22-alpine
 COPY package.json package-lock.json /app/
+COPY packages/server/package.json /app/packages/server/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=production-dependencies-env /app/packages /app/packages
+COPY --from=production-dependencies-env /app/packages/client/node_modules /app/packages/client/node_modules
 COPY --from=build-env /app/packages/server/dist /app/packages/server/dist
 WORKDIR /app/packages/server
 CMD ["npm", "run", "start"]
