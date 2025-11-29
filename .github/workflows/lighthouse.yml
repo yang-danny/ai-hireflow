@@ -1,6 +1,11 @@
 name: Lighthouse CI
 
 on:
+   push:
+      branches: [main]
+      paths:
+         - 'packages/client/**'
+         - '.github/workflows/lighthouse.yml'
    pull_request:
       branches: [main]
       paths:
