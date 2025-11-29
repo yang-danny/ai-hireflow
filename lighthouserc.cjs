@@ -32,6 +32,7 @@ module.exports = {
             'uses-text-compression': 'off',
             'unminified-css': 'off',
             'total-byte-weight': 'off',
+            'bf-cache': 'off',
 
             // PWA features - not required
             'installable-manifest': 'off',
