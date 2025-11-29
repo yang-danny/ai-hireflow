@@ -1,3 +1,9 @@
+## [1.0.4](https://github.com/yang-danny/ai-hireflow/compare/v1.0.3...v1.0.4) (2025-11-29)
+
+### Bug Fixes
+
+- disable bf-cache check in Lighthouse CI ([14be9d8](https://github.com/yang-danny/ai-hireflow/commit/14be9d83cf456bbf1b53c1dc0d1c7aa35b41f7f4))
+
 ## [1.0.3](https://github.com/yang-danny/ai-hireflow/compare/v1.0.2...v1.0.3) (2025-11-29)
 
 ### Bug Fixes
