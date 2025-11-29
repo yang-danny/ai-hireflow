@@ -1,3 +1,9 @@
+## [1.0.7](https://github.com/yang-danny/ai-hireflow/compare/v1.0.6...v1.0.7) (2025-11-29)
+
+### Bug Fixes
+
+- **docker:** update build context to root to fix missing package-lock.json ([93e3281](https://github.com/yang-danny/ai-hireflow/commit/93e32810ab555515e0cf640332e524b683662a7d))
+
 ## [1.0.6](https://github.com/yang-danny/ai-hireflow/compare/v1.0.5...v1.0.6) (2025-11-29)
 
 ### Bug Fixes
