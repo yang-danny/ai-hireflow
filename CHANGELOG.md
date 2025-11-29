@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/yang-danny/ai-hireflow/compare/v1.0.1...v1.0.2) (2025-11-29)
+
+### Bug Fixes
+
+- remove lighthouse preset that was overriding custom assertions ([eb1c8be](https://github.com/yang-danny/ai-hireflow/commit/eb1c8be2f2770fe1952577d50f70339f18b32206))
+
 ## [1.0.1](https://github.com/yang-danny/ai-hireflow/compare/v1.0.0...v1.0.1) (2025-11-29)
 
 ### Bug Fixes
