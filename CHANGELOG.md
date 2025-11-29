@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/yang-danny/ai-hireflow/compare/v1.0.2...v1.0.3) (2025-11-29)
+
+### Bug Fixes
+
+- make rate limiting test sequential to prevent ECONNRESET ([46389de](https://github.com/yang-danny/ai-hireflow/commit/46389def20104df952cc8b5cada1cd3050f92e27))
+
 ## [1.0.2](https://github.com/yang-danny/ai-hireflow/compare/v1.0.1...v1.0.2) (2025-11-29)
 
 ### Bug Fixes
