@@ -1,3 +1,9 @@
+## [1.0.11](https://github.com/yang-danny/ai-hireflow/compare/v1.0.10...v1.0.11) (2025-11-29)
+
+### Bug Fixes
+
+- **docker:** increase npm fetch retries and timeout to prevent ECONNRESET ([facf829](https://github.com/yang-danny/ai-hireflow/commit/facf82953f2d9484be19fbc6bc223bdee9ec1431))
+
 ## [1.0.10](https://github.com/yang-danny/ai-hireflow/compare/v1.0.9...v1.0.10) (2025-11-29)
 
 ### Bug Fixes
