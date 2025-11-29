@@ -3,14 +3,21 @@ COPY package.json package-lock.json /app/
 COPY packages/server/package.json /app/packages/server/
 COPY packages/client/package.json /app/packages/client/
 WORKDIR /app
-RUN npm ci
+RUN npm config set fetch-retries 5 \
+    && npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 120000 \
+    && npm ci
 
 FROM node:22-alpine AS production-dependencies-env
 COPY package.json package-lock.json /app/
 COPY packages/server/package.json /app/packages/server/
 COPY packages/client/package.json /app/packages/client/
 WORKDIR /app
-RUN npm pkg delete scripts.prepare && npm ci --omit=dev
+RUN npm config set fetch-retries 5 \
+    && npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 120000 \
+    && npm pkg delete scripts.prepare \
+    && npm ci --omit=dev
 
 FROM node:22-alpine AS build-env
 COPY . /app/
