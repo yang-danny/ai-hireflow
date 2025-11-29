@@ -8,7 +8,7 @@ FROM node:22-alpine AS production-dependencies-env
 COPY package.json package-lock.json /app/
 COPY packages/client/package.json /app/packages/client/
 WORKDIR /app
-RUN npm ci --omit=dev
+RUN npm pkg delete scripts.prepare && npm ci --omit=dev
 
 FROM node:22-alpine AS build-env
 COPY . /app/
