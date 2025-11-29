@@ -100,14 +100,25 @@ describe('Authentication', () => {
          expect(response.body.success).toBe(false);
       });
       it('should respect rate limiting', async () => {
-         // Attempt 6 logins (limit is 5 in 15 min)
-         const promises = Array.from({ length: 6 }).map(() =>
-            request(app.server).post('/api/auth/login').send({
-               email: 'test@example.com',
-               password: 'wrong',
-            })
-         );
-         const responses = await Promise.all(promises);
+         // Attempt 6 logins sequentially (limit is 5 in 15 min)
+         // Using sequential requests to avoid overwhelming the server
+         const responses = [];
+
+         for (let i = 0; i < 6; i++) {
+            const response = await request(app.server)
+               .post('/api/auth/login')
+               .send({
+                  email: 'test@example.com',
+                  password: 'wrong',
+               });
+            responses.push(response);
+
+            // Small delay to ensure rate limiter processes each request
+            if (i < 5) {
+               await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+         }
+
          const lastResponse = responses[responses.length - 1];
          expect(lastResponse.status).toBe(429);
       });
