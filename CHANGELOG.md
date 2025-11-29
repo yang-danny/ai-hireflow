@@ -1,3 +1,9 @@
+## [1.0.6](https://github.com/yang-danny/ai-hireflow/compare/v1.0.5...v1.0.6) (2025-11-29)
+
+### Bug Fixes
+
+- **e2e:** improve test reliability with viewport settings and explicit waits ([daffdbd](https://github.com/yang-danny/ai-hireflow/commit/daffdbd611d100afecc8d1e61b00fe859be5693c))
+
 ## [1.0.5](https://github.com/yang-danny/ai-hireflow/compare/v1.0.4...v1.0.5) (2025-11-29)
 
 ### Bug Fixes
