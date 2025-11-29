@@ -1,3 +1,9 @@
+## [1.0.10](https://github.com/yang-danny/ai-hireflow/compare/v1.0.9...v1.0.10) (2025-11-29)
+
+### Bug Fixes
+
+- **docker:** ensure full workspace structure and nested node_modules are copied ([4417603](https://github.com/yang-danny/ai-hireflow/commit/44176031bee83609b115f517e407118c0de53f7c))
+
 ## [1.0.9](https://github.com/yang-danny/ai-hireflow/compare/v1.0.8...v1.0.9) (2025-11-29)
 
 ### Bug Fixes
