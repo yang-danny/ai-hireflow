@@ -7,7 +7,7 @@
    "scripts": {
       "dev": "tsx watch src/server.ts",
       "dev:nodemon": "nodemon",
-      "build": "npm run build",
+      "build": "tsc",
       "start": "node dist/server.js",
       "clean": "rm -rf dist",
       "type-check": "tsc --noEmit",

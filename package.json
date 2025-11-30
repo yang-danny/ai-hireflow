@@ -17,7 +17,7 @@
    "main": "index.js",
    "scripts": {
       "test": "npm run test --workspaces --if-present",
-      "build": "npm run build",
+      "build": "npm run build --workspaces --if-present",
       "start": "npm run start -w packages/server",
       "lint": "eslint .",
       "lint:fix": "eslint . --fix",
