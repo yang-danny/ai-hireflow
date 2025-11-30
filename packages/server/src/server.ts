@@ -52,6 +52,8 @@ async function start() {
          });
       }
    } catch (error) {
+      console.error('❌ FATAL ERROR starting server:');
+      console.error(error);
       Logger.error('Error starting server:', error);
       process.exit(1);
    }
