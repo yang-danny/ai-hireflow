@@ -7,7 +7,7 @@
    "scripts": {
       "dev": "tsx watch src/server.ts",
       "dev:nodemon": "nodemon",
-      "build": "tsc",
+      "build:functions": "netlify-lambda build functions --config ./webpack.config.netlify.js",
       "start": "node dist/server.js",
       "clean": "rm -rf dist",
       "type-check": "tsc --noEmit",
