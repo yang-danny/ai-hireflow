@@ -1,7 +1,5 @@
 [build]
-  base = "/"
   command = "npm run build"
-  publish = "."
   functions = "netlify/functions"
 
 [build.environment]
