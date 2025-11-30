@@ -3,7 +3,7 @@
 ```yaml
 - generic [ref=e4]:
   - generic [ref=e5]:
-    - link "AI HireFlow" [ref=e6] [cursor=pointer]:
+    - link "AI HireFlow" [ref=e6]:
       - /url: /
       - img [ref=e7]
       - generic [ref=e9]: AI HireFlow
@@ -19,7 +19,7 @@
         - generic [ref=e18]: Password
         - textbox "Password" [ref=e19]:
           - /placeholder: ••••••••
-      - link "Forgot password?" [ref=e21] [cursor=pointer]:
+      - link "Forgot password?" [ref=e21]:
         - /url: "#"
     - button "Sign In" [ref=e22] [cursor=pointer]
   - generic [ref=e23]:
