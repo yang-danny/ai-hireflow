@@ -15,7 +15,7 @@
       "test:watch": "vitest",
       "test:ui": "vitest --ui",
       "test:coverage": "vitest run --coverage",
-      "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
+      "prepare": "node -e \"if (process.env.CI !== 'true') { require('child_process').execSync('husky install') }\""
    },
    "keywords": [
       "fastify",
