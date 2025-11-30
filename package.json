@@ -17,7 +17,7 @@
    "main": "index.js",
    "scripts": {
       "test": "npm run test --workspaces --if-present",
-      "build:functions": "netlify-lambda build functions --config ./webpack.config.netlify.js",
+      "build": "npm run build",
       "start": "npm run start -w packages/server",
       "lint": "eslint .",
       "lint:fix": "eslint . --fix",
