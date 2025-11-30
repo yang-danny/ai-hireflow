@@ -22,7 +22,7 @@
       "lint:fix": "eslint . --fix",
       "dev": "concurrently \"npm run dev -w packages/client\" \"npm run dev -w packages/server\"",
       "format": "prettier --write .",
-      "prepare": "husky",
+      "prepare": "node -e \"try { require('husky') && require('husky').install() } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e }\"",
       "typecheck": "npm run type-check --workspaces --if-present"
    },
    "workspaces": [
