@@ -16,7 +16,7 @@ export function DashboardHeader({ user, onNavigate }: DashboardHeaderProps) {
 
    const handleLogout = () => {
       logout();
-      showToast.success('Operation successful!');
+      showToast.success('Logout successful!');
       onNavigate?.('/');
    };
    // Close popup when clicking outside

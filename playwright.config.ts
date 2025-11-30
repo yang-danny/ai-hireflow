@@ -10,7 +10,7 @@ export default defineConfig({
    timeout: 45000, // Increase global timeout to 45s
 
    use: {
-      baseURL: 'http://localhost:5173',
+      baseURL: 'http://localhost:3001',
       trace: 'on-first-retry',
       screenshot: 'only-on-failure',
       actionTimeout: 15000, // Increase action timeout
@@ -35,7 +35,7 @@ export default defineConfig({
    // Comment out if dev server is already running
    // webServer: {
    //    command: 'npm run dev',
-   //    url: 'http://localhost:5173',
+   //    url: 'http://localhost:3001',
    //    reuseExistingServer: !process.env.CI,
    //    timeout: 120000,
    // },

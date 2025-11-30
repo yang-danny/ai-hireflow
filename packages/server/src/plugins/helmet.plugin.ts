@@ -35,7 +35,7 @@ export default async function helmetPlugin(fastify: FastifyInstance) {
                "'self'",
                'https://accounts.google.com',
                'https://oauth2.googleapis.com',
-               process.env.CLIENT_URL || 'http://localhost:5173',
+               process.env.CLIENT_URL || 'http://localhost:3001',
             ],
             frameSrc: [
                "'self'",

@@ -8,6 +8,7 @@ import { ResumeAnalyzerIcon } from './icons/icons';
 import { CoverLetterIcon } from './icons/icons';
 import { InterviewPrepIcon } from './icons/icons';
 import { LogoutIcon } from './icons/icons';
+import { showToast } from './Toast';
 
 interface NavItemProps {
    icon: React.ReactNode;
@@ -55,6 +56,7 @@ export function DashboardSidebar({
 
    const handleLogout = () => {
       logout();
+      showToast.success('Logout successful!');
       navigate('/');
    };
 

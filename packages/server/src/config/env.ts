@@ -52,7 +52,7 @@ export const envSchema = {
       },
       CORS_ORIGIN: {
          type: 'string',
-         default: 'http://localhost:5173',
+         default: 'http://localhost:3001',
       },
       GOOGLE_CLIENT_ID: {
          type: 'string',
@@ -66,7 +66,7 @@ export const envSchema = {
       },
       FRONTEND_URL: {
          type: 'string',
-         default: 'http://localhost:5173',
+         default: 'http://localhost:3001',
       },
       REDIS_URL: {
          type: 'string',

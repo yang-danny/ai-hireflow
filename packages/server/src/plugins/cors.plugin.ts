@@ -5,9 +5,9 @@ async function corsPlugin(fastify: FastifyInstance) {
    // Get allowed origins from environment variable or use defaults
    const allowedOriginsEnv = process.env.ALLOWED_ORIGINS;
    const defaultOrigins = [
-      'http://localhost:5173',
+      'http://localhost:3001',
       'http://localhost:3000',
-      'http://127.0.0.1:5173',
+      'http://127.0.0.1:3001',
       'http://127.0.0.1:3000',
    ];
 

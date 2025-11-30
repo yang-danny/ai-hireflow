@@ -8,7 +8,7 @@ export const errorHandler = (
    const statusCode = error.statusCode || 500;
 
    // ALWAYS set CORS headers, even on errors
-   const origin = request.headers.origin || 'http://localhost:5173';
+   const origin = request.headers.origin || 'http://localhost:3001';
    reply.header('Access-Control-Allow-Origin', origin);
    reply.header('Access-Control-Allow-Credentials', 'true');
    reply.header(

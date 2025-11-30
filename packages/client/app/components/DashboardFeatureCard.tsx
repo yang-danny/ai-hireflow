@@ -14,7 +14,7 @@ export function DashboardFeatureCard({
    onClick,
 }: DashboardFeatureCardProps) {
    return (
-      <div className="cussor-pointer bg-(--color-background-card) rounded-[20px] border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
+      <div className="max-w-[336px] cussor-pointer bg-(--color-background-card) rounded-[20px] border-2 border-(--color-border) p-8 hover:border-(--color-primary) hover:shadow-[var(--shadow-card-highlighted)] transition-all duration-500 hover:translate-y-[-4px]">
          {/* Content */}
          <div className="relative z-10 flex flex-col gap-3">
             {/* Icon */}

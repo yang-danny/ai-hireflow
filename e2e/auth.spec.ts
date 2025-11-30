@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Authentication Flow', () => {
    test('should display login page', async ({ page }) => {
-      await page.goto('http://localhost:5173/');
+      await page.goto('http://localhost:3001/');
 
       // Should see login/register options
       await expect(page.getByText(/Sign In|Login/i)).toBeVisible();
@@ -22,7 +22,7 @@ test.describe('Authentication Flow', () => {
    });
 
    test('should show validation errors for empty login', async ({ page }) => {
-      await page.goto('http://localhost:5173/login');
+      await page.goto('http://localhost:3001/login');
 
       // Try to submit without filling form
       const submitButton = page.getByRole('button', { name: /Sign In|Login/i });
@@ -41,7 +41,7 @@ test.describe('Authentication Flow', () => {
       const timestamp = Date.now();
       const testEmail = `test-${timestamp}@example.com`;
 
-      await page.goto('http://localhost:5173/register');
+      await page.goto('http://localhost:3001/register');
 
       // Fill registration form
       await page.fill('input[name="name"]', 'Test User');
@@ -56,7 +56,7 @@ test.describe('Authentication Flow', () => {
          await page.waitForURL(/.*dashboard/, { timeout: 15000 });
       } catch (e) {
          // If redirect didn't happen, navigate manually
-         await page.goto('http://localhost:5173/dashboard');
+         await page.goto('http://localhost:3001/dashboard');
       }
 
       // Ensure we're on dashboard and it's loaded

@@ -166,7 +166,9 @@ AI-HireFlow/
 - **MongoDB**: >= 7.0 (or use Docker)
 - **Redis**: >= 7.0 (or use Docker)
 
-### Quick Start with Docker
+### Quick Start with Docker (Recommended)
+
+Docker provides the easiest way to get started with all dependencies included.
 
 1. **Clone the repository**
 
@@ -175,28 +177,63 @@ AI-HireFlow/
    cd AI-HireFlow
    ```
 
-2. **Set up environment variables**
+2. **Quick start using the automated script**
 
    ```bash
-   # Create .env files
-   cp packages/server/.env.example packages/server/.env
-   cp packages/client/.env.example packages/client/.env
-
-   # Edit .env files with your values
+   # Makes environment setup, builds, and starts all services
+   ./docker-start.sh
    ```
 
-3. **Start with Docker Compose**
+   Or manually:
 
    ```bash
+   # Copy environment template
+   cp .env.docker .env
+
+   # Edit .env and update required values:
+   # - JWT_SECRET (generate with: openssl rand -base64 32)
+   # - COOKIE_SECRET (generate with: openssl rand -base64 32)
+   # - VITE_GEMINI_API_KEY (get from Google AI Studio)
+
+   # Build and start all services
    docker-compose up -d
    ```
 
-4. **Access the application**
-   - **Frontend**: http://localhost:5173
+3. **Access the application**
+   - **Frontend**: http://localhost:3001
    - **Backend API**: http://localhost:3000
-   - **API Documentation**: http://localhost:3000/api/docs
-   - **MongoDB**: localhost:27017
-   - **Redis**: localhost:6379
+   - **API Documentation**: http://localhost:3000/documentation
+   - **Health Check**: http://localhost:3000/api/health
+
+4. **Useful Docker commands**
+
+   ```bash
+   # View logs
+   docker-compose logs -f
+
+   # Stop services
+   docker-compose down
+
+   # Restart services
+   docker-compose restart
+
+   # Or use the convenience script
+   ./docker-commands.sh help
+   ```
+
+**📖 For comprehensive Docker documentation, see [DOCKER_SETUP.md](docs/DOCKER_SETUP.md)**
+
+![Docker Architecture](docker-architecture.png)
+
+**What's included:**
+
+- ✅ MongoDB 8.0 (database)
+- ✅ Redis 7.4 (cache)
+- ✅ Node.js 22 (latest LTS)
+- ✅ Optimized multi-stage builds
+- ✅ Health checks for all services
+- ✅ Persistent data volumes
+- ✅ Production-ready configuration
 
 ### Manual Setup (Development)
 
@@ -222,7 +259,7 @@ AI-HireFlow/
    npm run dev
    ```
 
-   This starts both frontend (port 5173) and backend (port 3000) concurrently.
+   This starts both frontend (port 3001) and backend (port 3000) concurrently.
 
 ## 🔧 Development
 
@@ -321,8 +358,6 @@ docs: update documentation      # No version bump
 chore: update dependencies      # No version bump
 feat!: breaking change          # Major version bump
 ```
-
-See [SEMANTIC_RELEASE.md](docs/SEMANTIC_RELEASE.md) for detailed guide.
 
 ## 🧪 Testing
 
@@ -442,18 +477,6 @@ The server provides health check endpoints:
 5. **Monitor logs** for suspicious activity (Winston + Sentry)
 6. **Keep dependencies updated** - Run `npm audit` regularly
 7. **Review Sentry errors** - Set up alerts for critical issues
-
-### Vulnerability Management
-
-```bash
-# Check for vulnerabilities
-npm audit
-
-# Review security report
-cat vulnerability_report.md
-```
-
-See [vulnerability_report.md](vulnerability_report.md) for current status.
 
 ## 🚦 CI/CD Pipeline
 
