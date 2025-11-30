@@ -1,22 +1,8 @@
 [build]
-  command = "npm run build"
-  functions = "netlify/functions"
-
-[build.environment]
-  NODE_VERSION = "22.21.1"
-  NPM_VERSION = "10.9.4"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/server/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server/:splat"
-  status = 200
-
-[functions]
-  node_bundler = "esbuild"
-  included_files = ["packages/server/dist/**"]
-
+  # This will be run the site build
+  command = "npm run build:functions"
+  # This is the directory is publishing to netlify's CDN
+  # and this is directory of your front of your app
+  # publish = "build"
+  # functions build directory
+  functions = "functions-build" # always appends `-build` folder to your `functions` folder for builds
