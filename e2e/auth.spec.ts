@@ -9,7 +9,7 @@ test.describe('Authentication Flow', () => {
    });
 
    test('should navigate to register page', async ({ page }) => {
-      await page.goto('http://localhost:5173/');
+      await page.goto('http://localhost:3001/');
 
       // Click register/sign up link
       const registerLink = page.getByRole('link', {
@@ -86,7 +86,7 @@ test.describe('Dashboard Navigation', () => {
       const testEmail = `test-${timestamp}@example.com`;
 
       // Register a new user
-      await page.goto('http://localhost:5173/register');
+      await page.goto('http://localhost:3001/register');
       await page.fill('input[name="name"]', 'Test User');
       await page.fill('input[type="email"]', testEmail);
       await page.fill('input[type="password"]', 'SecurePass123!');
@@ -97,7 +97,7 @@ test.describe('Dashboard Navigation', () => {
          await page.waitForURL(/.*dashboard/, { timeout: 15000 });
       } catch (e) {
          // If redirect didn't happen, navigate manually
-         await page.goto('http://localhost:5173/dashboard');
+         await page.goto('http://localhost:3001/dashboard');
       }
 
       // Ensure we're on dashboard and it's loaded
@@ -161,7 +161,7 @@ test.describe('Resume Creation', () => {
       const timestamp = Date.now();
       const testEmail = `test-${timestamp}@example.com`;
 
-      await page.goto('http://localhost:5173/register');
+      await page.goto('http://localhost:3001/register');
       await page.fill('input[name="name"]', 'Test User');
       await page.fill('input[type="email"]', testEmail);
       await page.fill('input[type="password"]', 'SecurePass123!');
@@ -172,7 +172,7 @@ test.describe('Resume Creation', () => {
          await page.waitForURL(/.*dashboard/, { timeout: 15000 });
       } catch (e) {
          // If redirect didn't happen, navigate manually
-         await page.goto('http://localhost:5173/dashboard');
+         await page.goto('http://localhost:3001/dashboard');
       }
 
       // Ensure we're on dashboard and it's loaded
