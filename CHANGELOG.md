@@ -1,3 +1,10 @@
+## [1.0.15](https://github.com/yang-danny/ai-hireflow/compare/v1.0.14...v1.0.15) (2025-11-30)
+
+
+### Reverts
+
+* Revert "fix: stabilize E2E auth tests" ([8f4caa2](https://github.com/yang-danny/ai-hireflow/commit/8f4caa28ed68e0319cc912b82b6a1a4bf11c1e0e))
+
 ## [1.0.14](https://github.com/yang-danny/ai-hireflow/compare/v1.0.13...v1.0.14) (2025-11-30)
 
 
