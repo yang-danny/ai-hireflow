@@ -450,8 +450,10 @@ The server provides health check endpoints:
 
 ## 📚 Documentation
 
+- [UI Design in Figma](https://www.figma.com/design/jGW7N9eMIlY8FVxNNBACit/AI-HireFlow?node-id=0-1&m=dev&t=nHw617p7kOUvDzU8-1)
 - [System Architecture](docs/ARCHITECTURE.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)
+- [Docker Setup](docs/DOCKER_SETUP.md)
 
 ## 🔒 Security
 
