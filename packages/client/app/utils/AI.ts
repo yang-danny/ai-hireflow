@@ -7,6 +7,7 @@ import {
 import type { Resume } from '../../types/resume.types';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const GEMINI_MODEL = import.meta.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 /**
  * Handles AI-related errors and throws specific, user-friendly messages.
@@ -71,7 +72,7 @@ export async function processResumeWithAI(
 ): Promise<Partial<Resume>> {
    try {
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-pro',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature: 0.1, // Lower temperature for more consistent output
             maxOutputTokens: 8192,
@@ -214,7 +215,7 @@ export async function enhanceProfessionalSummary(
          },
       ];
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-flash', // Using flash for faster response
+         model: GEMINI_MODEL, // Using flash for faster response
          generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 4096, // Increased token limit
@@ -266,7 +267,7 @@ export async function enhanceJobDescription(
          },
       ];
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-flash',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 2048,
@@ -303,7 +304,7 @@ export async function captureResumeFromLinkedIn(
 ): Promise<Partial<Resume>> {
    try {
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-pro',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature: 0.1,
             maxOutputTokens: 8192,
@@ -503,7 +504,7 @@ export async function generateCoverLetter(
       ];
 
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-pro',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature:
                tone === 'conservative' ? 0.3 : tone === 'balanced' ? 0.5 : 0.7,
@@ -735,7 +736,7 @@ export async function analyseResume(
       ];
 
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-pro',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature: 0.3, // Lower temperature for more consistent analysis
             maxOutputTokens: 8192,
@@ -955,7 +956,7 @@ export async function generateInterviewPreparation(
       ];
 
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-pro',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature: 0.5,
             maxOutputTokens: 8192,
@@ -1125,7 +1126,7 @@ export async function generateInterviewAnalytics(
       ];
 
       const modelParams: ModelParams = {
-         model: 'gemini-2.5-pro',
+         model: GEMINI_MODEL,
          generationConfig: {
             temperature: 0.3,
             maxOutputTokens: 4096,
